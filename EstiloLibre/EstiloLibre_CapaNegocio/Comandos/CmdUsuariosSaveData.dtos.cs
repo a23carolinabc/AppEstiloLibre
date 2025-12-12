@@ -18,7 +18,7 @@
                 public bool Publico { get; set; }
                 public DateTime FechaNacimiento { get; set; }
                 public int Telefono { get; set; }
-                public string ImagenBase64 { get; set; }
+                public string? ImagenBase64 { get; set; }
             }
         }
     }

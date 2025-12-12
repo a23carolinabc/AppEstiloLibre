@@ -1,0 +1,270 @@
+﻿@page "/explorar/conjuntos"
+@layout MainLayout
+
+<PageTitle>Explorar Conjuntos - EstiloLibre</PageTitle>
+
+<link href="css/Pages/ExploracionConjuntos.css" rel="stylesheet" />
+
+<MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="mt-4">
+    <MudText Typo="Typo.h4" Class="mb-4">Explorar Conjuntos Públicos</MudText>
+
+    <!-- Barra de búsqueda y filtros -->
+    <MudPaper Class="pa-4 mb-4" Elevation="2">
+        <MudGrid>
+            <MudItem xs="12" sm="4">
+                <MudSelect @bind-Value="this._tipoBusqueda"
+                           Label="Buscar por"
+                           Variant="Variant.Outlined"
+                           Dense="true"
+                           OnValueChanged="@((TipoBusquedaConjunto tipo) => OnTipoBusquedaChanged(tipo))">
+                    <MudSelectItem Value="@TipoBusquedaConjunto.Todos">Todos</MudSelectItem>
+                    <MudSelectItem Value="@TipoBusquedaConjunto.Estilo">Estilo</MudSelectItem>
+                    <MudSelectItem Value="@TipoBusquedaConjunto.Estacion">Estación</MudSelectItem>
+                    <MudSelectItem Value="@TipoBusquedaConjunto.Color">Color</MudSelectItem>
+                </MudSelect>
+            </MudItem>
+            <MudItem xs="12" sm="5">
+                @if (this._tipoBusqueda != TipoBusquedaConjunto.Todos)
+                {
+                    <MudSelect @bind-Value="this._valorBusqueda"
+                               Label="@ObtenerEtiquetaValor()"
+                               Variant="Variant.Outlined"
+                               Dense="true"
+                               T="int?">
+                        @foreach (var item in this.ObtenerOpcionesFiltro())
+                        {
+                            <MudSelectItem Value="@((int?)item.Id)">@item.Nombre</MudSelectItem>
+                        }
+                    </MudSelect>
+                }
+            </MudItem>
+            <MudItem xs="12" sm="3" Class="d-flex align-center">
+                <MudButton Variant="Variant.Filled"
+                           Color="Color.Primary"
+                           StartIcon="@Icons.Material.Filled.Search"
+                           OnClick="BuscarConjuntos"
+                           FullWidth="true">
+                    Buscar
+                </MudButton>
+            </MudItem>
+        </MudGrid>
+    </MudPaper>
+
+    <!-- Grid de conjuntos -->
+    @if (this._cargando)
+    {
+        <MudProgressLinear Color="Color.Primary" Indeterminate="true" />
+    }
+    else if (this._conjuntos == null || !this._conjuntos.Any())
+    {
+        <MudAlert Severity="Severity.Info">
+            No se encontraron conjuntos públicos con los criterios seleccionados.
+        </MudAlert>
+    }
+    else
+    {
+        <MudGrid>
+            @foreach (var conjunto in this._conjuntos)
+            {
+                <MudItem xs="12" sm="6" md="4" lg="3">
+                    <MudCard Class="conjunto-card" Elevation="3">
+                        @if (!string.IsNullOrEmpty(conjunto.ImagenBase64))
+                        {
+                            <MudCardMedia Image="@conjunto.ImagenBase64" Height="250" />
+                        }
+                        else
+                        {
+                            <div class="no-image">
+                                <MudIcon Icon="@Icons.Material.Filled.ImageNotSupported" Size="Size.Large" />
+                            </div>
+                        }
+
+                        <MudCardContent>
+                            <MudText Typo="Typo.body2" Class="mb-1">
+                                <MudIcon Icon="@Icons.Material.Filled.Person" Size="Size.Small" Class="mr-1" />
+                                @conjunto.NombreUsuario
+                            </MudText>
+
+                            @if (!string.IsNullOrEmpty(conjunto.EstiloNombre))
+                            {
+                                <MudChip T="string" Size="Size.Small" Color="Color.Primary" Class="mb-1">
+                                    @conjunto.EstiloNombre
+                                </MudChip>
+                            }
+
+                            @if (!string.IsNullOrEmpty(conjunto.EstacionNombre))
+                            {
+                                <MudChip T="string" Size="Size.Small" Color="Color.Secondary" Class="mb-1">
+                                    @conjunto.EstacionNombre
+                                </MudChip>
+                            }
+
+                            <MudText Typo="Typo.body2" Class="mt-2">
+                                <MudIcon Icon="@Icons.Material.Filled.Checkroom" Size="Size.Small" Class="mr-1" />
+                                @conjunto.CantidadPrendas prendas
+                            </MudText>
+
+                            @if (!string.IsNullOrEmpty(conjunto.Descripcion))
+                            {
+                                <MudText Typo="Typo.body2" Class="mt-2 descripcion-text">
+                                    @conjunto.Descripcion
+                                </MudText>
+                            }
+                        </MudCardContent>
+
+                        <MudCardActions>
+                            <MudButton Variant="Variant.Filled"
+                                       Color="Color.Success"
+                                       StartIcon="@Icons.Material.Filled.ContentCopy"
+                                       OnClick="@(() => CopiarConjunto(conjunto.Id))"
+                                       FullWidth="true"
+                                       Disabled="@this._copiando">
+                                Guardar en mi armario
+                            </MudButton>
+                        </MudCardActions>
+                    </MudCard>
+                </MudItem>
+            }
+        </MudGrid>
+    }
+</MudContainer>
+
+@code {
+    #region ***** DEPENDENCIAS *****
+
+    [Inject]
+    public required ServicioExploracion ServicioExploracion { get; set; }
+
+    [Inject]
+    public required ISnackbar Snackbar { get; set; }
+
+    [Inject]
+    public required NavigationManager Navigation { get; set; }
+
+    #endregion
+
+    #region ***** PROPIEDADES PRIVADAS *****
+
+    private List<ConjuntoPublicoResumenDTO> _conjuntos = new();
+    private DatosExploracionDTO _datosExploracion = new();
+    private bool _cargando = false;
+    private bool _copiando = false;
+    private TipoBusquedaConjunto _tipoBusqueda = TipoBusquedaConjunto.Todos;
+    private int? _valorBusqueda = null;
+
+    #endregion
+
+    #region ***** MÉTODOS PÚBLICOS *****
+
+    protected override async Task OnInitializedAsync()
+    {
+        await this.CargarDatosIniciales();
+        await this.CargarConjuntos();
+    }
+
+    #endregion
+
+    #region ***** MÉTODOS PRIVADOS *****
+
+    private async Task CargarDatosIniciales()
+    {
+        try
+        {
+            this._datosExploracion = await this.ServicioExploracion.GetDatosExploracion();
+        }
+        catch (Exception ex)
+        {
+            this.Snackbar.Add($"Error al cargar datos: {ex.Message}", Severity.Error);
+        }
+    }
+
+    private async Task CargarConjuntos()
+    {
+        try
+        {
+            int? iTipoBusqueda;
+
+            this._cargando = true;
+
+            iTipoBusqueda = this._tipoBusqueda != TipoBusquedaConjunto.Todos ? (int)this._tipoBusqueda : null;
+
+            this._conjuntos = await this.ServicioExploracion.GetConjuntosPublicos(iTipoBusqueda, this._valorBusqueda);
+        }
+        catch (Exception ex)
+        {
+            this.Snackbar.Add($"Error al cargar conjuntos: {ex.Message}", Severity.Error);
+        }
+        finally
+        {
+            this._cargando = false;
+        }
+    }
+
+    private async Task BuscarConjuntos()
+    {
+        await this.CargarConjuntos();
+    }
+
+    private void OnTipoBusquedaChanged(TipoBusquedaConjunto nuevoTipo)
+    {
+        this._tipoBusqueda = nuevoTipo;
+        this._valorBusqueda = null;
+    }
+
+    private List<ControlItem> ObtenerOpcionesFiltro()
+    {
+        List<ControlItem> opciones;
+
+        opciones = this._tipoBusqueda switch
+        {
+            TipoBusquedaConjunto.Estilo => this._datosExploracion.Estilos,
+            TipoBusquedaConjunto.Estacion => this._datosExploracion.Estaciones,
+            TipoBusquedaConjunto.Color => this._datosExploracion.Colores,
+            _ => new List<ControlItem>()
+        };
+
+        return opciones;
+    }
+
+    private string ObtenerEtiquetaValor()
+    {
+        string strEtiqueta;
+
+        strEtiqueta = this._tipoBusqueda switch
+        {
+            TipoBusquedaConjunto.Estilo => "Seleccione un estilo",
+            TipoBusquedaConjunto.Estacion => "Seleccione una estación",
+            TipoBusquedaConjunto.Color => "Seleccione un color",
+            _ => "Seleccione una opción"
+        };
+
+        return strEtiqueta;
+    }
+
+    private async Task CopiarConjunto(int conjuntoId)
+    {
+        try
+        {
+            int iNuevoConjuntoId;
+
+            this._copiando = true;
+
+            iNuevoConjuntoId = await this.ServicioExploracion.CopiarConjuntoPublico(conjuntoId);
+
+            this.Snackbar.Add("Conjunto copiado exitosamente a tu armario", Severity.Success);
+
+            // Opcional: navegar al nuevo conjunto
+            // this.Navigation.NavigateTo($"/conjuntos/{iNuevoConjuntoId}");
+        }
+        catch (Exception ex)
+        {
+            this.Snackbar.Add($"Error al copiar conjunto: {ex.Message}", Severity.Error);
+        }
+        finally
+        {
+            this._copiando = false;
+        }
+    }
+
+    #endregion
+}

@@ -1,6 +1,6 @@
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 WORKDIR /app
-EXPOSE 80
+# NO establecer EXPOSE aquí - Railway asigna el puerto dinámicamente
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
@@ -39,5 +39,10 @@ RUN mkdir -p /app/Adjuntos
 
 # Variables de entorno para Railway
 ENV ASPNETCORE_ENVIRONMENT=Docker
+
+# CRÍTICO: Railway proporciona la variable PORT automáticamente
+# ASP.NET Core leerá esta variable si ASPNETCORE_URLS no está establecida
+# o usa la sintaxis con variable de entorno
+ENV ASPNETCORE_URLS=http://0.0.0.0:${PORT:-80}
 
 ENTRYPOINT ["dotnet", "EstiloLibre.dll"]

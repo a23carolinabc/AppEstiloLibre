@@ -1,0 +1,33 @@
+﻿.prenda-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+    .prenda-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+
+    .prenda-card .mud-card-content {
+        flex-grow: 1;
+    }
+
+    .prenda-card .no-image {
+        height: 200px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #f5f5f5;
+        color: #999;
+    }
+
+    .prenda-card .mud-card-content.pa-2 {
+        padding: 8px;
+    }
+
+    .prenda-card .mud-card-actions.pa-2 {
+        padding: 8px;
+    }

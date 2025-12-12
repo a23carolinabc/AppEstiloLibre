@@ -35,6 +35,7 @@ namespace EstiloLibre_CapaNegocio.Utils
             services.AddScoped<ConsultasConjuntos>();
             services.AddScoped<ConsultasModeracion>();
             services.AddScoped<ConsultasUsuariosAdmin>();
+            services.AddScoped<ConsultasExploracion>();
         }
         #endregion
     }

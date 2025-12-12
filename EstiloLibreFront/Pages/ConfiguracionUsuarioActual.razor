@@ -148,7 +148,7 @@
                            Variant="Variant.Filled"
                            Color="Color.Primary"
                            StartIcon="@Icons.Material.Filled.Save"
-                           Disabled="@(this._bGuardando || string.IsNullOrEmpty(this._strImagenPreview))">
+                           Disabled="@(this._bGuardando)">
                     @(this._bGuardando ? Traductor["lblGuardando"] : Traductor["btnGuardarCambios"])
                 </MudButton>
             </MudStack>

@@ -42,6 +42,7 @@ builder.Services.AddScoped<ServicioPrendas>();
 builder.Services.AddScoped<ServicioConjuntos>();
 builder.Services.AddScoped<ServicioModeracion>();
 builder.Services.AddScoped<ServicioUsuariosAdmin>();
+builder.Services.AddScoped<ServicioExploracion>();
 builder.Services.AddScoped<IServicioCargador, ServicioCargador>();
 builder.Services.AddSingleton<ServicioDatosContexto>();
 builder.Services.AddScoped<AuthenticationStateProvider>(sp => sp.GetRequiredService<ServicioAutentificacion>());

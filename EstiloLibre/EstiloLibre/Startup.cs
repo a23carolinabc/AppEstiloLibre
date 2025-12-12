@@ -20,10 +20,68 @@ namespace EstiloLibre
         private IConfiguration _configuracion;
         private IWebHostEnvironment _entornoActual;
 
-        public Startup(IConfiguration configuration, IWebHostEnvironment env)
+        /* public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
             this._configuracion = configuration;
             this._entornoActual = env;
+        } */
+
+        public Startup(IConfiguration configuration, IWebHostEnvironment env)
+        {
+            this._configuracion = ReemplazarVariablesEntorno(configuration);
+            this._entornoActual = env;
+        }
+
+        private static IConfiguration ReemplazarVariablesEntorno(IConfiguration configuracion)
+        {
+            Dictionary<string, string?> valoresActualizados;
+            ConfigurationBuilder builder;
+            
+            valoresActualizados = new Dictionary<string, string?>();
+            
+            // Iterar sobre todas las secciones de configuración
+            foreach (var seccion in configuracion.GetChildren())
+            {
+                ReemplazarSeccionRecursivamente(seccion, "", valoresActualizados);
+            }
+            
+            // Crear nueva configuración con valores actualizados
+            builder = new ConfigurationBuilder();
+            builder.AddConfiguration(configuracion);
+            builder.AddInMemoryCollection(valoresActualizados);
+            
+            return builder.Build();
+        }
+
+        private static void ReemplazarSeccionRecursivamente(IConfigurationSection seccion, string rutaPadre, Dictionary<string, string?> valores)
+        {
+            string rutaCompleta;
+            string? valor;
+            
+            rutaCompleta = string.IsNullOrEmpty(rutaPadre) ? seccion.Key : $"{rutaPadre}:{seccion.Key}";
+            
+            if (seccion.Value != null)
+            {
+                valor = seccion.Value;
+                
+                // Reemplazar variables de entorno en formato ${VARIABLE}
+                if (valor.StartsWith("${") && valor.EndsWith("}"))
+                {
+                    string nombreVariable = valor.Substring(2, valor.Length - 3);
+                    string? valorVariable = Environment.GetEnvironmentVariable(nombreVariable);
+                    
+                    if (!string.IsNullOrEmpty(valorVariable))
+                    {
+                        valores[rutaCompleta] = valorVariable;
+                    }
+                }
+            }
+            
+            // Procesar subsecciones
+            foreach (var subSeccion in seccion.GetChildren())
+            {
+                ReemplazarSeccionRecursivamente(subSeccion, rutaCompleta, valores);
+            }
         }
 
         public virtual void ConfigureServices(IServiceCollection services)

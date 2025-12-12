@@ -1,0 +1,269 @@
+﻿@page "/explorar/prendas"
+@layout MainLayout
+
+<PageTitle>Explorar Prendas - EstiloLibre</PageTitle>
+
+<link href="css/Pages/ExploracionPrendas.css" rel="stylesheet" />
+
+<MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="mt-4">
+    <MudText Typo="Typo.h4" Class="mb-4">Explorar Prendas Públicas</MudText>
+
+    <!-- Barra de búsqueda y filtros -->
+    <MudPaper Class="pa-4 mb-4" Elevation="2">
+        <MudGrid>
+            <MudItem xs="12" sm="4">
+                <MudSelect @bind-Value="this._tipoBusqueda"
+                           Label="Buscar por"
+                           Variant="Variant.Outlined"
+                           Dense="true"
+                           OnValueChanged="@((TipoBusquedaPrenda tipo) => OnTipoBusquedaChanged(tipo))">
+                    <MudSelectItem Value="@TipoBusquedaPrenda.Todos">Todas</MudSelectItem>
+                    <MudSelectItem Value="@TipoBusquedaPrenda.Categoria">Categoría</MudSelectItem>
+                    <MudSelectItem Value="@TipoBusquedaPrenda.Color">Color</MudSelectItem>
+                    <MudSelectItem Value="@TipoBusquedaPrenda.Estacion">Estación</MudSelectItem>
+                    <MudSelectItem Value="@TipoBusquedaPrenda.Marca">Marca</MudSelectItem>
+                </MudSelect>
+            </MudItem>
+            <MudItem xs="12" sm="5">
+                @if (this._tipoBusqueda != TipoBusquedaPrenda.Todos)
+                {
+                    <MudSelect @bind-Value="this._valorBusqueda"
+                               Label="@ObtenerEtiquetaValor()"
+                               Variant="Variant.Outlined"
+                               Dense="true"
+                               T="int?">
+                        @foreach (var item in this.ObtenerOpcionesFiltro())
+                        {
+                            <MudSelectItem Value="@((int?)item.Id)">@item.Nombre</MudSelectItem>
+                        }
+                    </MudSelect>
+                }
+            </MudItem>
+            <MudItem xs="12" sm="3" Class="d-flex align-center">
+                <MudButton Variant="Variant.Filled"
+                           Color="Color.Primary"
+                           StartIcon="@Icons.Material.Filled.Search"
+                           OnClick="BuscarPrendas"
+                           FullWidth="true">
+                    Buscar
+                </MudButton>
+            </MudItem>
+        </MudGrid>
+    </MudPaper>
+
+    <!-- Grid de prendas -->
+    @if (this._cargando)
+    {
+        <MudProgressLinear Color="Color.Primary" Indeterminate="true" />
+    }
+    else if (this._prendas == null || !this._prendas.Any())
+    {
+        <MudAlert Severity="Severity.Info">
+            No se encontraron prendas públicas con los criterios seleccionados.
+        </MudAlert>
+    }
+    else
+    {
+        <MudGrid>
+            @foreach (var prenda in this._prendas)
+            {
+                <MudItem xs="6" sm="4" md="3" lg="2">
+                    <MudCard Class="prenda-card" Elevation="3">
+                        @if (!string.IsNullOrEmpty(prenda.ImagenBase64))
+                        {
+                            <MudCardMedia Image="@prenda.ImagenBase64" Height="200" />
+                        }
+                        else
+                        {
+                            <div class="no-image">
+                                <MudIcon Icon="@Icons.Material.Filled.ImageNotSupported" Size="Size.Large" />
+                            </div>
+                        }
+
+                        <MudCardContent Class="pa-2">
+                            <MudText Typo="Typo.caption" Class="mb-1">
+                                <MudIcon Icon="@Icons.Material.Filled.Person" Size="Size.Small" />
+                                @prenda.NombreUsuario
+                            </MudText>
+
+                            @if (!string.IsNullOrEmpty(prenda.CategoriaNombre))
+                            {
+                                <MudText Typo="Typo.caption" Color="Color.Primary">
+                                    @prenda.CategoriaNombre
+                                </MudText>
+                            }
+
+                            @if (!string.IsNullOrEmpty(prenda.ColorNombre))
+                            {
+                                <MudText Typo="Typo.caption">
+                                    @prenda.ColorNombre
+                                </MudText>
+                            }
+
+                            @if (!string.IsNullOrEmpty(prenda.MarcaNombre))
+                            {
+                                <MudText Typo="Typo.caption">
+                                    @prenda.MarcaNombre
+                                </MudText>
+                            }
+                        </MudCardContent>
+
+                        <MudCardActions Class="pa-2">
+                            <MudButton Variant="Variant.Filled"
+                                       Color="Color.Success"
+                                       Size="Size.Small"
+                                       StartIcon="@Icons.Material.Filled.Add"
+                                       OnClick="@(() => CopiarPrenda(prenda.Id))"
+                                       FullWidth="true"
+                                       Disabled="@this._copiando">
+                                Guardar
+                            </MudButton>
+                        </MudCardActions>
+                    </MudCard>
+                </MudItem>
+            }
+        </MudGrid>
+    }
+</MudContainer>
+
+@code {
+    #region ***** DEPENDENCIAS *****
+
+    [Inject]
+    public required ServicioExploracion ServicioExploracion { get; set; }
+
+    [Inject]
+    public required ISnackbar Snackbar { get; set; }
+
+    [Inject]
+    public required NavigationManager Navigation { get; set; }
+
+    #endregion
+
+    #region ***** PROPIEDADES PRIVADAS *****
+
+    private List<PrendaPublicaResumenDTO> _prendas = new();
+    private DatosExploracionDTO _datosExploracion = new();
+    private bool _cargando = false;
+    private bool _copiando = false;
+    private TipoBusquedaPrenda _tipoBusqueda = TipoBusquedaPrenda.Todos;
+    private int? _valorBusqueda = null;
+
+    #endregion
+
+    #region ***** MÉTODOS PÚBLICOS *****
+
+    protected override async Task OnInitializedAsync()
+    {
+        await this.CargarDatosIniciales();
+        await this.CargarPrendas();
+    }
+
+    #endregion
+
+    #region ***** MÉTODOS PRIVADOS *****
+
+    private async Task CargarDatosIniciales()
+    {
+        try
+        {
+            this._datosExploracion = await this.ServicioExploracion.GetDatosExploracion();
+        }
+        catch (Exception ex)
+        {
+            this.Snackbar.Add($"Error al cargar datos: {ex.Message}", Severity.Error);
+        }
+    }
+
+    private async Task CargarPrendas()
+    {
+        try
+        {
+            int? iTipoBusqueda;
+
+            this._cargando = true;
+
+            iTipoBusqueda = this._tipoBusqueda != TipoBusquedaPrenda.Todos ? (int)this._tipoBusqueda : null;
+
+            this._prendas = await this.ServicioExploracion.GetPrendasPublicas(iTipoBusqueda, this._valorBusqueda);
+        }
+        catch (Exception ex)
+        {
+            this.Snackbar.Add($"Error al cargar prendas: {ex.Message}", Severity.Error);
+        }
+        finally
+        {
+            this._cargando = false;
+        }
+    }
+
+    private async Task BuscarPrendas()
+    {
+        await this.CargarPrendas();
+    }
+
+    private void OnTipoBusquedaChanged(TipoBusquedaPrenda nuevoTipo)
+    {
+        this._tipoBusqueda = nuevoTipo;
+        this._valorBusqueda = null;
+    }
+
+    private List<ControlItem> ObtenerOpcionesFiltro()
+    {
+        List<ControlItem> opciones;
+
+        opciones = this._tipoBusqueda switch
+        {
+            TipoBusquedaPrenda.Categoria => this._datosExploracion.Categorias,
+            TipoBusquedaPrenda.Color => this._datosExploracion.Colores,
+            TipoBusquedaPrenda.Estacion => this._datosExploracion.Estaciones,
+            TipoBusquedaPrenda.Marca => this._datosExploracion.Marcas,
+            _ => new List<ControlItem>()
+        };
+
+        return opciones;
+    }
+
+    private string ObtenerEtiquetaValor()
+    {
+        string strEtiqueta;
+
+        strEtiqueta = this._tipoBusqueda switch
+        {
+            TipoBusquedaPrenda.Categoria => "Seleccione una categoría",
+            TipoBusquedaPrenda.Color => "Seleccione un color",
+            TipoBusquedaPrenda.Estacion => "Seleccione una estación",
+            TipoBusquedaPrenda.Marca => "Seleccione una marca",
+            _ => "Seleccione una opción"
+        };
+
+        return strEtiqueta;
+    }
+
+    private async Task CopiarPrenda(int prendaId)
+    {
+        try
+        {
+            int iNuevaPrendaId;
+
+            this._copiando = true;
+
+            iNuevaPrendaId = await this.ServicioExploracion.CopiarPrendaPublica(prendaId);
+
+            this.Snackbar.Add("Prenda copiada exitosamente a tu armario", Severity.Success);
+
+            // Opcional: navegar a la nueva prenda
+            // this.Navigation.NavigateTo($"/prendas/{iNuevaPrendaId}");
+        }
+        catch (Exception ex)
+        {
+            this.Snackbar.Add($"Error al copiar prenda: {ex.Message}", Severity.Error);
+        }
+        finally
+        {
+            this._copiando = false;
+        }
+    }
+
+    #endregion
+}
