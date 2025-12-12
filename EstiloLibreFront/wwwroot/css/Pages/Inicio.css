@@ -22,7 +22,7 @@
 }
 
 .seccion-caracteristicas {
-    background-color: #f5f5f5;
+    background-color: #F0F0F0;
 }
 
 .carta-caracteristica {
@@ -43,7 +43,7 @@
 }
 
 .seccion-accion {
-    background: linear-gradient(135deg, #1E88E5 0%, #1565C0 100%);
+    background: linear-gradient(135deg, #F0F0F0 0%, #F0F0F0 100%);
     color: white;
 }
 
@@ -52,7 +52,7 @@
 }
 
 .color-primario {
-    color: #1E88E5;
+    color: #DE869E;
 }
 
 .text-muted {

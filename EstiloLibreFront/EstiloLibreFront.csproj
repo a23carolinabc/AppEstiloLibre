@@ -26,9 +26,6 @@
     <None Include="wwwroot\css\Shared\MenuSuperior.css" />
     <None Include="wwwroot\css\Shared\MenuSuperiorPublico.css" />
     <None Include="wwwroot\css\Shared\PiePagina.css" />
-    <None Include="wwwroot\Recursos\icono-formulario.svg" />
-    <None Include="wwwroot\Recursos\icono-listado.svg" />
-    <None Include="wwwroot\Recursos\logo.svg" />
   </ItemGroup>
 
   <ItemGroup>

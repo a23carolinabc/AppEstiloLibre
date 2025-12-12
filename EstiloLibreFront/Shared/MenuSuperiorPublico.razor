@@ -4,7 +4,7 @@
     <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="d-flex align-center">
         <!-- Logo -->
         <MudLink Href="@URLsPantallas.Inicio" Underline="Underline.None" Color="Color.Inherit">
-            <MudText Typo="Typo.h5" Class="fw-bold appbar-logo">@Traductor["EstiloLibre"]</MudText>
+            <MudImage Alt="LogoEstiloLibre" Src="Recursos/LogoTitulo.svg" Height="40"></MudImage>
         </MudLink>
 
         <MudSpacer />
@@ -14,19 +14,16 @@
             <MudStack Row="true" Spacing="3" Class="mr-4">
                 <MudLink Href="@URLsPantallas.Inicio"
                          Underline="Underline.Hover"
-                         Color="Color.Dark"
                          Class="nav-link-publico">
                     @Traductor["nvlkInicio"]
                 </MudLink>
                 <MudLink Href="@URLsPantallas.Conocenos"
                          Underline="Underline.Hover"
-                         Color="Color.Dark"
                          Class="nav-link-publico">
                     @Traductor["nvlkConocenos"]
                 </MudLink>
                 <MudLink Href="@URLsPantallas.PoliticaPrivacidad"
                          Underline="Underline.Hover"
-                         Color="Color.Dark"
                          Class="nav-link-publico">
                     @Traductor["nvlkPoliticaPrivacidad"]
                 </MudLink>
@@ -42,7 +39,7 @@
                 </MudButton>
                 <MudButton Href="@URLsPantallas.Registro"
                            Variant="Variant.Filled"
-                           Color="Color.Primary"
+                           Color="Color.Secondary"
                            Size="Size.Medium">
                     @Traductor["btnRegistrarse"]
                 </MudButton>

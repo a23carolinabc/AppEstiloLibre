@@ -7,7 +7,7 @@
     border-bottom: 1px solid #e0e0e0;
 }
 .appbar-logo {
-    color: #1E88E5;
+    color: #DE869E;
 }
 
 .nav-link-publico {
@@ -16,5 +16,5 @@
 }
 
     .nav-link-publico:hover {
-        color: #1E88E5 !important;
+        color: #DE869E !important;
     }
