@@ -1,0 +1,17 @@
+﻿@layout MainLayout
+@page "/error/{errMnsj}"
+    
+<h6>@Traductor![errMnsj!]</h6>
+
+@code {
+    #region DEPENDENCIAS
+    [Inject]
+    public IStringLocalizer<TrErrores>? Traductor { get; set; }
+    #endregion
+
+    #region PARÁMETROS
+    [Parameter]
+    public string? errMnsj { get; set; }
+    #endregion
+}
+

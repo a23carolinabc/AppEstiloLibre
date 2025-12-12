@@ -1,0 +1,8 @@
+﻿::deep .prenda-seleccionada {
+    border: 3px solid var(--mud-palette-primary);
+    box-shadow: 0 0 10px var(--mud-palette-primary);
+    cursor: pointer;
+}
+::deep .prenda{
+    cursor:pointer;
+}

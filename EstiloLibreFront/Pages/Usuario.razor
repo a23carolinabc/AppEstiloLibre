@@ -1,0 +1,364 @@
+﻿@page "/admin/usuarios-normales/{Id:int}"
+@layout LayoutAdministracion
+@using Microsoft.AspNetCore.Authorization
+@using EstiloLibreFront.Objetos.Administracion
+@attribute [Authorize(Policy = CodigosPermisos.MODERADOR)]
+
+<PageTitle>Detalle de Usuario - EstiloLibre</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="mt-4">
+    <MudButton Variant="Variant.Text" 
+               Color="Color.Primary"
+               StartIcon="@Icons.Material.Filled.ArrowBack"
+               Href="@URLsPantallas.AdminUsuariosNormalesListado"
+               Class="mb-4">
+        Volver al Listado
+    </MudButton>
+
+    <MudText Typo="Typo.h4" Class="mb-4">Detalle de Usuario</MudText>
+
+    @if (this._cargando)
+    {
+        <MudProgressLinear Color="Color.Primary" Indeterminate="true" />
+    }
+    else if (this._datosUsuario != null)
+    {
+        <!-- Datos del Usuario -->
+        <MudPaper Class="pa-4 mb-4" Elevation="2">
+            <MudText Typo="Typo.h6" Class="mb-3">Información del Usuario</MudText>
+            
+            <MudGrid>
+                <!-- Foto -->
+                <MudItem xs="12" sm="3" Class="d-flex justify-center align-center">
+                    @if (!string.IsNullOrEmpty(this._datosUsuario.Usuario.ImagenBase64))
+                    {
+                        <MudAvatar Size="Size.Large" Style="width: 120px; height: 120px;">
+                            <MudImage Src="@($"data:image/jpeg;base64,{this._datosUsuario.Usuario.ImagenBase64}")" />
+                        </MudAvatar>
+                    }
+                    else
+                    {
+                        <MudAvatar Color="Color.Primary" Size="Size.Large" Style="width: 120px; height: 120px;">
+                            <MudIcon Icon="@Icons.Material.Filled.Person" Size="Size.Large" />
+                        </MudAvatar>
+                    }
+                </MudItem>
+
+                <!-- Información básica -->
+                <MudItem xs="12" sm="9">
+                    <MudGrid>
+                        <MudItem xs="12" sm="6">
+                            <MudTextField Label="Login" 
+                                          Value="@this._datosUsuario.Usuario.Login" 
+                                          ReadOnly="true" 
+                                          Variant="Variant.Outlined" />
+                        </MudItem>
+                        <MudItem xs="12" sm="6">
+                            <MudTextField Label="Email" 
+                                          Value="@this._datosUsuario.Usuario.CorreoE" 
+                                          ReadOnly="true" 
+                                          Variant="Variant.Outlined" />
+                        </MudItem>
+                        <MudItem xs="12" sm="4">
+                            <MudTextField Label="Nombre" 
+                                          Value="@this._datosUsuario.Usuario.Nombre" 
+                                          ReadOnly="true" 
+                                          Variant="Variant.Outlined" />
+                        </MudItem>
+                        <MudItem xs="12" sm="4">
+                            <MudTextField Label="Primer Apellido" 
+                                          Value="@this._datosUsuario.Usuario.Apellido1" 
+                                          ReadOnly="true" 
+                                          Variant="Variant.Outlined" />
+                        </MudItem>
+                        <MudItem xs="12" sm="4">
+                            <MudTextField Label="Segundo Apellido" 
+                                          Value="@(this._datosUsuario.Usuario.Apellido2 ?? "-")" 
+                                          ReadOnly="true" 
+                                          Variant="Variant.Outlined" />
+                        </MudItem>
+                        <MudItem xs="12" sm="4">
+                            <MudTextField Label="Fecha de Nacimiento" 
+                                          Value="@this._datosUsuario.Usuario.FechaNacimiento.ToString("dd/MM/yyyy")" 
+                                          ReadOnly="true" 
+                                          Variant="Variant.Outlined" />
+                        </MudItem>
+                        <MudItem xs="12" sm="4">
+                            <MudTextField Label="Teléfono" 
+                                          Value="@this._datosUsuario.Usuario.Telefono.ToString()" 
+                                          ReadOnly="true" 
+                                          Variant="Variant.Outlined" />
+                        </MudItem>
+                        <MudItem xs="12" sm="4">
+                            <MudTextField Label="Perfil Público" 
+                                          Value="@(this._datosUsuario.Usuario.Publico ? "Sí" : "No")" 
+                                          ReadOnly="true" 
+                                          Variant="Variant.Outlined" />
+                        </MudItem>
+                    </MudGrid>
+                </MudItem>
+            </MudGrid>
+        </MudPaper>
+
+        <!-- Prendas -->
+        <MudPaper Class="pa-4 mb-4" Elevation="2">
+            <MudExpansionPanels>
+                <MudExpansionPanel>
+                    <TitleContent>
+                        <div class="d-flex align-center">
+                            <MudIcon Icon="@Icons.Material.Filled.Checkroom" Class="mr-3" />
+                            <MudText Typo="Typo.h6">
+                                Prendas (@this._datosUsuario.Prendas.Count)
+                            </MudText>
+                        </div>
+                    </TitleContent>
+                    <ChildContent>
+                        @if (!this._datosUsuario.Prendas.Any())
+                        {
+                            <MudText Color="Color.Secondary">Este usuario no tiene prendas registradas.</MudText>
+                        }
+                        else
+                        {
+                            <MudGrid>
+                                @foreach (var prenda in this._datosUsuario.Prendas)
+                                {
+                                    <MudItem xs="12" sm="6" md="4" lg="3">
+                                        <MudCard>
+                                            @if (!string.IsNullOrEmpty(prenda.ImagenBase64))
+                                            {
+                                                <MudCardMedia Image="@($"data:image/jpeg;base64,{prenda.ImagenBase64}")" 
+                                                              Height="200" />
+                                            }
+                                            else
+                                            {
+                                                <MudCardMedia>
+                                                    <div style="height: 200px; display: flex; align-items: center; justify-content: center; background-color: #f5f5f5;">
+                                                        <MudIcon Icon="@Icons.Material.Filled.Checkroom" 
+                                                                 Size="Size.Large" 
+                                                                 Color="Color.Default" />
+                                                    </div>
+                                                </MudCardMedia>
+                                            }
+                                            <MudCardContent>
+                                                <MudText Typo="Typo.body2">
+                                                    <strong>Categoría:</strong> @(prenda.CategoriaNombre ?? "N/A")
+                                                </MudText>
+                                                <MudText Typo="Typo.body2">
+                                                    <strong>Color:</strong> @(prenda.ColorNombre ?? "N/A")
+                                                </MudText>
+                                                <MudText Typo="Typo.body2">
+                                                    <strong>Marca:</strong> @(prenda.MarcaNombre ?? "N/A")
+                                                </MudText>
+                                            </MudCardContent>
+                                            <MudCardActions>
+                                                <MudButton Variant="Variant.Text" 
+                                                           Color="Color.Error"
+                                                           StartIcon="@Icons.Material.Filled.Delete"
+                                                           OnClick="@(() => EliminarPrenda(prenda.Id))"
+                                                           FullWidth="true">
+                                                    Eliminar
+                                                </MudButton>
+                                            </MudCardActions>
+                                        </MudCard>
+                                    </MudItem>
+                                }
+                            </MudGrid>
+                        }
+                    </ChildContent>
+                </MudExpansionPanel>
+            </MudExpansionPanels>
+        </MudPaper>
+
+        <!-- Conjuntos -->
+        <MudPaper Class="pa-4 mb-4" Elevation="2">
+            <MudExpansionPanels>
+                <MudExpansionPanel>
+                    <TitleContent>
+                        <div class="d-flex align-center">
+                            <MudIcon Icon="@Icons.Material.Filled.Collections" Class="mr-3" />
+                            <MudText Typo="Typo.h6">
+                                Conjuntos (@this._datosUsuario.Conjuntos.Count)
+                            </MudText>
+                        </div>
+                    </TitleContent>
+                    <ChildContent>
+                        @if (!this._datosUsuario.Conjuntos.Any())
+                        {
+                            <MudText Color="Color.Secondary">Este usuario no tiene conjuntos registrados.</MudText>
+                        }
+                        else
+                        {
+                            <MudGrid>
+                                @foreach (var conjunto in this._datosUsuario.Conjuntos)
+                                {
+                                    <MudItem xs="12" sm="6" md="4" lg="3">
+                                        <MudCard>
+                                            @if (!string.IsNullOrEmpty(conjunto.ImagenBase64))
+                                            {
+                                                <MudCardMedia Image="@($"data:image/jpeg;base64,{conjunto.ImagenBase64}")" 
+                                                              Height="200" />
+                                            }
+                                            else
+                                            {
+                                                <MudCardMedia>
+                                                    <div style="height: 200px; display: flex; align-items: center; justify-content: center; background-color: #f5f5f5;">
+                                                        <MudIcon Icon="@Icons.Material.Filled.Collections" 
+                                                                 Size="Size.Large" 
+                                                                 Color="Color.Default" />
+                                                    </div>
+                                                </MudCardMedia>
+                                            }
+                                            <MudCardContent>
+                                                @if (!string.IsNullOrEmpty(conjunto.Descripcion))
+                                                {
+                                                    <MudText Typo="Typo.body2" Class="mb-2">
+                                                        <strong>@conjunto.Descripcion</strong>
+                                                    </MudText>
+                                                }
+                                                <MudText Typo="Typo.body2">
+                                                    <strong>Estilo:</strong> @(conjunto.EstilonNombre ?? "N/A")
+                                                </MudText>
+                                                <MudText Typo="Typo.body2">
+                                                    <strong>Prendas:</strong> @conjunto.CantidadPrendas
+                                                </MudText>
+                                                @if (conjunto.EsFavorito)
+                                                {
+                                                    <MudChip T="string" Size="Size.Small" 
+                                                             Color="Color.Warning" 
+                                                             Icon="@Icons.Material.Filled.Star"
+                                                             Class="mt-2">
+                                                        Favorito
+                                                    </MudChip>
+                                                }
+                                            </MudCardContent>
+                                            <MudCardActions>
+                                                <MudButton Variant="Variant.Text" 
+                                                           Color="Color.Error"
+                                                           StartIcon="@Icons.Material.Filled.Delete"
+                                                           OnClick="@(() => EliminarConjunto(conjunto.Id))"
+                                                           FullWidth="true">
+                                                    Eliminar
+                                                </MudButton>
+                                            </MudCardActions>
+                                        </MudCard>
+                                    </MudItem>
+                                }
+                            </MudGrid>
+                        }
+                    </ChildContent>
+                </MudExpansionPanel>
+            </MudExpansionPanels>
+        </MudPaper>
+    }
+</MudContainer>
+
+@code {
+    #region ***** DEPENDENCIAS *****
+
+    [Inject]
+    public required ServicioModeracion ServicioAdministracion { get; set; }
+
+    [Inject]
+    public required ISnackbar Snackbar { get; set; }
+
+    [Inject]
+    public required IDialogService DialogService { get; set; }
+
+    #endregion
+
+    #region ***** PARÁMETROS *****
+
+    [Parameter]
+    public int Id { get; set; }
+
+    #endregion
+
+    #region ***** PROPIEDADES PRIVADAS *****
+
+    private UsuarioNormalShowDataDTO? _datosUsuario;
+    private bool _cargando = false;
+
+    #endregion
+
+    #region ***** MÉTODOS PÚBLICOS *****
+
+    protected override async Task OnInitializedAsync()
+    {
+        await this.CargarDatos();
+    }
+
+    #endregion
+
+    #region ***** MÉTODOS PRIVADOS *****
+
+    private async Task CargarDatos()
+    {
+        try
+        {
+            this._cargando = true;
+            this._datosUsuario = await this.ServicioAdministracion.GetDatosUsuarioNormal(this.Id);
+        }
+        catch (Exception ex)
+        {
+            this.Snackbar.Add($"Error al cargar datos: {ex.Message}", Severity.Error);
+        }
+        finally
+        {
+            this._cargando = false;
+        }
+    }
+
+    private async Task EliminarPrenda(int iPrendaId)
+    {
+        bool? confirmado;
+
+        confirmado = await this.DialogService.ShowMessageBox(
+            "Confirmar eliminación",
+            "¿Está seguro de que desea eliminar esta prenda?",
+            yesText: "Eliminar",
+            cancelText: "Cancelar"
+        );
+
+        if (confirmado == true)
+        {
+            try
+            {
+                await this.ServicioAdministracion.EliminarPrenda(iPrendaId);
+                this.Snackbar.Add("Prenda eliminada correctamente", Severity.Success);
+                await this.CargarDatos(); // Recargar datos
+            }
+            catch (Exception ex)
+            {
+                this.Snackbar.Add($"Error al eliminar prenda: {ex.Message}", Severity.Error);
+            }
+        }
+    }
+
+    private async Task EliminarConjunto(int iConjuntoId)
+    {
+        bool? confirmado;
+
+        confirmado = await this.DialogService.ShowMessageBox(
+            "Confirmar eliminación",
+            "¿Está seguro de que desea eliminar este conjunto?",
+            yesText: "Eliminar",
+            cancelText: "Cancelar"
+        );
+
+        if (confirmado == true)
+        {
+            try
+            {
+                await this.ServicioAdministracion.EliminarConjunto(iConjuntoId);
+                this.Snackbar.Add("Conjunto eliminado correctamente", Severity.Success);
+                await this.CargarDatos(); // Recargar datos
+            }
+            catch (Exception ex)
+            {
+                this.Snackbar.Add($"Error al eliminar conjunto: {ex.Message}", Severity.Error);
+            }
+        }
+    }
+
+    #endregion
+}

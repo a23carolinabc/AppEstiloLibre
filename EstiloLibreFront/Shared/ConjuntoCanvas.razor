@@ -1,0 +1,439 @@
+﻿@implements IDisposable
+
+<link href="css/Shared/ConjuntoCanvas.css" rel="stylesheet" />
+
+<div class="canvas-container">
+    <div id="canvas-composicion" class="canvas-area"
+         style="width: @(this._dAncho)px; height: @(this._dAlto)px; background-color: white; position: relative; border: 1px solid #ccc;"
+         @ref="this._canvas" @onmousemove="OnMouseMove" @onmouseup="OnMouseUp" @onmouseleave="OnMouseLeave">
+
+        @foreach (Canvas.PrendaEnCanvas prenda in this._prendasEnCanvas)
+        {
+            <div class="prenda-canvas @(prenda.EstaSeleccionada ? "seleccionada" : "")"
+                 style="position: absolute;
+                            left: @(prenda.X)px;
+                            top: @(prenda.Y)px;
+                            width: @(prenda.Ancho)px;
+                            height: @(prenda.Alto)px;
+                            transform: rotate(@(prenda.Rotacion)deg);
+                            z-index: @(prenda.ZIndex);
+                            cursor: move;
+                            user-select: none;"
+                 @onclick="@(() => SeleccionarPrenda(prenda))"
+                 @onmousedown="@((MouseEventArgs e) => OnMouseDown(e, prenda))"
+                 @ondblclick="@(() => EliminarPrendaDelCanvas(prenda))">
+                <img src="@prenda.ImagenBase64"
+                     class="imagen"
+                     draggable="false" />
+            </div>
+        }
+    </div>
+
+    <div class="controles-canvas mt-3">
+        @if (this._prendaSeleccionada != null)
+        {
+            <MudText Typo="Typo.subtitle2" Class="mb-2">@Traductor["lblControladorCanvas"]</MudText>
+            <MudStack Row="true" Spacing="2">
+                <MudIconButton Icon="@Icons.Material.Filled.ArrowUpward"
+                               OnClick="@(() => MoverPrenda(0, -10))"
+                               Size="Size.Small"
+                               Title=@Traductor["ttFlechaSubir"] />
+                <MudIconButton Icon="@Icons.Material.Filled.ArrowDownward"
+                               OnClick="@(() => MoverPrenda(0, 10))"
+                               Size="Size.Small"
+                               Title=@Traductor["ttFlechaBajar"] />
+                <MudIconButton Icon="@Icons.Material.Filled.ArrowBack"
+                               OnClick="@(() => MoverPrenda(-10, 0))"
+                               Size="Size.Small"
+                               Title=@Traductor["ttFlechaIzquierda"] />
+                <MudIconButton Icon="@Icons.Material.Filled.ArrowForward"
+                               OnClick="@(() => MoverPrenda(10, 0))"
+                               Size="Size.Small"
+                               Title=@Traductor["ttFlechaDerecha"] />
+                <MudIconButton Icon="@Icons.Material.Filled.ZoomIn"
+                               OnClick="@(() => CambiarTamaño(10))"
+                               Size="Size.Small"
+                               Title=@Traductor["ttZoomPositivo"] />
+                <MudIconButton Icon="@Icons.Material.Filled.ZoomOut"
+                               OnClick="@(() => CambiarTamaño(-10))"
+                               Size="Size.Small"
+                               Title=@Traductor["ttZoomNegativo"] />
+                <MudIconButton Icon="@Icons.Material.Filled.RotateLeft"
+                               OnClick="@(() => Rotar(-15))"
+                               Size="Size.Small"
+                               Title=@Traductor["ttGirarIzquierda"] />
+                <MudIconButton Icon="@Icons.Material.Filled.RotateRight"
+                               OnClick="@(() => Rotar(15))"
+                               Size="Size.Small"
+                               Title=@Traductor["ttGirarDerecha"] />
+                <MudIconButton Icon="@Icons.Material.Filled.Delete"
+                               OnClick="@(() => EliminarPrendaDelCanvas(this._prendaSeleccionada))"
+                               Size="Size.Small"
+                               Color="Color.Error"
+                               Title=@Traductor["ttEliminar"] />
+            </MudStack>
+
+            <MudText Typo="Typo.caption" Class="mt-2">
+                @Traductor["lblExplicacionCanvasPrendaSeleccionada"]                
+            </MudText>
+        }
+        else
+        {
+            <MudAlert Severity="Severity.Info" Dense="true">
+                @Traductor["lblExplicacionCanvas"]                
+            </MudAlert>
+        }
+    </div>
+</div>
+
+@code {
+    #region ***** INYECCIONES *****
+    [Inject]
+    public required IJSRuntime JS { get; set; }
+    [Inject]
+    public required IStringLocalizer<TrErrores> TraductorErrores { get; set; }
+    [Inject]
+    public required IStringLocalizer<TrShared> Traductor { get; set; }
+    #endregion
+
+    #region ***** PARÁMETROS *****
+    [Parameter]
+    public List<int>? PrendasSeleccionadas { get; set; }
+
+    [Parameter]
+    public List<PrendaResumenDTO>? PrendasDisponibles { get; set; }
+
+    [Parameter]
+    public Canvas.ComposicionCanvas? ComposicionInicial { get; set; }
+    #endregion
+
+    #region ***** PROPIEDADES PRIVADAS *****
+    private bool _bArrastrando = false;
+    private double _dAncho = 400;
+    private double _dAlto = 400;
+    private double _dOffsetX = 0;
+    private double _dOffsetY = 0;
+    private double _dCanvasOffsetX = 0;
+    private double _dCanvasOffsetY = 0;
+    private ElementReference _canvas;
+    private List<Canvas.PrendaEnCanvas> _prendasEnCanvas = new();
+    private Canvas.PrendaEnCanvas? _prendaSeleccionada;
+    private Canvas.PrendaEnCanvas? _prendaArrastrada = null;
+    private DotNetObjectReference<ConjuntoCanvas>? _dotNetRef;
+    #endregion
+
+    #region ***** MÉTODOS PÚBLICOS *****
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            // Crear referencia para JavaScript
+            this._dotNetRef = DotNetObjectReference.Create(this);
+
+            // Registrar listener global para mouseup
+            await this.JS.InvokeVoidAsync("registrarListenerGlobalMouseUp", this._dotNetRef);
+
+            // Obtener posición del canvas
+            await this.ActualizarPosicionCanvas();
+        }
+    }
+
+    protected override void OnParametersSet()
+    {
+        // Si hay composición inicial, cargarla
+        if (this.ComposicionInicial != null && this.ComposicionInicial.Prendas.Any())
+        {
+            this._prendasEnCanvas = this.ComposicionInicial.Prendas;
+            this._dAncho = this.ComposicionInicial.Ancho;
+            this._dAlto = this.ComposicionInicial.Alto;
+        }
+        else
+        {
+            // Añadir automáticamente las prendas seleccionadas al canvas
+            this.AñadirPrendasAutomaticamente();
+        }
+    }
+
+    [JSInvokable]
+    public void OnGlobalMouseUp()
+    {
+        // Este método se llama desde JavaScript cuando se suelta el mouse en cualquier parte
+        this.DetenerArrastre();
+        StateHasChanged();
+    }
+
+    async void IDisposable.Dispose()
+    {
+        // Limpiar listener global
+        if (this._dotNetRef != null)
+        {
+            await this.JS.InvokeVoidAsync("limpiarListenerGlobalMouseUp");
+            this._dotNetRef.Dispose();
+        }
+    }
+
+    public async Task<string> GetComposicionJson()
+    {
+        Canvas.ComposicionCanvas composicion;
+        string strJson;
+
+        composicion = new Canvas.ComposicionCanvas
+        {
+            Ancho = this._dAncho,
+            Alto = this._dAlto,
+            Prendas = this._prendasEnCanvas
+        };
+
+        strJson = composicion.SerializarAJson();
+        return await Task.FromResult(strJson);
+    }
+
+    public async Task<string?> GenerarImagenCompuesta()
+    {
+        string? strImagenBase64;
+
+        try
+        {
+            // Forzar un StateHasChanged para asegurar que el DOM está actualizado
+            StateHasChanged();
+
+            // Esperar un momento para que el navegador termine de renderizar
+            await Task.Delay(100);
+
+            // Llamar a función JS para capturar el canvas como imagen
+            strImagenBase64 = await this.JS.InvokeAsync<string>("capturarCanvas", "#canvas-composicion");
+            return strImagenBase64;
+        }
+        catch(Exception e)
+        {
+            Console.WriteLine(e.Message);
+            return null;
+        }
+    }
+
+    #endregion
+
+    #region ***** MÉTODOS PRIVADOS *****
+
+    private void AñadirPrendasAutomaticamente()
+    {
+        double xOffset;
+        double yOffset;
+        int iPrendasNuevas;
+        int iMaxZIndex;
+        PrendaResumenDTO? prenda;
+        Canvas.PrendaEnCanvas prendaCanvas;
+
+        // Si no hay prendas devolver null
+        if (this.PrendasSeleccionadas == null || this.PrendasDisponibles == null)
+        {
+            return;
+        }
+
+        // Calcular desplazamiento
+        xOffset = 50;
+        yOffset = 50;
+        iPrendasNuevas = 0;
+
+        foreach (int prendaId in this.PrendasSeleccionadas)
+        {
+            // Solo añadir si no está ya en el canvas
+            if (this._prendasEnCanvas.Any(p => p.PrendaId == prendaId))
+            {
+                continue;
+            }
+
+            prenda = this.PrendasDisponibles.FirstOrDefault(p => p.Id == prendaId);
+            if (prenda == null)
+            {
+                continue;
+            }
+
+            // Calcular z-index
+            iMaxZIndex = this._prendasEnCanvas.Any() ? this._prendasEnCanvas.Max(p => p.ZIndex) : 0;
+
+            // Definimos la posición en escalera (evitando que las imágenes se superpongan)
+            prendaCanvas = new Canvas.PrendaEnCanvas
+            {
+                PrendaId = prenda.Id,
+                ImagenBase64 = prenda.ImagenBase64,
+                X = xOffset + (iPrendasNuevas * 30),
+                Y = yOffset + (iPrendasNuevas * 30),
+                Ancho = 150,
+                Alto = 150,
+                Rotacion = 0,
+                ZIndex = iMaxZIndex + 1
+            };
+
+            this._prendasEnCanvas.Add(prendaCanvas);
+            iPrendasNuevas++;
+        }
+
+        // Seleccionar la última prenda añadida por defecto
+        if (iPrendasNuevas > 0 && this._prendasEnCanvas.Any())
+        {
+            this.SeleccionarPrenda(this._prendasEnCanvas.Last());
+        }
+    }
+
+    private async Task ActualizarPosicionCanvas()
+    {
+        DatosCanvas datos;
+        try
+        {
+            datos = await this.JS.InvokeAsync<DatosCanvas>("obtenerPosicionCanvas", this._canvas);
+            this._dCanvasOffsetX = datos.Izquierda;
+            this._dCanvasOffsetY = datos.Arriba;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.Message);
+            // Si falla, usar valores por defecto
+            this._dCanvasOffsetX = 0;
+            this._dCanvasOffsetY = 0;
+        }
+    }
+
+    private async void OnMouseDown(MouseEventArgs e, Canvas.PrendaEnCanvas prenda)
+    {
+        // Actualizar posición del canvas por si ha cambiado (scroll, resize, etc)
+        await this.ActualizarPosicionCanvas();
+
+        this._bArrastrando = true;
+        this._prendaArrastrada = prenda;
+
+        // Calcular offset considerando la posición del canvas en la página
+        this._dOffsetX = (e.ClientX - this._dCanvasOffsetX) - prenda.X;
+        this._dOffsetY = (e.ClientY - this._dCanvasOffsetY) - prenda.Y;
+
+        // Seleccionar la prenda
+        this.SeleccionarPrenda(prenda);
+
+        // Traer al frente (aumentar z-index)
+        this.TraerAlFrente(prenda);
+    }
+
+    private void OnMouseMove(MouseEventArgs e)
+    {
+        double nuevaX;
+        double nuevaY;
+
+        // Solo procesar si realmente se está arrastrando
+        if (!this._bArrastrando || this._prendaArrastrada == null)
+        {
+            return;
+        }
+
+        // Calcular nueva posición ajustando por el offset del canvas
+        nuevaX = (e.ClientX - this._dCanvasOffsetX) - this._dOffsetX;
+        nuevaY = (e.ClientY - this._dCanvasOffsetY) - this._dOffsetY;
+
+        // Limitar al canvas
+        this._prendaArrastrada.X = Math.Max(0, Math.Min(nuevaX, this._dAncho - this._prendaArrastrada.Ancho));
+        this._prendaArrastrada.Y = Math.Max(0, Math.Min(nuevaY, this._dAlto - this._prendaArrastrada.Alto));
+    }
+
+    private void OnMouseUp(MouseEventArgs e)
+    {
+        this.DetenerArrastre();
+    }
+
+    private void OnMouseLeave(MouseEventArgs e)
+    {
+        // Si el ratón sale del canvas mientras arrastra, detener el arrastre
+        this.DetenerArrastre();
+    }
+
+    private void DetenerArrastre()
+    {
+        this._bArrastrando = false;
+        this._prendaArrastrada = null;
+    }
+
+    private void TraerAlFrente(Canvas.PrendaEnCanvas prenda)
+    {
+        int iMaxZIndex;
+
+        // Obtener el z-index más alto actual
+        iMaxZIndex = this._prendasEnCanvas.Max(p => p.ZIndex);
+
+        // Solo cambiar si no es ya el más alto
+        if (prenda.ZIndex < iMaxZIndex)
+        {
+            prenda.ZIndex = iMaxZIndex + 1;
+        }
+    }
+
+    private void EliminarPrendaDelCanvas(Canvas.PrendaEnCanvas prenda)
+    {
+        this._prendasEnCanvas.Remove(prenda);
+        if (this._prendaSeleccionada == prenda)
+        {
+            this._prendaSeleccionada = null;
+        }
+    }
+
+    private void SeleccionarPrenda(Canvas.PrendaEnCanvas prenda)
+    {
+        // Deseleccionar todas
+        foreach (Canvas.PrendaEnCanvas p in this._prendasEnCanvas)
+        {
+            p.EstaSeleccionada = false;
+        }
+
+        // Seleccionar la prenda
+        prenda.EstaSeleccionada = true;
+        this._prendaSeleccionada = prenda;
+    }
+
+    private void MoverPrenda(double deltaX, double deltaY)
+    {
+        if (this._prendaSeleccionada == null)
+        {
+            return;
+        }
+
+        this._prendaSeleccionada.X += deltaX;
+        this._prendaSeleccionada.Y += deltaY;
+
+        // Limitar al canvas
+        this._prendaSeleccionada.X = Math.Max(0, Math.Min(this._prendaSeleccionada.X, this._dAncho - this._prendaSeleccionada.Ancho));
+        this._prendaSeleccionada.Y = Math.Max(0, Math.Min(this._prendaSeleccionada.Y, this._dAlto - this._prendaSeleccionada.Alto));
+    }
+
+    private void CambiarTamaño(double delta)
+    {
+        if (this._prendaSeleccionada == null)
+        {
+            return;
+        }
+
+        this._prendaSeleccionada.Ancho = Math.Max(50, this._prendaSeleccionada.Ancho + delta);
+        this._prendaSeleccionada.Alto = Math.Max(50, this._prendaSeleccionada.Alto + delta);
+    }
+
+    private void Rotar(double grados)
+    {
+        if (this._prendaSeleccionada == null)
+        {
+            return;
+        }
+
+        this._prendaSeleccionada.Rotacion += grados;
+    }
+
+    #endregion
+
+    #region ***** CLASES PRIVADAS *****
+
+    private class DatosCanvas
+    {
+        public double Izquierda { get; set; }
+        public double Arriba { get; set; }
+        public double Ancho { get; set; }
+        public double Altura { get; set; }
+    }
+
+    #endregion
+}

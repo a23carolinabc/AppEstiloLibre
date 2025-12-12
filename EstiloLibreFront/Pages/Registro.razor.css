@@ -1,0 +1,15 @@
+﻿.registro-container {
+    min-height: calc(100vh - 64px);
+    padding-top: 100px;
+    padding-bottom: 40px;
+}
+
+.font-weight-bold {
+    font-weight: 600;
+}
+
+@media (max-width: 600px) {
+    .registro-container {
+        padding-top: 80px;
+    }
+}

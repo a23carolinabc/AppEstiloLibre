@@ -1,0 +1,209 @@
+﻿@attribute [AllowAnonymous]
+@page "/"
+@layout LayoutPublico
+<link href="css/Pages/Inicio.css" rel="stylesheet" />
+
+<PageTitle>@Traductor["pageTitle"]</PageTitle>
+
+<!-- Sección Intro -->
+<MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="intro">
+    <MudGrid Justify="Justify.Center" Spacing="4">
+        <MudItem xs="12" md="6" Class="d-flex flex-column justify-center">
+            <MudText Typo="Typo.h2" Class="intro-titulo mb-4">
+                @Traductor["lblGancho1"]
+                <br />
+                <span class="color-primario">@Traductor["lblGancho2"]</span>
+            </MudText>
+            <MudText Typo="Typo.h6" Class="intro-subtitulo mb-6">
+                @Traductor["lblSubTituloGancho"]                
+            </MudText>
+            <MudStack Row="true" Spacing="3">
+                <MudButton Href="@URLsPantallas.Registro"
+                           Variant="Variant.Filled"
+                           Color="Color.Primary"
+                           Size="Size.Large"
+                           StartIcon="@Icons.Material.Filled.PersonAdd">
+                           @Traductor["btnComenzar"]
+                </MudButton>
+                <MudButton Href="@URLsPantallas.Conocenos"
+                           Variant="Variant.Outlined"
+                           Color="Color.Primary"
+                           Size="Size.Large">
+                    @Traductor["btnSaberMas"]
+                </MudButton>
+            </MudStack>
+        </MudItem>
+        <MudItem xs="12" md="6" Class="d-flex align-center justify-center">
+            <MudPaper Elevation="3" Class="pa-4 intro-imagen">
+                <MudIcon Icon="@Icons.Material.Filled.Checkroom"
+                         Style="font-size: 300px;"
+                         Color="Color.Primary" />
+            </MudPaper>
+        </MudItem>
+    </MudGrid>
+</MudContainer>
+
+<!-- Sección de Características -->
+<MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="seccion-caracteristicas py-16">
+    <MudText Typo="Typo.h3" Align="Align.Center" Class="mb-12">
+        ¿@Traductor["lblSeccionCaracteristicas"] <span class="color-primario">@Traductor["EstiloLibre"]</span>?
+    </MudText>
+
+    <MudGrid Spacing="4">
+        <MudItem xs="12" md="4">
+            <MudCard Elevation="2" Class="carta-caracteristica">
+                <MudCardContent Class="text-center">
+                    <MudIcon Icon="@Icons.Material.Filled.PhotoLibrary"
+                             Size="Size.Large"
+                             Color="Color.Primary"
+                             Class="mb-4 carta-icono"/>
+                    <MudText Typo="Typo.h5" Class="mb-3">@Traductor["lblTituloCaracteristica1"]</MudText>
+                    <MudText Typo="Typo.body1" Color="Color.Dark">
+                        @Traductor["lblTextoCaracteristica1"]
+                    </MudText>
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+
+        <MudItem xs="12" md="4">
+            <MudCard Elevation="2" Class="carta-caracteristica">
+                <MudCardContent Class="text-center">
+                    <MudIcon Icon="@Icons.Material.Filled.Style"
+                             Size="Size.Large"
+                             Color="Color.Primary"
+                             Class="mb-4 carta-icono"/>
+                    <MudText Typo="Typo.h5" Class="mb-3">@Traductor["lblTituloCaracteristica2"]</MudText>
+                    <MudText Typo="Typo.body1" Color="Color.Dark">
+                        @Traductor["lblTextoCaracteristica2"]                        
+                    </MudText>
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+
+        <MudItem xs="12" md="4">
+            <MudCard Elevation="2" Class="carta-caracteristica">
+                <MudCardContent Class="text-center">
+                    <MudIcon Icon="@Icons.Material.Filled.Lightbulb"
+                             Size="Size.Large"
+                             Color="Color.Primary"
+                             Class="mb-4 carta-icono"/>
+                    <MudText Typo="Typo.h5" Class="mb-3">@Traductor["lblTituloCaracteristica3"]</MudText>
+                    <MudText Typo="Typo.body1" Color="Color.Dark">
+                        @Traductor["lblTextoCaracteristica3"]                        
+                    </MudText>
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+    </MudGrid>
+</MudContainer>
+
+<!-- Sección Cómo Funciona -->
+<MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="seccion-funcionamiento py-16">
+    <MudText Typo="Typo.h3" Align="Align.Center" Class="mb-12">
+        @Traductor["lblSeccionFuncionamiento"]
+    </MudText>
+
+    <MudTimeline TimelineOrientation="TimelineOrientation.Vertical" TimelinePosition="TimelinePosition.Alternate">
+        <MudTimelineItem Color="Color.Primary" Size="Size.Large">
+            <ItemOpposite>
+                <MudText Typo="Typo.h6" Color="Color.Primary">@Traductor["lblPaso1"]</MudText>
+            </ItemOpposite>
+            <ItemContent>
+                <MudCard Elevation="2">
+                    <MudCardContent>
+                        <MudText Typo="Typo.h6" Class="mb-2">@Traductor["lblTituloPaso1"]</MudText>
+                        <MudText Typo="Typo.body1">
+                            @Traductor["lblTextoPaso1"]                            
+                        </MudText>
+                    </MudCardContent>
+                </MudCard>
+            </ItemContent>
+        </MudTimelineItem>
+
+        <MudTimelineItem Color="Color.Primary" Size="Size.Large">
+            <ItemOpposite>
+                <MudText Typo="Typo.h6" Color="Color.Primary">@Traductor["lblPaso2"]</MudText>
+            </ItemOpposite>
+            <ItemContent>
+                <MudCard Elevation="2">
+                    <MudCardContent>
+                        <MudText Typo="Typo.h6" Class="mb-2">@Traductor["lblTituloPaso2"]</MudText>
+                        <MudText Typo="Typo.body1">
+                            @Traductor["lblTextoPaso2"]                            
+                        </MudText>
+                    </MudCardContent>
+                </MudCard>
+            </ItemContent>
+        </MudTimelineItem>
+
+        <MudTimelineItem Color="Color.Primary" Size="Size.Large">
+            <ItemOpposite>
+                <MudText Typo="Typo.h6" Color="Color.Primary">@Traductor["lblPaso3"]</MudText>
+            </ItemOpposite>
+            <ItemContent>
+                <MudCard Elevation="2">
+                    <MudCardContent>
+                        <MudText Typo="Typo.h6" Class="mb-2">@Traductor["lblTituloPaso3"]</MudText>
+                        <MudText Typo="Typo.body1">
+                            @Traductor["lblTextoPaso3"]                            
+                        </MudText>
+                    </MudCardContent>
+                </MudCard>
+            </ItemContent>
+        </MudTimelineItem>
+
+        <MudTimelineItem Color="Color.Success" Size="Size.Large">
+            <ItemOpposite>
+                <MudText Typo="Typo.h6" Color="Color.Success">@Traductor["lblPaso4"]</MudText>
+            </ItemOpposite>
+            <ItemContent>
+                <MudCard Elevation="2">
+                    <MudCardContent>
+                        <MudText Typo="Typo.h6" Class="mb-2">@Traductor["lblTituloPaso4"]</MudText>
+                        <MudText Typo="Typo.body1">
+                            @Traductor["lblTextoPaso4"]                            
+                        </MudText>
+                    </MudCardContent>
+                </MudCard>
+            </ItemContent>
+        </MudTimelineItem>
+    </MudTimeline>
+</MudContainer>
+
+<!-- Sección Acción -->
+<MudContainer MaxWidth="MaxWidth.Large" Class="seccion-accion py-16">
+    <MudPaper Elevation="4" Class="pa-8 text-center div-accion">
+        <MudText Typo="Typo.h3" Class="mb-4">
+            @Traductor["lblSeccionAccion"]            
+        </MudText>
+        <MudText Typo="Typo.h6" Class="mb-6 text-muted">
+            @Traductor["lblTextoAccion"]            
+        </MudText>
+        <MudButton Href="@URLsPantallas.Registro"
+                   Variant="Variant.Filled"
+                   Color="Color.Primary"
+                   Size="Size.Large"
+                   StartIcon="@Icons.Material.Filled.ArrowForward">
+            @Traductor["btnComenzar"]
+        </MudButton>
+    </MudPaper>
+</MudContainer>
+
+@code {
+    #region ***** INYECCIONES *****
+    [Inject]
+    public required IStringLocalizer<TrInicio> Traductor { get; set; }
+    #endregion
+
+    #region ***** PARÁMETROS *****
+    #endregion
+
+    #region ***** PROPIEDADES PRIVADAS *****
+    #endregion
+
+    #region ***** MÉTODOS PÚBLICOS *****
+    #endregion
+
+    #region ***** MÉTODOS PRIVADOS *****
+    #endregion
+}

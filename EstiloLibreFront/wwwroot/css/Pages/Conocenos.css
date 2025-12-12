@@ -1,0 +1,22 @@
+﻿.conocenos-container {
+    padding-top: 100px;
+    min-height: 100vh;
+}
+
+.conocenos-subtitulo {
+    max-width: 800px;
+    margin: 0 auto;
+    line-height: 1.6;
+}
+
+.h-100 {
+    height: 100%;
+}
+
+.negrita {
+    font-weight: 600;
+}
+
+.div-accion {
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+}

@@ -1,0 +1,35 @@
+﻿<link href="css/Shared/PiePagina.css" rel="stylesheet" />
+
+<MudPaper Class="pie-pagina" Elevation="0" Square="true">
+    <MudContainer MaxWidth="MaxWidth.Large" Class="py-4">
+        <MudGrid>
+            <MudItem xs="12" md="4">
+                <MudText Typo="Typo.h6" Class="mb-2">@Traductor["EstiloLibre"]</MudText>
+                <MudText Typo="Typo.body2" Class="text-muted">
+                    @Traductor["lblFraseGancho"]                    
+                </MudText>
+            </MudItem>
+            <MudItem xs="12" md="4">
+                <MudText Typo="Typo.h6" Class="mb-2">Enlaces</MudText>
+                <MudStack Spacing="1">
+                    <MudLink Href="@URLsPantallas.Inicio" Color="Color.Inherit">@Traductor["nvlkInicio"]</MudLink>
+                    <MudLink Href="@URLsPantallas.Conocenos" Color="Color.Inherit">@Traductor["nvlkConocenos"]</MudLink>
+                    <MudLink Href="@URLsPantallas.PoliticaPrivacidad" Color="Color.Inherit">@Traductor["nvlkPoliticaPrivacidad"]</MudLink>
+                </MudStack>
+            </MudItem>
+            <MudItem xs="12" md="4">
+                <MudText Typo="Typo.h6" Class="mb-2">@Traductor["nvlkContacto"]</MudText>
+                <MudText Typo="Typo.body2" Class="text-muted">                    
+                    @Traductor["lblLicencia"]
+                </MudText>
+            </MudItem>
+        </MudGrid>
+    </MudContainer>
+</MudPaper>
+
+@code {
+    #region ***** INYECCIONES *****
+    [Inject]
+    public required IStringLocalizer<TrShared> Traductor { get; set; }
+    #endregion
+}

@@ -1,0 +1,36 @@
+﻿.dialog .mud-dialog {
+    background: transparent !important;
+    box-shadow: none !important;
+    border: none;
+}
+
+.contenido {
+    background: transparent !important;
+    padding: 0 !important;
+}
+
+.carga {
+    position: relative;
+    display: block;
+    width: 8rem;
+    height: 8rem;
+    margin: 20vh auto 1rem auto;
+}
+
+    .carga circle {
+        stroke-width: 8;
+        stroke-linecap: round;
+        stroke: #1976d2;
+        stroke-dasharray: 200;
+        animation: spin 1.5s linear infinite;
+    }
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}

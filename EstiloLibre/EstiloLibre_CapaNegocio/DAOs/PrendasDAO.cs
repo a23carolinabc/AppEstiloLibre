@@ -1,0 +1,35 @@
+﻿using EstiloLibre_CapaNegocio.AccesoBD;
+using EstiloLibre_CapaNegocio.Base;
+using EstiloLibre_CapaNegocio.Colecciones;
+using EstiloLibre_CapaNegocio.Objetos;
+
+namespace EstiloLibre_CapaNegocio.DAOs
+{
+    public class PrendasDAO : DAO<Prenda>
+    {
+        #region ***** CONSTRUCTORES *****
+        public PrendasDAO(Conexion conexion) : base(conexion, TablasBD.Prendas) { }
+        #endregion
+
+        #region ***** MÉTODOS PÚBLICOS *****        
+
+        public override ObjetoBD CrearObjetoBD()
+        {
+            return new Prenda(this);
+        }
+        public Prenda? CargarPrenda(int iPrendaId)
+        {
+            return (Prenda?)this.CargarObjetoBD(iPrendaId);
+        }
+
+        public Prendas CargarPrendas(int iUsuarioId)
+        {
+            Prendas prendas;
+
+            prendas = new(this.CargarObjetosBD($"UsuarioId = {iUsuarioId}"));
+
+            return prendas;
+        }
+        #endregion
+    }    
+}

@@ -1,0 +1,69 @@
+﻿@using Microsoft.AspNetCore.Components.Authorization
+
+<MudDrawer Open="true" Elevation="0" Variant="@DrawerVariant.Persistent"
+           ClipMode="DrawerClipMode.Never">
+    <MudPaper Width="100%" Height="100%" Class="d-inline-flex py-3" Elevation="0" Outlined=true>
+        <MudNavMenu Class="mud-width-full">
+            <MudText Typo="Typo.h6" Class="px-4">@Traductor["lblEstiloLibre"]</MudText>
+            <MudText Typo="Typo.body2" Class="px-4 mud-text-secondary">@Traductor["lblAdministracion"]</MudText>
+            <MudDivider Class="my-2" />
+
+            <!-- Menú Principal -->
+            <MudNavLink Href=@(URLsPantallas.AdminMenu)
+                        Icon="@Icons.Material.Filled.Dashboard">
+                @Traductor["nvlkPanelAdmin"]
+            </MudNavLink>
+
+            <AuthorizeView Policy="@CodigosPermisos.MODERADOR">
+                <Authorized>
+                    <!-- Gestión de Usuarios Normales (ADMIN) -->
+                    <MudNavGroup Title="@Traductor["lblUsuariosNormales"]"
+                                 Icon="@Icons.Material.Filled.People"
+                                 Expanded="false">
+                        <MudNavLink Href=@(URLsPantallas.AdminUsuariosNormalesListado)
+                                    Icon="@Icons.Material.Filled.List">
+                            @Traductor["nvlkListadoUsuarios"]
+                        </MudNavLink>
+                    </MudNavGroup>
+                </Authorized>
+            </AuthorizeView>
+
+            <AuthorizeView Policy="@CodigosPermisos.ADMIN">
+                <Authorized>
+                    <!-- Gestión de Usuarios Admin (PLUS) -->
+                    <MudNavGroup Title="@Traductor["lblAdministradores"]"
+                                 Icon="@Icons.Material.Filled.AdminPanelSettings"
+                                 Expanded="false">
+                        <MudNavLink Href=@(URLsPantallas.AdminUsuariosListado)
+                                    Icon="@Icons.Material.Filled.List">
+                            @Traductor["nvlkListadoAdmins"]
+                        </MudNavLink>
+                        <MudNavLink Href=@(URLsPantallas.AdminUsuarios)
+                                    Icon="@Icons.Material.Filled.PersonAdd">
+                            @Traductor["nvlkCrearAdmin"]
+                        </MudNavLink>
+                    </MudNavGroup>
+                </Authorized>
+            </AuthorizeView>
+        </MudNavMenu>
+    </MudPaper>
+</MudDrawer>
+
+@code {
+    #region ***** DEPENDENCIAS *****
+    [Inject]
+    public required IStringLocalizer<TrShared> Traductor { get; set; }
+    #endregion
+
+    #region ***** PARÁMETROS *****
+    #endregion
+
+    #region ***** PROPIEDADES PRIVADAS *****
+    #endregion
+
+    #region ***** MÉTODOS PÚBLICOS *****
+    #endregion
+
+    #region ***** MÉTODOS PRIVADOS *****
+    #endregion
+}

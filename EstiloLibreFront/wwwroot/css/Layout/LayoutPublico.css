@@ -1,0 +1,5 @@
+﻿.contenido-publico {
+    margin-top:3rem;
+    min-height: calc(100vh - 64px - 200px);
+    padding-top: 64px;
+}

@@ -1,0 +1,46 @@
+﻿<link href="css/Shared/Cargador.css" rel="stylesheet" />
+
+<MudDialog @ref="this._dialog" Options="this._dialogConfiguracion" Class="dialog">
+    <DialogContent>
+        <div class="contenido">
+            <svg class="carga">
+                <circle r="40%" cx="50%" cy="50%" />
+            </svg>
+        </div>
+    </DialogContent>
+</MudDialog>
+
+
+@code {
+    #region ***** PROPIEDADES PRIVADAS ****
+    private MudDialog _dialog;
+    private DialogOptions _dialogConfiguracion = new()
+    {
+        CloseButton = false,
+        BackdropClick = false,
+        FullWidth = true,
+        MaxWidth = MaxWidth.ExtraSmall,
+        Position = DialogPosition.Center,
+        NoHeader = true,
+        CloseOnEscapeKey = false
+    };
+    #endregion
+
+    #region  ***** MÉTODOS PÚBLICOS *****
+    public async Task Abrir()
+    {
+        if (this._dialog != null)
+        {
+            await this._dialog.ShowAsync();
+        }
+    }
+
+    public async Task Cerrar()
+    {
+        if (this._dialog != null)
+        {
+            await this._dialog.CloseAsync();
+        }
+    }
+    #endregion
+}

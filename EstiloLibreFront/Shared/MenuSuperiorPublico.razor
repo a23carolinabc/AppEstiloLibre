@@ -1,0 +1,123 @@
+﻿<link href="css/Shared/MenuSuperiorPublico.css" rel="stylesheet" />
+
+<MudAppBar Elevation="1" Color="Color.Tertiary" Fixed="true" Class="appbar-publico">
+    <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="d-flex align-center">
+        <!-- Logo -->
+        <MudLink Href="@URLsPantallas.Inicio" Underline="Underline.None" Color="Color.Inherit">
+            <MudText Typo="Typo.h5" Class="fw-bold appbar-logo">@Traductor["EstiloLibre"]</MudText>
+        </MudLink>
+
+        <MudSpacer />
+                
+        <MudHidden Breakpoint="Breakpoint.MdAndDown">
+            <!-- Enlaces de navegación -->
+            <MudStack Row="true" Spacing="3" Class="mr-4">
+                <MudLink Href="@URLsPantallas.Inicio"
+                         Underline="Underline.Hover"
+                         Color="Color.Dark"
+                         Class="nav-link-publico">
+                    @Traductor["nvlkInicio"]
+                </MudLink>
+                <MudLink Href="@URLsPantallas.Conocenos"
+                         Underline="Underline.Hover"
+                         Color="Color.Dark"
+                         Class="nav-link-publico">
+                    @Traductor["nvlkConocenos"]
+                </MudLink>
+                <MudLink Href="@URLsPantallas.PoliticaPrivacidad"
+                         Underline="Underline.Hover"
+                         Color="Color.Dark"
+                         Class="nav-link-publico">
+                    @Traductor["nvlkPoliticaPrivacidad"]
+                </MudLink>
+            </MudStack>
+
+            <!-- Botones de acción -->
+            <MudStack Row="true" Spacing="2">
+                <MudButton Href="@URLsPantallas.Login"
+                           Variant="Variant.Outlined"
+                           Color="Color.Primary"
+                           Size="Size.Medium">
+                    @Traductor["btnIniciarSesion"]
+                </MudButton>
+                <MudButton Href="@URLsPantallas.Registro"
+                           Variant="Variant.Filled"
+                           Color="Color.Primary"
+                           Size="Size.Medium">
+                    @Traductor["btnRegistrarse"]
+                </MudButton>
+            </MudStack>
+        </MudHidden>
+
+        <!-- Menú hamburguesa para dispositivos pequeños abrir el menú lateral -->
+        <MudHidden Breakpoint="Breakpoint.LgAndUp">
+            <MudIconButton Icon="@Icons.Material.Filled.Menu"
+                           Color="Color.Primary"
+                           Edge="Edge.End"
+                           OnClick="@this.AlternarMenuMovil" />
+        </MudHidden>
+    </MudContainer>
+</MudAppBar>
+
+<!-- Menú lateral para móviles -->
+<MudDrawer @bind-Open="@this._menuMovilAbierto"
+           Anchor="Anchor.Right"
+           Elevation="1"
+           Variant="@DrawerVariant.Temporary"
+           ClipMode="DrawerClipMode.Always">
+    <MudDrawerHeader>
+        <MudText Typo="Typo.h6" Class="appbar-logo">@Traductor["EstiloLibre"]</MudText>
+    </MudDrawerHeader>
+    <MudNavMenu>
+        <MudNavLink Href="@URLsPantallas.Inicio"
+                    OnClick="@this.CerrarMenuMovil">
+            @Traductor["nvlkInicio"]
+        </MudNavLink>
+        <MudNavLink Href="@URLsPantallas.Conocenos"
+                    OnClick="@this.CerrarMenuMovil">
+            @Traductor["nvlkConocenos"]
+        </MudNavLink>
+        <MudNavLink Href="@URLsPantallas.PoliticaPrivacidad"
+                    OnClick="@this.CerrarMenuMovil">
+            @Traductor["nvlkPoliticaPrivacidad"]
+        </MudNavLink>
+        <MudDivider Class="my-2" />
+        <MudNavLink Href="@URLsPantallas.Login"
+                    OnClick="@this.CerrarMenuMovil">
+            @Traductor["btnIniciarSesion"]
+        </MudNavLink>
+        <MudNavLink Href="@URLsPantallas.Registro"
+                    OnClick="@this.CerrarMenuMovil">
+            @Traductor["btnRegistrarse"]
+        </MudNavLink>
+    </MudNavMenu>
+</MudDrawer>
+
+@code {
+    #region ***** INYECCIONES *****
+    [Inject]
+    public required IStringLocalizer<TrShared> Traductor { get; set; }
+    #endregion
+
+    #region ***** PARÁMETROS *****
+    #endregion
+
+    #region ***** PROPIEDADES PRIVADAS *****
+    private bool _menuMovilAbierto = false;
+    #endregion
+
+    #region ***** MÉTODOS PÚBLICOS *****
+    #endregion
+
+    #region ***** MÉTODOS PRIVADOS *****
+    private void AlternarMenuMovil()
+    {
+        this._menuMovilAbierto = !this._menuMovilAbierto;
+    }
+
+    private void CerrarMenuMovil()
+    {
+        this._menuMovilAbierto = false;
+    }
+    #endregion
+}

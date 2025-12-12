@@ -1,0 +1,19 @@
+﻿.prenda-canvas {
+    border: 2px solid transparent;
+    transition: border-color 0.2s;
+}
+
+    .prenda-canvas:hover {
+        border-color: #90caf9;
+    }
+
+    .prenda-canvas.seleccionada:hover {
+        border-color: #1976d2;
+        box-shadow: 0 0 10px rgba(25, 118, 210, 0.5);
+    }
+.imagen {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    pointer-events: none;
+}

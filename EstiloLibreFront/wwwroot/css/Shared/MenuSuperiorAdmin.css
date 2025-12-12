@@ -1,0 +1,54 @@
+﻿/* Menú Superior Admin */
+.appbar-admin {
+    background: linear-gradient(135deg, #1565C0 0%, #1976D2 100%);
+}
+
+    .appbar-admin .mud-chip {
+        background-color: rgba(255, 255, 255, 0.9);
+        color: #1565C0;
+        font-weight: 500;
+    }
+
+    .appbar-admin .mud-button,
+    .appbar-admin .mud-icon-button {
+        color: white;
+    }
+
+    .appbar-admin .mud-menu {
+        color: white;
+    }
+
+    /* Menú desplegable */
+    .appbar-admin .mud-menu-item {
+        min-height: 48px;
+    }
+
+        .appbar-admin .mud-menu-item:hover {
+            background-color: rgba(30, 136, 229, 0.08);
+        }
+
+/* Información del usuario */
+.user-info-admin {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+    .user-info-admin:hover {
+        background-color: rgba(255, 255, 255, 0.15);
+    }
+
+/* Iconos */
+.appbar-admin .mud-icon-root {
+    color: white;
+}
+
+/* Responsivo */
+@media (max-width: 960px) {
+    .appbar-admin .mud-chip {
+        display: none;
+    }
+}

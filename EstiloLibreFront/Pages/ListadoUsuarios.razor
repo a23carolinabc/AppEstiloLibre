@@ -1,0 +1,231 @@
+﻿@page "/admin/usuarios-normales/listado"
+@layout LayoutAdministracion
+@using Microsoft.AspNetCore.Authorization
+@using EstiloLibreFront.Objetos.Administracion
+@attribute [Authorize(Policy = CodigosPermisos.MODERADOR)]
+
+<PageTitle>Listado de Usuarios - EstiloLibre</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="mt-4">
+    <MudText Typo="Typo.h4" Class="mb-4">Gestión de Usuarios</MudText>
+
+    <!-- Barra de búsqueda -->
+    <MudPaper Class="pa-4 mb-4" Elevation="2">
+        <MudGrid>
+            <MudItem xs="12" sm="4">
+                <MudSelect @bind-Value="this._tipoBusqueda" 
+                           Label="Buscar por" 
+                           Variant="Variant.Outlined"
+                           Dense="true">
+                    <MudSelectItem Value="@("0")">Todos</MudSelectItem>
+                    <MudSelectItem Value="@("1")">Nombre</MudSelectItem>
+                    <MudSelectItem Value="@("2")">Login</MudSelectItem>
+                    <MudSelectItem Value="@("3")">Email</MudSelectItem>
+                </MudSelect>
+            </MudItem>
+            <MudItem xs="12" sm="5">
+                <MudTextField @bind-Value="this._textoBusqueda" 
+                              Label="Texto de búsqueda" 
+                              Variant="Variant.Outlined"
+                              Dense="true"
+                              Immediate="true"
+                              OnKeyUp="@OnKeyUpBusqueda" />
+            </MudItem>
+            <MudItem xs="12" sm="3" Class="d-flex align-center">
+                <MudButton Variant="Variant.Filled" 
+                           Color="Color.Primary"
+                           StartIcon="@Icons.Material.Filled.Search"
+                           OnClick="BuscarUsuarios"
+                           FullWidth="true">
+                    Buscar
+                </MudButton>
+            </MudItem>
+        </MudGrid>
+    </MudPaper>
+
+    <!-- Tabla de usuarios -->
+    @if (this._cargando)
+    {
+        <MudProgressLinear Color="Color.Primary" Indeterminate="true" />
+    }
+    else
+    {
+        <MudTable Items="@this._usuarios" 
+                  Hover="true" 
+                  Breakpoint="Breakpoint.Sm"
+                  Loading="@this._cargando"
+                  Elevation="2"
+                  Dense="true"
+                  OnRowClick="@((TableRowClickEventArgs<UsuarioNormalResumenDTO> args) => Navigation.NavigateTo($"{URLsPantallas.AdminUsuariosNormales}{args.Item.Id}"))">
+            <HeaderContent>
+                <MudTh>Foto</MudTh>
+                <MudTh>Login</MudTh>
+                <MudTh>Nombre</MudTh>
+                <MudTh>Email</MudTh>
+                <MudTh>Fecha Nac.</MudTh>
+                <MudTh>Prendas</MudTh>
+                <MudTh>Conjuntos</MudTh>
+                <MudTh>Público</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="Foto">
+                    @if (!string.IsNullOrEmpty(context.ImagenBase64))
+                    {
+                        <MudAvatar>
+                            <MudImage Src="@($"data:image/jpeg;base64,{context.ImagenBase64}")" />
+                        </MudAvatar>
+                    }
+                    else
+                    {
+                        <MudAvatar Color="Color.Primary">
+                            <MudIcon Icon="@Icons.Material.Filled.Person" />
+                        </MudAvatar>
+                    }
+                </MudTd>
+                <MudTd DataLabel="Login">@context.Login</MudTd>
+                <MudTd DataLabel="Nombre">@context.NombreCompleto</MudTd>
+                <MudTd DataLabel="Email">@context.CorreoE</MudTd>
+                <MudTd DataLabel="Fecha Nac.">@context.FechaNacimiento.ToString("dd/MM/yyyy")</MudTd>
+                <MudTd DataLabel="Prendas">
+                    <MudChip T="string" Size="Size.Small" Color="Color.Info">
+                        @context.CantidadPrendas
+                    </MudChip>
+                </MudTd>
+                <MudTd DataLabel="Conjuntos">
+                    <MudChip T="string" Size="Size.Small" Color="Color.Secondary">
+                        @context.CantidadConjuntos
+                    </MudChip>
+                </MudTd>
+                <MudTd DataLabel="Público">
+                    @if (context.Publico)
+                    {
+                        <MudIcon Icon="@Icons.Material.Filled.CheckCircle" Color="Color.Success" Size="Size.Small" />
+                    }
+                    else
+                    {
+                        <MudIcon Icon="@Icons.Material.Filled.Cancel" Color="Color.Default" Size="Size.Small" />
+                    }
+                </MudTd>
+                <MudTd DataLabel="Acciones">
+                    <MudIconButton Icon="@Icons.Material.Filled.Edit"
+                                   Color="Color.Primary"
+                                   Size="Size.Small"
+                                   Href="@($"{URLsPantallas.AdminUsuarios}{context.Id}")" />
+                    <MudIconButton Icon="@Icons.Material.Filled.Delete"
+                                   Color="Color.Error"
+                                   Size="Size.Small"
+                                   OnClick="@(() => EliminarUsuario(context.Id))" />
+                </MudTd>
+            </RowTemplate>
+            <NoRecordsContent>
+                <MudText>No se encontraron usuarios</MudText>
+            </NoRecordsContent>
+        </MudTable>
+    }
+</MudContainer>
+
+@code {
+    #region ***** DEPENDENCIAS *****
+
+    [Inject]
+    public required ServicioModeracion ServicioAdministracion { get; set; }
+
+
+    [Inject]
+    public required ServicioUsuarios SerivicioUsuario { get; set; }
+
+    [Inject]
+    public required ISnackbar Snackbar { get; set; }
+
+    [Inject]
+    public required NavigationManager Navigation { get; set; }
+
+    [Inject]
+    public required IDialogService DialogService { get; set; }
+
+    #endregion
+
+    #region ***** PARÁMETROS *****
+    #endregion
+
+    #region ***** PROPIEDADES PRIVADAS *****
+
+    private List<UsuarioNormalResumenDTO> _usuarios = new();
+    private bool _cargando = false;
+    private string _tipoBusqueda = "0";
+    private string _textoBusqueda = string.Empty;
+
+    #endregion
+
+    #region ***** MÉTODOS PÚBLICOS *****
+
+    protected override async Task OnInitializedAsync()
+    {
+        await this.CargarUsuarios();
+    }
+
+    #endregion
+
+    #region ***** MÉTODOS PRIVADOS *****
+
+    private async Task CargarUsuarios()
+    {
+        try
+        {
+            this._cargando = true;
+            this._usuarios = await this.ServicioAdministracion.GetListadoUsuariosNormales(
+                string.IsNullOrWhiteSpace(this._textoBusqueda) ? null : this._textoBusqueda,
+                this._tipoBusqueda
+            );
+        }
+        catch (Exception ex)
+        {
+            this.Snackbar.Add($"Error al cargar usuarios: {ex.Message}", Severity.Error);
+        }
+        finally
+        {
+            this._cargando = false;
+        }
+    }
+
+    private async Task EliminarUsuario(int iUsuarioId)
+    {
+        bool? confirmado;
+
+        confirmado = await this.DialogService.ShowMessageBox(
+            "Confirmar eliminación",
+            "¿Está seguro de que desea eliminar este administrador?",
+            yesText: "Eliminar",
+            cancelText: "Cancelar"
+        );
+
+        if (confirmado == true)
+        {
+            try
+            {
+                await this.SerivicioUsuario.Delete(iUsuarioId);
+                this.Snackbar.Add("Administrador eliminado correctamente", Severity.Success);
+                await this.CargarUsuarios();
+            }
+            catch (Exception ex)
+            {
+                this.Snackbar.Add($"Error al eliminar: {ex.Message}", Severity.Error);
+            }
+        }
+    }
+
+    private async Task BuscarUsuarios()
+    {
+        await this.CargarUsuarios();
+    }
+
+    private async Task OnKeyUpBusqueda(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            await this.BuscarUsuarios();
+        }
+    }
+
+    #endregion
+}

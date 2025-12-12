@@ -1,0 +1,452 @@
+﻿@attribute [AllowAnonymous]
+@page "/politica-privacidad"
+@layout LayoutPublico
+
+<PageTitle>Política de Privacidad - EstiloLibre</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.Large" Class="politica-container py-8">
+    <!-- Encabezado -->
+    <MudPaper Elevation="0" Class="mb-6">
+        <MudText Typo="Typo.h2" Class="mb-3">Política de Privacidad y Protección de Datos</MudText>
+        <MudText Typo="Typo.body2" Color="Color.Dark">
+            Última actualización: @DateTime.Now.ToString("dd/MM/yyyy")
+        </MudText>
+    </MudPaper>
+
+    <!-- Introducción -->
+    <MudCard Elevation="2" Class="mb-4">
+        <MudCardContent>
+            <MudText Typo="Typo.body1" Class="mb-3">
+                EstiloLibre se compromete a proteger su privacidad y sus datos personales. Esta Política de Privacidad 
+                explica cómo recopilamos, usamos, compartimos y protegemos su información personal cuando utiliza 
+                nuestra aplicación web.
+            </MudText>
+            <MudText Typo="Typo.body1">
+                Esta política cumple con el Reglamento General de Protección de Datos (RGPD - Reglamento UE 2016/679) 
+                y la Ley Orgánica 3/2018, de 5 de diciembre, de Protección de Datos Personales y garantía de los 
+                derechos digitales (LOPDGDD).
+            </MudText>
+        </MudCardContent>
+    </MudCard>
+
+    <!-- 1. Responsable del Tratamiento -->
+    <MudCard Elevation="2" Class="mb-4">
+        <MudCardHeader>
+            <CardHeaderContent>
+                <MudText Typo="Typo.h5">
+                    <MudIcon Icon="@Icons.Material.Filled.Business" Class="mr-2" Color="Color.Primary" />
+                    1. Responsable del Tratamiento
+                </MudText>
+            </CardHeaderContent>
+        </MudCardHeader>
+        <MudCardContent>
+            <MudList Dense="true" T="string">
+                <MudListItem><strong>Denominación:</strong> EstiloLibre</MudListItem>
+                <MudListItem><strong>Correo electrónico:</strong> privacidad@estilolibre.com</MudListItem>
+                <MudListItem><strong>Sitio web:</strong> www.estilolibre.com</MudListItem>
+            </MudList>
+        </MudCardContent>
+    </MudCard>
+
+    <!-- 2. Datos que Recopilamos -->
+    <MudCard Elevation="2" Class="mb-4">
+        <MudCardHeader>
+            <CardHeaderContent>
+                <MudText Typo="Typo.h5">
+                    <MudIcon Icon="@Icons.Material.Filled.Storage" Class="mr-2" Color="Color.Primary" />
+                    2. Datos que Recopilamos
+                </MudText>
+            </CardHeaderContent>
+        </MudCardHeader>
+        <MudCardContent>
+            <MudText Typo="Typo.body1" Class="mb-3">
+                Recopilamos únicamente los datos estrictamente necesarios para la prestación del servicio:
+            </MudText>
+            
+            <MudText Typo="Typo.h6" Class="mt-4 mb-2">2.1. Datos de Registro</MudText>
+            <MudList Dense="true" T="string">
+                <MudListItem Icon="@Icons.Material.Filled.Check">Nombre de usuario</MudListItem>
+                <MudListItem Icon="@Icons.Material.Filled.Check">Dirección de correo electrónico</MudListItem>
+                <MudListItem Icon="@Icons.Material.Filled.Check">Contraseña (encriptada)</MudListItem>
+                <MudListItem Icon="@Icons.Material.Filled.Check">Nombre y apellidos (opcional)</MudListItem>
+            </MudList>
+
+            <MudText Typo="Typo.h6" Class="mt-4 mb-2">2.2. Datos de Uso</MudText>
+            <MudList Dense="true" T="string">
+                <MudListItem Icon="@Icons.Material.Filled.Check">Imágenes de prendas que usted sube</MudListItem>
+                <MudListItem Icon="@Icons.Material.Filled.Check">Información de prendas (categoría, color, talla, etc.)</MudListItem>
+                <MudListItem Icon="@Icons.Material.Filled.Check">Conjuntos creados por usted</MudListItem>
+                <MudListItem Icon="@Icons.Material.Filled.Check">Preferencias de usuario</MudListItem>
+            </MudList>
+
+            <MudText Typo="Typo.h6" Class="mt-4 mb-2">2.3. Datos Técnicos</MudText>
+            <MudList Dense="true" T="string">
+                <MudListItem Icon="@Icons.Material.Filled.Check">Dirección IP</MudListItem>
+                <MudListItem Icon="@Icons.Material.Filled.Check">Tipo de navegador</MudListItem>
+                <MudListItem Icon="@Icons.Material.Filled.Check">Fecha y hora de acceso</MudListItem>
+                <MudListItem Icon="@Icons.Material.Filled.Check">Páginas visitadas</MudListItem>
+            </MudList>
+        </MudCardContent>
+    </MudCard>
+
+    <!-- 3. Finalidad del Tratamiento -->
+    <MudCard Elevation="2" Class="mb-4">
+        <MudCardHeader>
+            <CardHeaderContent>
+                <MudText Typo="Typo.h5">
+                    <MudIcon Icon="@Icons.Material.Filled.Assignment" Class="mr-2" Color="Color.Primary" />
+                    3. Finalidad del Tratamiento
+                </MudText>
+            </CardHeaderContent>
+        </MudCardHeader>
+        <MudCardContent>
+            <MudText Typo="Typo.body1" Class="mb-3">
+                Sus datos personales serán tratados para las siguientes finalidades:
+            </MudText>
+            <MudList Dense="true" T="string">
+                <MudListItem Icon="@Icons.Material.Filled.ArrowRight">
+                    Gestionar su registro y cuenta de usuario
+                </MudListItem>
+                <MudListItem Icon="@Icons.Material.Filled.ArrowRight">
+                    Prestar los servicios de gestión de guardarropa digital
+                </MudListItem>
+                <MudListItem Icon="@Icons.Material.Filled.ArrowRight">
+                    Almacenar y gestionar sus prendas y conjuntos
+                </MudListItem>
+                <MudListItem Icon="@Icons.Material.Filled.ArrowRight">
+                    Mejorar nuestros servicios y experiencia de usuario
+                </MudListItem>
+                <MudListItem Icon="@Icons.Material.Filled.ArrowRight">
+                    Comunicaciones relacionadas con el servicio
+                </MudListItem>
+                <MudListItem Icon="@Icons.Material.Filled.ArrowRight">
+                    Cumplir con obligaciones legales
+                </MudListItem>
+            </MudList>
+        </MudCardContent>
+    </MudCard>
+
+    <!-- 4. Base Legal -->
+    <MudCard Elevation="2" Class="mb-4">
+        <MudCardHeader>
+            <CardHeaderContent>
+                <MudText Typo="Typo.h5">
+                    <MudIcon Icon="@Icons.Material.Filled.Gavel" Class="mr-2" Color="Color.Primary" />
+                    4. Base Legal del Tratamiento
+                </MudText>
+            </CardHeaderContent>
+        </MudCardHeader>
+        <MudCardContent>
+            <MudText Typo="Typo.body1" Class="mb-3">
+                La base legal para el tratamiento de sus datos es:
+            </MudText>
+            <MudList Dense="true" T="string">
+                <MudListItem Icon="@Icons.Material.Filled.CheckCircle" IconColor="Color.Success">
+                    <strong>Consentimiento:</strong> Al registrarse y aceptar esta política, usted nos otorga su 
+                    consentimiento explícito para el tratamiento de sus datos.                    
+                </MudListItem>
+                <MudListItem Icon="@Icons.Material.Filled.CheckCircle" IconColor="Color.Success">
+                    <strong>Ejecución del contrato:</strong> El tratamiento es necesario para prestar el servicio 
+                    que usted ha solicitado.
+                </MudListItem>
+                <MudListItem Icon="@Icons.Material.Filled.CheckCircle" IconColor="Color.Success">
+                    <strong>Interés legítimo:</strong> Para mejorar nuestros servicios y garantizar la seguridad 
+                    de la plataforma.
+                </MudListItem>
+            </MudList>
+        </MudCardContent>
+    </MudCard>
+
+    <!-- 5. Conservación de Datos -->
+    <MudCard Elevation="2" Class="mb-4">
+        <MudCardHeader>
+            <CardHeaderContent>
+                <MudText Typo="Typo.h5">
+                    <MudIcon Icon="@Icons.Material.Filled.Schedule" Class="mr-2" Color="Color.Primary" />
+                    5. Plazo de Conservación
+                </MudText>
+            </CardHeaderContent>
+        </MudCardHeader>
+        <MudCardContent>
+            <MudText Typo="Typo.body1" Class="mb-3">
+                Sus datos se conservarán durante el tiempo necesario para cumplir con la finalidad para la que 
+                se recabaron:
+            </MudText>
+            <MudList Dense="true" T="string">
+                <MudListItem Icon="@Icons.Material.Filled.ArrowRight">
+                    <strong>Datos de cuenta:</strong> Mientras su cuenta permanezca activa o durante el tiempo 
+                    necesario para prestar el servicio.
+                </MudListItem>
+                <MudListItem Icon="@Icons.Material.Filled.ArrowRight">
+                    <strong>Tras cancelación de cuenta:</strong> Los datos se eliminarán en un plazo de 30 días, 
+                    salvo obligación legal de conservación.
+                </MudListItem>
+                <MudListItem Icon="@Icons.Material.Filled.ArrowRight">
+                    <strong>Datos fiscales:</strong> Se conservarán durante el plazo que establezca la legislación 
+                    aplicable.
+                </MudListItem>
+            </MudList>
+        </MudCardContent>
+    </MudCard>
+
+    <!-- 6. Destinatarios de los Datos -->
+    <MudCard Elevation="2" Class="mb-4">
+        <MudCardHeader>
+            <CardHeaderContent>
+                <MudText Typo="Typo.h5">
+                    <MudIcon Icon="@Icons.Material.Filled.Share" Class="mr-2" Color="Color.Primary" />
+                    6. Destinatarios de los Datos
+                </MudText>
+            </CardHeaderContent>
+        </MudCardHeader>
+        <MudCardContent>
+            <MudText Typo="Typo.body1" Class="mb-3">
+                No cedemos ni vendemos sus datos personales a terceros. Sus datos solo se compartirán con:
+            </MudText>
+            <MudList Dense="true" T="string">
+                <MudListItem Icon="@Icons.Material.Filled.ArrowRight">
+                    Proveedores de servicios de alojamiento web (con medidas de seguridad adecuadas)
+                </MudListItem>
+                <MudListItem Icon="@Icons.Material.Filled.ArrowRight">
+                    Proveedores de servicios de correo electrónico
+                </MudListItem>
+                <MudListItem Icon="@Icons.Material.Filled.ArrowRight">
+                    Autoridades públicas cuando sea requerido por ley
+                </MudListItem>
+            </MudList>
+            <MudAlert Severity="Severity.Info" Class="mt-3">
+                Todos nuestros proveedores están ubicados en la Unión Europea o cuentan con cláusulas 
+                contractuales tipo aprobadas por la Comisión Europea.
+            </MudAlert>
+        </MudCardContent>
+    </MudCard>
+
+    <!-- 7. Derechos del Usuario -->
+    <MudCard Elevation="2" Class="mb-4">
+        <MudCardHeader>
+            <CardHeaderContent>
+                <MudText Typo="Typo.h5">
+                    <MudIcon Icon="@Icons.Material.Filled.Security" Class="mr-2" Color="Color.Primary" />
+                    7. Sus Derechos
+                </MudText>
+            </CardHeaderContent>
+        </MudCardHeader>
+        <MudCardContent>
+            <MudText Typo="Typo.body1" Class="mb-3">
+                De acuerdo con el RGPD y la LOPDGDD, usted tiene los siguientes derechos:
+            </MudText>
+            
+            <MudExpansionPanels MultiExpansion="true">
+                <MudExpansionPanel Text="Derecho de Acceso">
+                    <MudText Typo="Typo.body2">
+                        Puede solicitar información sobre los datos personales que tratamos sobre usted.
+                    </MudText>
+                </MudExpansionPanel>
+                
+                <MudExpansionPanel Text="Derecho de Rectificación">
+                    <MudText Typo="Typo.body2">
+                        Puede solicitar la corrección de datos inexactos o incompletos.
+                    </MudText>
+                </MudExpansionPanel>
+                
+                <MudExpansionPanel Text="Derecho de Supresión">
+                    <MudText Typo="Typo.body2">
+                        Puede solicitar la eliminación de sus datos cuando ya no sean necesarios o haya 
+                        retirado su consentimiento.
+                    </MudText>
+                </MudExpansionPanel>
+                
+                <MudExpansionPanel Text="Derecho de Oposición">
+                    <MudText Typo="Typo.body2">
+                        Puede oponerse al tratamiento de sus datos en determinadas circunstancias.
+                    </MudText>
+                </MudExpansionPanel>
+                
+                <MudExpansionPanel Text="Derecho a la Limitación del Tratamiento">
+                    <MudText Typo="Typo.body2">
+                        Puede solicitar que limitemos el tratamiento de sus datos en ciertas situaciones.
+                    </MudText>
+                </MudExpansionPanel>
+                
+                <MudExpansionPanel Text="Derecho a la Portabilidad">
+                    <MudText Typo="Typo.body2">
+                        Puede solicitar recibir sus datos en un formato estructurado y de uso común, 
+                        o que los transmitamos a otro responsable.
+                    </MudText>
+                </MudExpansionPanel>
+                
+                <MudExpansionPanel Text="Derecho a Retirar el Consentimiento">
+                    <MudText Typo="Typo.body2">
+                        Puede retirar su consentimiento en cualquier momento, sin que afecte a la licitud 
+                        del tratamiento basado en el consentimiento previo.
+                    </MudText>
+                </MudExpansionPanel>
+            </MudExpansionPanels>
+
+            <MudDivider Class="my-4" />
+            
+            <MudText Typo="Typo.h6" Class="mb-2">Cómo ejercer sus derechos:</MudText>
+            <MudText Typo="Typo.body2" Class="mb-2">
+                Para ejercer cualquiera de estos derechos, puede contactarnos en:
+            </MudText>
+            <MudChip T="string" Icon="@Icons.Material.Filled.Email" Color="Color.Primary">
+                privacidad@estilolibre.com
+            </MudChip>
+            
+            <MudText Typo="Typo.body2" Class="mt-3">
+                Deberá acreditar su identidad e indicar el derecho que desea ejercer. Responderemos a su 
+                solicitud en el plazo máximo de un mes.
+            </MudText>
+        </MudCardContent>
+    </MudCard>
+
+    <!-- 8. Medidas de Seguridad -->
+    <MudCard Elevation="2" Class="mb-4">
+        <MudCardHeader>
+            <CardHeaderContent>
+                <MudText Typo="Typo.h5">
+                    <MudIcon Icon="@Icons.Material.Filled.Lock" Class="mr-2" Color="Color.Primary" />
+                    8. Medidas de Seguridad
+                </MudText>
+            </CardHeaderContent>
+        </MudCardHeader>
+        <MudCardContent>
+            <MudText Typo="Typo.body1" Class="mb-3">
+                Implementamos medidas técnicas y organizativas apropiadas para proteger sus datos personales:
+            </MudText>
+            <MudList Dense="true" T="string">
+                <MudListItem Icon="@Icons.Material.Filled.Check" IconColor="Color.Success">
+                    Encriptación de datos sensibles (contraseñas, información personal)
+                </MudListItem>
+                <MudListItem Icon="@Icons.Material.Filled.Check" IconColor="Color.Success">
+                    Conexiones seguras mediante protocolo HTTPS
+                </MudListItem>
+                <MudListItem Icon="@Icons.Material.Filled.Check" IconColor="Color.Success">
+                    Control de acceso restringido a datos personales
+                </MudListItem>
+                <MudListItem Icon="@Icons.Material.Filled.Check" IconColor="Color.Success">
+                    Copias de seguridad periódicas
+                </MudListItem>
+                <MudListItem Icon="@Icons.Material.Filled.Check" IconColor="Color.Success">
+                    Monitorización continua de seguridad
+                </MudListItem>
+            </MudList>
+        </MudCardContent>
+    </MudCard>
+
+    <!-- 9. Cookies -->
+    <MudCard Elevation="2" Class="mb-4">
+        <MudCardHeader>
+            <CardHeaderContent>
+                <MudText Typo="Typo.h5">
+                    <MudIcon Icon="@Icons.Material.Filled.Cookie" Class="mr-2" Color="Color.Primary" />
+                    9. Cookies
+                </MudText>
+            </CardHeaderContent>
+        </MudCardHeader>
+        <MudCardContent>
+            <MudText Typo="Typo.body1" Class="mb-3">
+                Utilizamos cookies necesarias para el funcionamiento de la aplicación:
+            </MudText>
+            <MudList Dense="true" T="string">
+                <MudListItem Icon="@Icons.Material.Filled.ArrowRight">
+                    <strong>Cookies de sesión:</strong> Mantienen su sesión activa mientras navega
+                </MudListItem>
+                <MudListItem Icon="@Icons.Material.Filled.ArrowRight">
+                    <strong>Cookies de autenticación:</strong> Verifican su identidad
+                </MudListItem>
+                <MudListItem Icon="@Icons.Material.Filled.ArrowRight">
+                    <strong>Cookies de preferencias:</strong> Guardan sus configuraciones
+                </MudListItem>
+            </MudList>
+            <MudText Typo="Typo.body2" Class="mt-3">
+                Puede configurar su navegador para rechazar cookies, aunque esto puede afectar a la 
+                funcionalidad de la aplicación.
+            </MudText>
+        </MudCardContent>
+    </MudCard>
+
+    <!-- 10. Reclamaciones -->
+    <MudCard Elevation="2" Class="mb-4">
+        <MudCardHeader>
+            <CardHeaderContent>
+                <MudText Typo="Typo.h5">
+                    <MudIcon Icon="@Icons.Material.Filled.Report" Class="mr-2" Color="Color.Primary" />
+                    10. Derecho a Presentar una Reclamación
+                </MudText>
+            </CardHeaderContent>
+        </MudCardHeader>
+        <MudCardContent>
+            <MudText Typo="Typo.body1" Class="mb-3">
+                Si considera que el tratamiento de sus datos personales vulnera la normativa, tiene 
+                derecho a presentar una reclamación ante la autoridad de control:
+            </MudText>
+            <MudPaper Elevation="1" Class="pa-4">
+                <MudText Typo="Typo.h6" Class="mb-2">
+                    Agencia Española de Protección de Datos (AEPD)
+                </MudText>
+                <MudList Dense="true" T="string">
+                    <MudListItem><strong>Web:</strong> www.aepd.es</MudListItem>
+                    <MudListItem><strong>Dirección:</strong> C/ Jorge Juan, 6, 28001 Madrid</MudListItem>
+                    <MudListItem><strong>Teléfono:</strong> 901 100 099 / 912 663 517</MudListItem>
+                </MudList>
+            </MudPaper>
+        </MudCardContent>
+    </MudCard>
+
+    <!-- 11. Actualizaciones -->
+    <MudCard Elevation="2" Class="mb-4">
+        <MudCardHeader>
+            <CardHeaderContent>
+                <MudText Typo="Typo.h5">
+                    <MudIcon Icon="@Icons.Material.Filled.Update" Class="mr-2" Color="Color.Primary" />
+                    11. Modificaciones de la Política
+                </MudText>
+            </CardHeaderContent>
+        </MudCardHeader>
+        <MudCardContent>
+            <MudText Typo="Typo.body1">
+                EstiloLibre se reserva el derecho a modificar esta Política de Privacidad para adaptarla a 
+                cambios legislativos, jurisprudenciales o en nuestros servicios. Le notificaremos cualquier 
+                cambio significativo a través del correo electrónico asociado a su cuenta o mediante un aviso 
+                destacado en la aplicación.
+            </MudText>
+            <MudAlert Severity="Severity.Info" Class="mt-3">
+                Le recomendamos revisar periódicamente esta política para estar informado sobre cómo 
+                protegemos su información.
+            </MudAlert>
+        </MudCardContent>
+    </MudCard>
+
+    <!-- Contacto -->
+    <MudPaper Elevation="4" Class="pa-6 text-center">
+        <MudText Typo="Typo.h5" Class="mb-3">¿Tiene alguna pregunta?</MudText>
+        <MudText Typo="Typo.body1" Class="mb-4">
+            Si tiene dudas sobre esta Política de Privacidad o sobre el tratamiento de sus datos, 
+            no dude en contactarnos.
+        </MudText>
+        <MudButton Variant="Variant.Filled" 
+                   Color="Color.Primary" 
+                   StartIcon="@Icons.Material.Filled.Email"
+                   Href="mailto:privacidad@estilolibre.com">
+            Contactar
+        </MudButton>
+    </MudPaper>
+</MudContainer>
+
+@code {
+    #region ***** DEPENDENCIAS *****
+    #endregion
+
+    #region ***** PARÁMETROS *****
+    #endregion
+
+    #region ***** PROPIEDADES PRIVADAS *****
+    #endregion
+
+    #region ***** MÉTODOS PÚBLICOS *****
+    #endregion
+
+    #region ***** MÉTODOS PRIVADOS *****
+    #endregion
+}

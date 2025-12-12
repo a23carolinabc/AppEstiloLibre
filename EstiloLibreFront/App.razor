@@ -1,0 +1,41 @@
+﻿@using Microsoft.AspNetCore.Components.Authorization
+
+<CascadingAuthenticationState>
+    <Router AppAssembly="@typeof(App).Assembly">
+        <Found Context="routeData">
+            <AuthorizeRouteView RouteData="@routeData">
+                <Authorizing>
+                    <FocusOnNavigate RouteData="@routeData" Selector="h1" />                
+                </Authorizing>
+                <NotAuthorized>
+                    @{
+                        this.Navegacion.NavegarA(URLsPantallas.Login);
+                    }
+                </NotAuthorized>          
+            </AuthorizeRouteView>       
+        </Found>
+        <NotFound>
+            <PageTitle>No encontrada</PageTitle>
+            <LayoutView>
+                <div style="font-size: 120px;font-weight: bold;color: #e74c3c;line-height: 1;margin-bottom: 20px;  ">
+                    404
+                </div>
+                <h1 style="color: #333;margin-bottom: 16px;font-size: 28px;  ">
+                    Página no encontrada
+                </h1>
+                <p style="color: #666;font-size: 18px; margin-bottom: 30px; line-height: 1.5;  ">
+                    Lo sentimos, la página que estás buscando no existe o ha sido movida.
+                </p>
+            </LayoutView>
+        </NotFound>
+    </Router>
+</CascadingAuthenticationState>
+
+@code {
+    #region ***** DEPENDENCIAS *****
+
+    [Inject]
+    public required ServicioNavegacion Navegacion { get; set; }
+
+    #endregion
+}

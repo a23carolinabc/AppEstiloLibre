@@ -1,0 +1,138 @@
+﻿@layout MainLayout
+@page "/listadoConjuntos"
+
+<PageTitle>Mis Conjuntos</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="mt-4">
+    <MudText Typo="Typo.h4" Class="mb-4">Mis Conjuntos</MudText>
+
+    <MudButton Variant="Variant.Filled"
+               Color="Color.Primary"
+               StartIcon="@Icons.Material.Filled.Add"
+               OnClick="@IrACrearConjunto"
+               Class="mb-4">
+        Crear Nuevo Conjunto
+    </MudButton>
+
+    @if (this._cargando)
+    {
+        <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
+    }
+    else if (this._conjuntos == null || !this._conjuntos.Any())
+    {
+        <MudAlert Severity="Severity.Info">
+            No tienes conjuntos creados. ¡Crea tu primer conjunto!
+        </MudAlert>
+    }
+    else
+    {
+        <MudGrid>
+            @foreach (var conjunto in this._conjuntos)
+            {
+                <MudItem xs="12" sm="6" md="4" lg="3">
+                    <MudCard>
+                        <MudCardMedia Image="@conjunto.ImagenBase64" Height=300/>
+                        <MudCardContent>
+                            @if (conjunto.EsFavorito)
+                            {
+                                <MudIcon Icon="@Icons.Material.Filled.Favorite" Color="Color.Error" Size="Size.Small" />
+                            }
+                        </MudCardContent>
+                        <MudCardActions>
+                            <MudIconButton Icon="@Icons.Material.Filled.Edit"
+                                           Color="Color.Primary"
+                                           OnClick="@(() => IrAEditarConjunto(conjunto.Id))" />
+                            <MudIconButton Icon="@Icons.Material.Filled.Delete"
+                                           Color="Color.Error"
+                                           OnClick="@(() => EliminarConjunto(conjunto.Id))" />
+                        </MudCardActions>
+                    </MudCard>
+                </MudItem>
+            }
+        </MudGrid>
+    }
+</MudContainer>
+
+@code {
+    #region ***** INYECCIONES *****
+    [Inject]
+    public ServicioConjuntos ServicioConjuntos { get; set; }
+    [Inject]
+    public ServicioDatosContexto ServicioDatosContexto { get; set; }
+    [Inject]
+    public ServicioNavegacion ServicioNavegacion { get; set; }
+    [Inject]
+    public ISnackbar ServicioNotificacion { get; set; }
+    #endregion
+
+    #region ***** PROPIEDADES PRIVADAS *****
+    private List<ConjuntoDTO>? _conjuntos;
+    private bool _cargando;
+    #endregion
+
+    #region ***** MÉTODOS PÚBLICOS *****
+    protected override async Task OnInitializedAsync()
+    {
+        await this.CargarConjuntos();
+    }
+
+    private async Task CargarConjuntos()
+    {
+        int iUsuarioId;
+
+        try
+        {
+            this._cargando = true;
+            iUsuarioId = this.ServicioDatosContexto.GetUsuarioId();
+            this._conjuntos = await this.ServicioConjuntos.GetConjuntosUsuario(iUsuarioId);
+        }
+        catch (Exception ex)
+        {
+            this.ServicioNotificacion.Add($"Error al cargar conjuntos: {ex.Message}", Severity.Error);
+        }
+        finally
+        {
+            this._cargando = false;
+        }
+    }
+
+    private void IrACrearConjunto()
+    {
+        this.ServicioNavegacion.NavegarA($"{URLsPantallas.Conjuntos}");
+    }
+
+    private void IrAEditarConjunto(int iConjuntoId)
+    {
+        this.ServicioNavegacion.NavegarA($"{URLsPantallas.Conjuntos}{iConjuntoId}");
+    }
+
+    private async Task EliminarConjunto(int iConjuntoId)
+    {
+        bool bConfirmado;
+
+        bConfirmado = await this.MostrarDialogoConfirmacion();
+        if (!bConfirmado)
+        {
+            return;
+        }
+
+        try
+        {
+            await this.ServicioConjuntos.Delete(iConjuntoId);
+            this.ServicioNotificacion.Add("Conjunto eliminado correctamente", Severity.Success);
+            await this.CargarConjuntos();
+        }
+        catch (Exception ex)
+        {
+            this.ServicioNotificacion.Add($"Error al eliminar: {ex.Message}", Severity.Error);
+        }
+    }
+
+    private async Task<bool> MostrarDialogoConfirmacion()
+    {
+        // Aquí implementarías un diálogo de confirmación
+        // Por simplicidad, retorno true
+        return await Task.FromResult(true);
+    }
+    #endregion
+}

@@ -1,0 +1,145 @@
+﻿@attribute [AllowAnonymous]
+@page "/login"
+@layout LayoutPublico
+
+<PageTitle>Iniciar Sesión - EstiloLibre</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.Small" Class="login-container">
+    <MudPaper Elevation="4" Class="pa-8 login-paper">
+        <!-- Logo y título -->
+        <div class="text-center mb-6">
+            <MudIcon Icon="@Icons.Material.Filled.Checkroom" 
+                     Size="Size.Large" 
+                     Color="Color.Primary"
+                     Style="font-size: 64px;" />
+            <MudText Typo="Typo.h4" Class="mt-3">EstiloLibre</MudText>
+            <MudText Typo="Typo.h6" Color="Color.Dark">Bienvenido de nuevo</MudText>
+        </div>
+
+        <EditForm Model="@this._usuario" OnSubmit="@this.LogIn">
+            <DataAnnotationsValidator />
+
+            <!-- Campo Usuario -->
+            <MudTextField @bind-Value="@this._usuario.Login"
+                          Label="@Traductor["strUsuario"]"
+                          Variant="Variant.Outlined"
+                          FullWidth="true"
+                          Margin="Margin.Normal"
+                          Adornment="Adornment.Start"
+                          AdornmentIcon="@Icons.Material.Filled.Person"
+                          Required="true"
+                          RequiredError="El usuario es obligatorio" />
+
+            <!-- Campo Contraseña -->
+            <MudTextField @bind-Value="@this._usuario.Contraseña"
+                          Label="@Traductor["strContraseña"]"
+                          Variant="Variant.Outlined"
+                          InputType="InputType.Password"
+                          FullWidth="true"
+                          Margin="Margin.Normal"
+                          Adornment="Adornment.Start"
+                          AdornmentIcon="@Icons.Material.Filled.Lock"
+                          Required="true"
+                          RequiredError="La contraseña es obligatoria" />
+
+            <!-- Mensaje de error -->
+            @if (this._bIntentoFallido)
+            {
+                <MudAlert Severity="Severity.Error" Class="my-3">
+                    @TraductorErrores["ERR_CrendencialesInvalidas"]
+                </MudAlert>
+            }
+
+            <!-- Enlaces -->
+            <MudStack Class="my-3">
+                <MudLink Href="#" Color="Color.Primary" Typo="Typo.body2">
+                    ¿Olvidaste tu contraseña?
+                </MudLink>
+            </MudStack>
+
+            <!-- Botón Iniciar Sesión -->
+            <MudButton ButtonType="ButtonType.Submit"
+                       Variant="Variant.Filled"
+                       Color="Color.Primary"
+                       FullWidth="true"
+                       Size="Size.Large"
+                       Disabled="@this._bLoginBloqueado"
+                       StartIcon="@Icons.Material.Filled.Login"
+                       Class="mt-4">
+                @if (this._bLoginBloqueado)
+                {
+                    <MudProgressCircular Size="Size.Small" Indeterminate="true" Class="mr-2" />
+                    <text>Iniciando sesión...</text>
+                }
+                else
+                {
+                    <text>Iniciar Sesión</text>
+                }
+            </MudButton>
+
+            <!-- Separador -->
+            <MudDivider Class="my-4" />
+
+            <!-- Enlace a Registro -->
+            <MudText Align="Align.Center" Typo="Typo.body2">
+                ¿No tienes una cuenta?
+                <MudLink Href="@URLsPantallas.Registro" Color="Color.Primary" Typo="Typo.body2" Class="font-weight-bold">
+                    Regístrate aquí
+                </MudLink>
+            </MudText>
+        </EditForm>
+    </MudPaper>
+
+    <!-- Enlace volver a inicio -->
+    <MudText Align="Align.Center" Class="mt-4">
+        <MudLink Href="@URLsPantallas.Inicio" Color="Color.Primary">
+            <MudIcon Icon="@Icons.Material.Filled.ArrowBack" Size="Size.Small" />
+            Volver al inicio
+        </MudLink>
+    </MudText>
+</MudContainer>
+
+@code {
+    #region ***** DEPENDENCIAS *****
+
+    [Inject]
+    public required ServicioLogIn ServicioLogin { get; set; }
+
+    [Inject]
+    public required IStringLocalizer<TrGeneral> Traductor { get; set; }
+
+    [Inject]
+    public required IStringLocalizer<TrErrores> TraductorErrores { get; set; }
+
+    #endregion
+
+    #region ***** VARIABLES INTERNAS *****
+
+    private UsuarioLogin _usuario = new UsuarioLogin();
+    private bool _bLoginBloqueado = false;
+    private bool _bIntentoFallido = false;
+
+    #endregion
+
+    #region ***** MÉTODOS PÚBLICOS *****
+
+    public async void LogIn()
+    {
+        bool bLogueado;
+
+        this._bLoginBloqueado = true;
+        this._bIntentoFallido = false;
+        StateHasChanged();
+
+        bLogueado = await this.ServicioLogin.LogIn(this._usuario.Login, this._usuario.Contraseña);
+        
+        if (!bLogueado) 
+        { 
+            this._bLoginBloqueado = false;
+            this._bIntentoFallido = true;
+            StateHasChanged(); 
+        }
+    }
+    
+    #endregion
+}

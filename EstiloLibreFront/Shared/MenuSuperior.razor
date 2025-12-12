@@ -1,0 +1,99 @@
+﻿<link href="css/Shared/MenuSuperior.css" rel="stylesheet" />
+
+<MudAppBar Elevation="0" Dense="false" Color="Color.Tertiary" Class="appbar-principal">
+    <MudTextField @bind-Value="this._strBusqueda"
+                  Placeholder=@Traductor["phBuscar"]
+                  Adornment="Adornment.Start"
+                  AdornmentIcon="@Icons.Material.Filled.Search"
+                  Variant="Variant.Outlined"
+                  Margin="Margin.Dense"
+                  Class="mx-4 search-field"
+                  AdornmentColor="Color.Primary"
+                  FullWidth="false" />
+    <MudSpacer />
+
+    <!-- DISPOSITIVOS PEQUEÑOS -->
+    <MudHidden Breakpoint="Breakpoint.MdAndUp">
+        <MudMenu Dense
+                 Variant="Variant.Text"
+                 Size="Size.Medium"
+                 Color="Color.Dark"
+                 Icon="@Icons.Material.Filled.MoreVert">
+
+            <MudMenuItem Href="@(URLsPantallas.Configuracion)"
+                         Icon="@Icons.Material.TwoTone.SettingsApplications"
+                         IconColor="Color.Primary"
+                         Label=@Traductor["lblAjustes"] />
+
+            <MudDivider />
+
+            <MudMenuItem ForceLoad
+                         Icon="@Icons.Material.TwoTone.Logout"
+                         IconColor="Color.Primary"
+                         Label=@Traductor["lblCerrarSesion"]
+                         OnClick="LogOut" />
+        </MudMenu>
+    </MudHidden>
+
+    <!-- DISPOSITIVOS GRANDES-->
+    <MudHidden Breakpoint="Breakpoint.SmAndDown">
+        <MudMenu Dense
+                 Variant="Variant.Text"
+                 Size="Size.Medium"
+                 Color="Color.Dark"
+                 Icon="@Icons.Material.TwoTone.SupervisedUserCircle">
+
+            @* <MudMenu StartIcon="@Icons.Material.TwoTone.Settings"
+                     IconColor="Color.Primary"
+                     Label="Settings">
+                <MudMenuItem Icon="@Icons.Material.TwoTone.DarkMode"
+                             IconColor="Color.Secondary"
+                             Label="Dark Theme" />
+
+                <MudMenuItem Href="@(URLsPantallas.Configuracion)"
+                             Icon="@Icons.Material.TwoTone.SettingsApplications"
+                             IconColor="Color.Primary"
+                             Label="Perfil"/>
+            </MudMenu> *@
+            <MudMenuItem Href="@(URLsPantallas.Configuracion)"
+                         Icon="@Icons.Material.TwoTone.SettingsApplications"
+                         IconColor="Color.Primary"
+                         Label=@Traductor["lblAjustes"] />
+
+            <MudDivider />
+
+            <MudMenuItem ForceLoad
+                         Icon="@Icons.Material.TwoTone.Logout"
+                         IconColor="Color.Primary"
+                         Label=@Traductor["lblCerrarSesion"]
+                         OnClick="LogOut" />
+        </MudMenu>
+    </MudHidden>
+</MudAppBar>
+
+@code {
+    #region ***** DEPENDENCIAS *****
+    [Inject]
+    public ServicioLogIn ServicioLogIn { get; set; }
+    [Inject]
+    public required IStringLocalizer<TrShared> Traductor { get; set; }
+    #endregion
+
+    #region ***** PARÁMETROS *****
+    #endregion
+
+    #region ***** PROPIEDADES PRIVADAS *****
+    private string _strBusqueda = string.Empty;
+    #endregion
+
+    #region ***** MÉTODOS PÚBLICOS *****
+
+    #endregion
+
+    #region ***** MÉTODOS PRIVADOS *****
+    private void LogOut()
+    {
+        this.ServicioLogIn.LogOut();
+    }
+    #endregion
+}

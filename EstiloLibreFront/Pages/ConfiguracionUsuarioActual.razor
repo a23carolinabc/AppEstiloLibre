@@ -1,0 +1,290 @@
+﻿@layout MainLayout
+@page "/configuracion/"
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <h2>@Traductor["lblConfiguracionUsuario"]</h2>
+        </div>
+    </div>
+
+    @if (this._usuarioData?.Usuario != null)
+    {
+        <EditForm Model="@this._usuario" OnValidSubmit="this.Guardar">
+            <DataAnnotationsValidator />
+
+            <!-- SELECCIÓN DE LA IMAGEN -->
+            <MudCard Class="mb-4">
+                <MudCardHeader>
+                    <CardHeaderContent>
+                        <MudText Typo="Typo.h6">
+                            <MudIcon Icon="@Icons.Material.Filled.Image" Class="mr-2" />
+                            @Traductor["lblFotoPrenda"]
+                        </MudText>
+                    </CardHeaderContent>
+                </MudCardHeader>
+            </MudCard>
+
+            <!-- INFORMACIÓN BÁSICA -->
+            <MudCard Class="mb-4">
+                <MudCardHeader>
+                    <CardHeaderContent>
+                        <MudText Typo="Typo.h6">
+                            <MudIcon Icon="@Icons.Material.Filled.Info" Class="mr-2" />
+                            @Traductor["lblInformacionBasica"]
+                        </MudText>
+                    </CardHeaderContent>
+                </MudCardHeader>
+                <MudCardContent>
+                    <!-- Login -->
+                    <MudTextField @bind-Value="this._usuario.Login"
+                                  Label="@Traductor["lblLogin"]"
+                                  Variant="Variant.Outlined"
+                                  Class="mb-3" AutoFocus=true
+                                  Required=true RequiredError="@TraductorErrores["ERR_CampoObligatorio"]" />
+                    <!-- Cambiar contraseña-->
+                    <MudLink Color="Color.Primary" OnClick="@(() => this._bCambiarContraseña = !this._bCambiarContraseña)">
+                        @Traductor["nvlkCambiarContraseña"]
+                    </MudLink>
+
+                    @if (this._bCambiarContraseña)
+                    {
+                        <MudCard>
+                            <MudCardContent>
+                                <MudTextField @bind-Value="@this._usuario.ContraseñaActual"
+                                              Label=@Traductor["lblContraseñaActual"]
+                                              InputType="InputType.Password"
+                                              Immediate="true"
+                                              Variant="Variant.Outlined"
+                                              FullWidth="true"
+                                              Margin="Margin.Dense" />
+
+                                <MudTextField @bind-Value="@this._usuario.Contraseña"
+                                              Label="@Traductor["lblContraseñaNueva"]"
+                                              InputType="InputType.Password"
+                                              Immediate="true"
+                                              Variant="Variant.Outlined"
+                                              FullWidth="true"
+                                              Margin="Margin.Dense" Validation="@((string st) => ValidarContraseña(st))" />
+
+                                <MudTextField @bind-Value="@this._strConfirmacionContraseña"
+                                              Label="@Traductor["lblContraseñaNueva"]"
+                                              InputType="InputType.Password"
+                                              Immediate="true"
+                                              Variant="Variant.Outlined"
+                                              FullWidth="true"
+                                              Margin="Margin.Dense" Validation="@((string st) => ValidarConfirmacionContraseña(st))">
+                                </MudTextField>
+
+                            </MudCardContent>
+                        </MudCard>
+                    }
+
+                    <!-- Nombre -->
+                    <MudTextField @bind-Value="this._usuario.Nombre"
+                                  Label=@Traductor["lblNombre"]
+                                  Variant="Variant.Outlined"
+                                  Class="mb-3" Required=true RequiredError="@TraductorErrores["ERR_CampoObligatorio"]" />
+                    <!-- Apellido 1 -->
+                    <MudTextField @bind-Value="this._usuario.Apellido1"
+                                  Label=@Traductor["lblApellido1"]
+                                  Variant="Variant.Outlined"
+                                  Class="mb-3" Required=true RequiredError="@TraductorErrores["ERR_CampoObligatorio"]" />
+                    <!-- Apellido 2 -->
+                    <MudTextField @bind-Value="this._usuario.Apellido2"
+                                  Label=@Traductor["lblApellido2"]
+                                  Variant="Variant.Outlined"
+                                  Class="mb-3" />
+                    <!-- CorreoE -->
+                    <MudTextField @bind-Value="this._usuario.CorreoE"
+                                  Label=@Traductor["lblCorreoElectronico"]
+                                  Variant="Variant.Outlined"
+                                  Class="mb-3" Required=true RequiredError="@TraductorErrores["ERR_CampoObligatorio"]" />
+                    <!-- Idioma -->
+                    <MudSelect @bind-Value="this._usuario.IdiomaId"
+                               Label="@Traductor["lblIdioma"]"
+                               Variant="Variant.Outlined"
+                               Class="mb-3"
+                               Required=true RequiredError="@TraductorErrores["ERR_CampoObligatorio"]">
+                        <MudSelectItem Value="0">@Traductor["phSeleccioneIdioma"]</MudSelectItem>
+                        @if (this._usuarioData.Idiomas != null)
+                        {
+                            @foreach (var color in this._usuarioData.Idiomas)
+                            {
+                                <MudSelectItem Value="@color.Id">@color.Nombre</MudSelectItem>
+                            }
+                        }
+                    </MudSelect>
+
+                    <!--Público-->
+                    <MudSwitch @bind-Value="@this._usuario.Publico"
+                               Label=@Traductor["lblPerfilPublico"]
+                               Color="Color.Error" />
+
+                    <!-- Telefono -->
+                    <MudNumericField @bind-Value="this._usuario.Telefono"
+                                     Label=@Traductor["lblTelefono"]
+                                     Variant="Variant.Outlined"
+                                     Min="0"
+                                     Class="mb-3" />
+
+                    <!-- Fecha nacimiento -->
+                    <MudDatePicker @bind-Date="this._usuario.FechaNacimiento"
+                                   Label=@Traductor["lblFechaNacimiento"]
+                                   Variant="Variant.Outlined" Required=true RequiredError="@TraductorErrores["ERR_CampoObligatorio"]" />
+                </MudCardContent>
+            </MudCard>
+
+            <!-- BOTONES DE ACCIÓN -->
+            <MudStack Row="true" Justify="Justify.SpaceBetween" Class="mt-4">
+                <MudButton Variant="Variant.Outlined"
+                           Color="Color.Default"
+                           StartIcon="@Icons.Material.Filled.ArrowBack"
+                           OnClick="@(() => this.ServicioNavegacion.NavegarA(URLsPantallas.ListadoPrendas))">
+                    @Traductor["btnCancelar"]
+                </MudButton>
+
+                <MudButton ButtonType="ButtonType.Submit"
+                           Variant="Variant.Filled"
+                           Color="Color.Primary"
+                           StartIcon="@Icons.Material.Filled.Save"
+                           Disabled="@(this._bGuardando || string.IsNullOrEmpty(this._strImagenPreview))">
+                    @(this._bGuardando ? Traductor["lblGuardando"] : Traductor["btnGuardarCambios"])
+                </MudButton>
+            </MudStack>
+        </EditForm>
+    }
+</div>
+
+@code {
+    #region ***** INYECCIONES *****
+    [Inject]
+    public required ServicioUsuarios ServicioUsuarios { get; set; }
+    [Inject]
+    public required IStringLocalizer<TrErrores> TraductorErrores { get; set; }
+    [Inject]
+    public required IStringLocalizer<TrConfiguracionUsuario> Traductor { get; set; }
+    [Inject]
+    public required IStringLocalizer<TrGeneral> TraductorGeneral { get; set; }
+    [Inject]
+    public required ServicioNavegacion ServicioNavegacion { get; set; }
+    [Inject]
+    public required ServicioDatosContexto ServicioDatosContexto { get; set; }
+    [Inject]
+    public required ISnackbar ServicioNotificacion { get; set; }
+    #endregion
+
+    #region ***** PROPIEDADES PRIVADAS *****
+    private UsuarioData? _usuarioData;
+    private UsuarioDTO _usuario = new();
+    private string _strConfirmacionContraseña = string.Empty;
+    private string _strImagenPreview = string.Empty;
+    private bool _bGuardando = false;
+    private bool _bCambiarContraseña = false;
+    #endregion
+
+    #region ***** MÉTODOS PÚBLICOS
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            this._usuarioData = await this.ServicioUsuarios.ShowData(this.ServicioDatosContexto.GetUsuarioId());
+            if (this._usuarioData == null || this._usuarioData.Usuario == null)
+            {
+                this.ServicioNotificacion.Add(this.TraductorErrores["ERR_ObjetoNoEncontrado"], Severity.Error);
+            }
+            else
+            {
+                this._usuario = this._usuarioData.Usuario ?? new();
+                if (!string.IsNullOrEmpty(this._usuario.ImagenBase64))
+                {
+                    this._strImagenPreview = this._usuario.ImagenBase64;
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            this.ServicioNotificacion.Add(this.TraductorErrores[e.Message], Severity.Error);
+        }
+    }
+    #endregion
+
+    #region ***** MÉTODOS PRIVADOS
+
+    private async Task Guardar()
+    {
+        int iPrendaId;
+        bool bFormValido;
+
+        try
+        {
+            //Validar formulario.
+            bFormValido = this.Validar();
+            if (!bFormValido) return;
+
+            //Notificar al usuario.
+            this._bGuardando = true;
+            this.ServicioNotificacion.Add(this.TraductorGeneral["NTF_Guardando"], Severity.Info);
+
+            // Enviar al servidor
+            iPrendaId = await this.ServicioUsuarios.SaveData(this._usuario);
+
+            //Notificar al usuario el guardado.
+            this.ServicioNotificacion.Add(this.Traductor["NTF_Guardado"], Severity.Success);
+        }
+        catch (Exception ex)
+        {
+            this.ServicioNotificacion.Add(this.TraductorErrores[ex.Message], Severity.Error);
+        }
+        finally
+        {
+            this._bGuardando = false;
+        }
+    }
+
+    private bool Validar()
+    {
+        if (string.IsNullOrEmpty(this._usuario.Login) ||
+            string.IsNullOrEmpty(this._usuario.Nombre) ||
+            string.IsNullOrEmpty(this._usuario.Apellido1) ||
+            string.IsNullOrEmpty(this._usuario.CorreoE) ||
+            this._usuario.FechaNacimiento == null ||
+            this._usuario.IdiomaId <= 0)
+        {
+            this.ServicioNotificacion.Add(this.TraductorErrores["ERR_RellenarCamposObligatorios"], Severity.Warning);
+            return false;
+        }
+        if ((string.IsNullOrEmpty(this._usuario.Contraseña) && !string.IsNullOrEmpty(this._usuario.ContraseñaActual)) ||
+                (string.IsNullOrEmpty(this._usuario.ContraseñaActual) && !string.IsNullOrEmpty(this._usuario.Contraseña)))
+        {
+            this._usuario.Contraseña = null;
+            this._usuario.ContraseñaActual = null;
+        }
+        return true;
+    }
+
+    public bool ValidarContraseña(string strContraseña)
+    {
+        if (string.IsNullOrEmpty(strContraseña) || strContraseña.Length < 8)
+        {
+            this.ServicioNotificacion.Add(this.TraductorErrores["ERR_ContraseñaNoValida"], Severity.Error);
+            return false;
+        }
+
+        return strContraseña.Any(char.IsUpper) &&
+               strContraseña.Any(char.IsLower);
+    }
+
+    public bool ValidarConfirmacionContraseña(string strContraseña)
+    {
+        if (!strContraseña.Equals(this._usuario.Contraseña))
+        {
+            this.ServicioNotificacion.Add(this.TraductorErrores["ERR_ContraseñasNoCoinciden"], Severity.Error);
+            return false;
+        }
+
+        return strContraseña.Any(char.IsUpper) &&
+               strContraseña.Any(char.IsLower);
+    }
+    #endregion
+}

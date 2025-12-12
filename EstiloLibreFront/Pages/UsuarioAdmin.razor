@@ -1,0 +1,367 @@
+﻿@page "/admin/usuarios/{Id:int?}"
+@layout LayoutAdministracion
+@using Microsoft.AspNetCore.Authorization
+@using EstiloLibreFront.Objetos.Administracion
+@using System.ComponentModel.DataAnnotations
+@attribute [Authorize(Policy = CodigosPermisos.ADMIN)]
+
+<PageTitle>@(this.Id.HasValue ? "Editar" : "Crear") Administrador - EstiloLibre</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.Large" Class="mt-4">
+    <MudText Typo="Typo.h4" Class="mb-4">
+        @(this.Id.HasValue ? "Editar" : "Crear Nuevo") Administrador
+    </MudText>
+
+    @if (this._cargando)
+    {
+        <MudProgressLinear Color="Color.Primary" Indeterminate="true" />
+    }
+    else if (this._datosUsuario != null)
+    {
+        <MudPaper Class="pa-4" Elevation="2">
+            <MudForm @ref="this._form" @bind-IsValid="@this._formValido">
+                <MudGrid>
+                    <!-- Foto de perfil -->
+                    <MudItem xs="12" Class="d-flex justify-center mb-4">
+                        <MudStack AlignItems="AlignItems.Center" Spacing="2">
+                            @if (!string.IsNullOrEmpty(this._fotoPreview))
+                            {
+                                <MudAvatar Size="Size.Large" Style="width: 120px; height: 120px;">
+                                    <MudImage Src="@this._fotoPreview" />
+                                </MudAvatar>
+                            }
+                            else
+                            {
+                                <MudAvatar Color="Color.Primary" Size="Size.Large" Style="width: 120px; height: 120px;">
+                                    <MudIcon Icon="@Icons.Material.Filled.Person" Size="Size.Large" />
+                                </MudAvatar>
+                            }
+                            <InputFile id="fileInput"
+                                       OnChange="OnImagenSeleccionada"
+                                       accept="image/*"
+                                       hidden />
+                            <MudButton HtmlTag="label"
+                                       Variant="Variant.Filled"
+                                       Color="Color.Primary"
+                                       StartIcon="@Icons.Material.Filled.CloudUpload"
+                                       for="fileInput">
+                                Subir Foto
+                            </MudButton>
+                        </MudStack>
+                    </MudItem>
+
+                    <!-- Login -->
+                    <MudItem xs="12" sm="6">
+                        <MudTextField @bind-Value="this._usuario.Login"
+                                      Label="Login"
+                                      Required="true"
+                                      RequiredError="El login es obligatorio"
+                                      Variant="Variant.Outlined" />
+                    </MudItem>
+
+                    <!-- Contraseña -->
+                    <MudItem xs="12" sm="6">
+                        <MudTextField @bind-Value="this._usuario.Contraseña"
+                                      Label="@(this.Id.HasValue ? "Nueva Contraseña (opcional)" : "Contraseña")"
+                                      InputType="InputType.Password"
+                                      Required="@(!this.Id.HasValue)"
+                                      RequiredError="La contraseña es obligatoria"
+                                      Variant="Variant.Outlined" />
+                    </MudItem>
+
+                    <!-- Nombre -->
+                    <MudItem xs="12" sm="4">
+                        <MudTextField @bind-Value="this._usuario.Nombre"
+                                      Label="Nombre"
+                                      Required="true"
+                                      RequiredError="El nombre es obligatorio"
+                                      Variant="Variant.Outlined" />
+                    </MudItem>
+
+                    <!-- Apellido1 -->
+                    <MudItem xs="12" sm="4">
+                        <MudTextField @bind-Value="this._usuario.Apellido1"
+                                      Label="Primer Apellido"
+                                      Required="true"
+                                      RequiredError="El primer apellido es obligatorio"
+                                      Variant="Variant.Outlined" />
+                    </MudItem>
+
+                    <!-- Apellido2 -->
+                    <MudItem xs="12" sm="4">
+                        <MudTextField @bind-Value="this._usuario.Apellido2"
+                                      Label="Segundo Apellido"
+                                      Variant="Variant.Outlined" />
+                    </MudItem>
+
+                    <!-- Email -->
+                    <MudItem xs="12" sm="6">
+                        <MudTextField @bind-Value="this._usuario.CorreoE"
+                                      Label="Email"
+                                      Required="true"
+                                      RequiredError="El email es obligatorio"
+                                      Validation="@(new EmailAddressAttribute() { ErrorMessage = "Email no válido" })"
+                                      Variant="Variant.Outlined" />
+                    </MudItem>
+
+                    <!-- Teléfono -->
+                    <MudItem xs="12" sm="6">
+                        <MudNumericField @bind-Value="this._usuario.Telefono"
+                                         Label="Teléfono"
+                                         Required="true"
+                                         RequiredError="El teléfono es obligatorio"
+                                         Variant="Variant.Outlined"
+                                         HideSpinButtons="true" />
+                    </MudItem>
+
+                    <!-- Fecha Nacimiento -->
+                    <MudItem xs="12" sm="6">
+                        <MudDatePicker @bind-Date="this._fechaNacimiento"
+                                       Label="Fecha de Nacimiento"
+                                       Required="true"
+                                       RequiredError="La fecha es obligatoria"
+                                       Variant="Variant.Outlined"
+                                       DateFormat="dd/MM/yyyy"
+                                       MaxDate="DateTime.Today" />
+                    </MudItem>
+
+                    <!-- Idioma -->
+                    <MudItem xs="12" sm="6">
+                        <MudSelect @bind-Value="this._usuario.IdiomaId"
+                                   Label="Idioma"
+                                   Required="true"
+                                   RequiredError="El idioma es obligatorio"
+                                   Variant="Variant.Outlined">
+                            @foreach (var idioma in this._datosUsuario.Idiomas)
+                            {
+                                <MudSelectItem Value="@idioma.Id">@idioma.Nombre</MudSelectItem>
+                            }
+                        </MudSelect>
+                    </MudItem>
+
+                    <!-- Permisos -->
+                    <MudItem xs="12">
+                        <MudText Typo="Typo.h6" Class="mb-2">Permisos Asignados</MudText>
+                        <MudPaper Class="pa-3" Outlined="true">
+                            @foreach (var permiso in this._datosUsuario.PermisosDisponibles)
+                            {
+                                <MudCheckBox @bind-Value="permiso.Asignado"
+                                             Label="@($"{permiso.Codigo} - {permiso.Nombre}")"
+                                             Color="@ObtenerColorPermiso(permiso.Codigo)" />
+                            }
+                        </MudPaper>
+                        @if (!this._datosUsuario.PermisosDisponibles.Any(p => p.Asignado))
+                        {
+                            <MudText Color="Color.Error" Typo="Typo.caption" Class="mt-1">
+                                Debe asignar al menos el permiso ADMIN
+                            </MudText>
+                        }
+                    </MudItem>
+
+                    <!-- Botones -->
+                    <MudItem xs="12" Class="d-flex justify-end gap-2 mt-4">
+                        <MudButton Variant="Variant.Outlined"
+                                   Color="Color.Default"
+                                   Href="@URLsPantallas.AdminUsuariosListado">
+                            Cancelar
+                        </MudButton>
+                        <MudButton Variant="Variant.Filled"
+                                   Color="Color.Primary"
+                                   OnClick="GuardarUsuario"
+                                   Disabled="@(!this._formValido || this._guardando)">
+                            @if (this._guardando)
+                            {
+                                <MudProgressCircular Size="Size.Small" Indeterminate="true" />
+                                <span class="ml-2">Guardando...</span>
+                            }
+                            else
+                            {
+                                <span>Guardar</span>
+                            }
+                        </MudButton>
+                    </MudItem>
+                </MudGrid>
+            </MudForm>
+        </MudPaper>
+    }
+</MudContainer>
+
+@code {
+    #region ***** DEPENDENCIAS *****
+
+    [Inject]
+    public required ServicioUsuariosAdmin ServicioUsuariosAdmin { get; set; }
+
+    [Inject]
+    public required ISnackbar Snackbar { get; set; }
+
+    [Inject]
+    public required NavigationManager Navigation { get; set; }
+
+    #endregion
+
+    #region ***** PARÁMETROS *****
+
+    [Parameter]
+    public int? Id { get; set; }
+
+    #endregion
+
+    #region ***** PROPIEDADES PRIVADAS *****
+
+    private UsuarioAdminData? _datosUsuario;
+    private UsuarioAdminSaveDataDTO _usuario = new();
+    private MudForm? _form;
+    private bool _formValido = false;
+    private bool _cargando = false;
+    private bool _guardando = false;
+    private string? _fotoPreview;
+    private DateTime? _fechaNacimiento;
+
+    #endregion
+
+    #region ***** MÉTODOS PÚBLICOS *****
+
+    protected override async Task OnInitializedAsync()
+    {
+        await this.CargarDatos();
+    }
+
+    #endregion
+
+    #region ***** MÉTODOS PRIVADOS *****
+
+    private async Task CargarDatos()
+    {
+        try
+        {
+            this._cargando = true;
+
+            if (this.Id.HasValue)
+            {
+                // Edición: cargar datos existentes
+                this._datosUsuario = await this.ServicioUsuariosAdmin.ShowData(this.Id.Value);
+                if (this._datosUsuario != null && this._datosUsuario.Usuario != null)
+                {
+                    this._usuario.Id = this._datosUsuario.Usuario.Id;
+                    this._usuario.Login = this._datosUsuario.Usuario.Login;
+                    this._usuario.Nombre = this._datosUsuario.Usuario.Nombre;
+                    this._usuario.Apellido1 = this._datosUsuario.Usuario.Apellido1;
+                    this._usuario.Apellido2 = this._datosUsuario.Usuario.Apellido2;
+                    this._usuario.CorreoE = this._datosUsuario.Usuario.CorreoE;
+                    this._usuario.IdiomaId = this._datosUsuario.Usuario.IdiomaId;
+                    this._usuario.Telefono = this._datosUsuario.Usuario.Telefono;
+                    this._usuario.PermisosIds = this._datosUsuario.Usuario.PermisosIds;
+                    this._fechaNacimiento = this._datosUsuario.Usuario.FechaNacimiento;
+
+                    if (!string.IsNullOrEmpty(this._datosUsuario.Usuario.ImagenBase64))
+                    {
+                        this._fotoPreview = $"data:image/webp;base64,{this._datosUsuario.Usuario.ImagenBase64}";
+                        this._usuario.ImagenBase64 = this._datosUsuario.Usuario.ImagenBase64;
+                    }
+                }
+            }
+            else
+            {
+                // Creación: cargar datos para nuevo
+                this._datosUsuario = await this.ServicioUsuariosAdmin.AddNew();
+                this._fechaNacimiento = DateTime.Today.AddYears(-18);
+            }
+        }
+        catch (Exception ex)
+        {
+            this.Snackbar.Add($"Error al cargar datos: {ex.Message}", Severity.Error);
+        }
+        finally
+        {
+            this._cargando = false;
+        }
+    }
+
+    private async Task OnImagenSeleccionada(InputFileChangeEventArgs e)
+    {
+        IBrowserFile file;
+        Stream stream;
+        MemoryStream memoryStream;
+        byte[] bytes;
+
+        try
+        {
+            file = e.File;
+
+            if (file.Size > 5 * 1024 * 1024) // 5MB
+            {
+                this.Snackbar.Add("La imagen no puede superar 5MB", Severity.Warning);
+                return;
+            }
+
+            stream = file.OpenReadStream(maxAllowedSize: 5 * 1024 * 1024);
+            memoryStream = new MemoryStream();
+            await stream.CopyToAsync(memoryStream);
+            bytes = memoryStream.ToArray();
+
+            this._usuario.ImagenBase64 = Convert.ToBase64String(bytes);
+            this._fotoPreview = $"data:{file.ContentType};base64,{this._usuario.ImagenBase64}";
+        }
+        catch (Exception ex)
+        {
+            this.Snackbar.Add($"Error al cargar imagen: {ex.Message}", Severity.Error);
+        }
+    }
+
+    private async Task GuardarUsuario()
+    {
+        List<int> permisosSeleccionados;
+
+        try
+        {
+            // Validar que tenga al menos ADMIN
+            permisosSeleccionados = this._datosUsuario?.PermisosDisponibles
+                .Where(p => p.Asignado)
+                .Select(p => p.Id)
+                .ToList() ?? new List<int>();
+
+            if (!permisosSeleccionados.Any())
+            {
+                this.Snackbar.Add("Debe asignar al menos el permiso ADMIN", Severity.Warning);
+                return;
+            }
+
+            this._guardando = true;
+
+            // Asignar permisos seleccionados
+            this._usuario.PermisosIds = permisosSeleccionados;
+
+            // Asignar fecha de nacimiento
+            if (this._fechaNacimiento.HasValue)
+            {
+                this._usuario.FechaNacimiento = this._fechaNacimiento.Value;
+            }
+
+            await this.ServicioUsuariosAdmin.SaveData(this._usuario);
+
+            this.Snackbar.Add("Administrador guardado correctamente", Severity.Success);
+            this.Navigation.NavigateTo(URLsPantallas.AdminUsuariosListado);
+        }
+        catch (Exception ex)
+        {
+            this.Snackbar.Add($"Error al guardar: {ex.Message}", Severity.Error);
+        }
+        finally
+        {
+            this._guardando = false;
+        }
+    }
+
+    private Color ObtenerColorPermiso(string codigo)
+    {
+        return codigo switch
+        {
+            "PLUS" => Color.Success,
+            "ADMIN" => Color.Primary,
+            _ => Color.Default
+        };
+    }
+
+    #endregion
+}

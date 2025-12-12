@@ -1,0 +1,58 @@
+﻿@implements IDisposable
+
+<CascadingValue Value="this">
+    @Contenido
+</CascadingValue>
+
+<Cargador @ref="this._cargador" />
+
+@code {
+    #region ***** INYECCIONES *****
+    [Inject] private IServicioCargador ServicioCargador { get; set; }
+    #endregion
+
+    #region ***** PARÁMETROS *****
+    [Parameter] public RenderFragment Contenido { get; set; }
+    #endregion
+
+    #region ***** PROPIEDADES PRIVADAS *****
+    private Cargador _cargador;
+
+    #endregion
+
+    #region ***** MÉTODOS PÚBLICOS *****
+    protected override void OnInitialized()
+    {
+        if (ServicioCargador != null)
+        {
+            ServicioCargador.AlAbrir += MostrarCargador;
+            ServicioCargador.AlCerrar += OcultarCargador;
+        }
+    }
+
+    internal async void MostrarCargador()
+    {
+        if (this._cargador != null)
+        {
+            await this._cargador.Abrir();
+        }
+    }
+
+    internal async void OcultarCargador()
+    {
+        if (this._cargador != null)
+        {
+            await this._cargador.Cerrar();
+        }
+    }
+
+    public void Dispose()
+    {
+        if (ServicioCargador != null)
+        {
+            ServicioCargador.AlAbrir -= MostrarCargador;
+            ServicioCargador.AlCerrar -= OcultarCargador;
+        }
+    }
+    #endregion
+}

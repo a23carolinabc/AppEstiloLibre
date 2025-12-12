@@ -1,0 +1,187 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+	<BlazorWebAssemblyLoadAllGlobalizationData>true</BlazorWebAssemblyLoadAllGlobalizationData>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Remove="wwwroot\css\Layout\LayoutAdministracion.css" />
+    <Content Remove="wwwroot\css\Pages\Conocenos.css" />
+    <Content Remove="wwwroot\css\Pages\Inicio.css" />
+    <Content Remove="wwwroot\css\Shared\MenuSuperior.css" />
+    <Content Remove="wwwroot\css\Shared\MenuSuperiorAdmin.css" />
+    <Content Remove="wwwroot\css\Shared\MenuSuperiorPublico.css" />
+  </ItemGroup>
+
+  <ItemGroup>
+	<BlazorWebAssemblyAdditionalCulture Include="gl-ES" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Pages\Login.razor" />
+    <None Include="wwwroot\css\Layout\LayoutAdministracion.css" />
+    <None Include="wwwroot\css\Layout\LayoutPublico.css" />
+    <None Include="wwwroot\css\Layout\MainLayout.css" />
+    <None Include="wwwroot\css\Pages\Conocenos.css" />
+    <None Include="wwwroot\css\Pages\Inicio.css" />
+    <None Include="wwwroot\css\Shared\Cargador.css" />
+    <None Include="wwwroot\css\Shared\ConjuntoCanvas.css" />
+    <None Include="wwwroot\css\Shared\MenuSuperiorAdmin.css" />
+    <None Include="wwwroot\css\Shared\MenuSuperior.css" />
+    <None Include="wwwroot\css\Shared\MenuSuperiorPublico.css" />
+    <None Include="wwwroot\css\Shared\PiePagina.css" />
+    <None Include="wwwroot\Recursos\icono-formulario.svg" />
+    <None Include="wwwroot\Recursos\icono-listado.svg" />
+    <None Include="wwwroot\Recursos\logo.svg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Blazored.LocalStorage" Version="4.5.0" />
+    <PackageReference Include="Blazored.SessionStorage" Version="2.4.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="9.0.4" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="9.0.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="9.0.3" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="9.0.3" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="9.0.3" />
+    <PackageReference Include="Microsoft.Extensions.Localization" Version="9.0.3" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Configuration" Version="9.0.3" />
+    <PackageReference Include="MudBlazor" Version="8.14.0" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.7.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Traducciones\TrConfiguracionUsuario\TrConfiguracionUsuario.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>TrConfiguracionUsuario.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Traducciones\TrConjuntos\TrConjuntos.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>TrConjuntos.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Traducciones\TrConocenos\TrConocenos.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>TrConocenos.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Traducciones\TrGeneral\TrGeneral.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>TrGeneral.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Traducciones\TrInicio\TrInicio.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>TrInicio.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Traducciones\TrListadoConjuntos\TrListadoConjuntos.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>TrListadoConjuntos.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Traducciones\TrListadoPrendas\TrListadoPrendas.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>TrListadoPrendas.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Traducciones\TrListadoUsuariosAdmin\TrListadoUsuariosAdmin.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>TrListadoUsuariosAdmin.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Traducciones\TrListadoUsuarios\TrListadoUsuarios.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>TrListadoUsuarios.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Traducciones\TrLogin\TrLogin.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>TrLogin.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Traducciones\TrRegistro\TrRegistro.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>TrRegistro.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Traducciones\TrShared\TrShared.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>TrShared.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Traducciones\TrErrores\TrErrores.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>TrErrores.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Traducciones\TrPrendas\TrPrendas.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>TrPrendas.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Traducciones\TrConfiguracionUsuario\TrConfiguracionUsuario.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>TrConfiguracionUsuario.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Traducciones\TrConjuntos\TrConjuntos.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>TrConjuntos.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Traducciones\TrConocenos\TrConocenos.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>TrConocenos.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Traducciones\TrGeneral\TrGeneral.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>TrGeneral.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Traducciones\TrInicio\TrInicio.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>TrInicio.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Traducciones\TrListadoConjuntos\TrListadoConjuntos.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>TrListadoConjuntos.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Traducciones\TrListadoPrendas\TrListadoPrendas.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>TrListadoPrendas.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Traducciones\TrListadoUsuariosAdmin\TrListadoUsuariosAdmin.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>TrListadoUsuariosAdmin.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Traducciones\TrListadoUsuarios\TrListadoUsuarios.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>TrListadoUsuarios.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Traducciones\TrLogin\TrLogin.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>TrLogin.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Traducciones\TrRegistro\TrRegistro.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>TrRegistro.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Traducciones\TrShared\TrShared.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>TrShared.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Traducciones\TrErrores\TrErrores.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>TrErrores.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Traducciones\TrPrendas\TrPrendas.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>TrPrendas.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+</Project>

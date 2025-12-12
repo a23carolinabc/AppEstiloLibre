@@ -1,0 +1,60 @@
+﻿@inherits LayoutComponentBase
+
+<MudThemeProvider Theme="this._temaPersonalizado" />
+<MudPopoverProvider />
+<MudDialogProvider />
+<MudSnackbarProvider />
+<link href="css/Layout/MainLayout.css" rel="stylesheet" />
+
+<MudLayout>
+    <MenuLateral />
+    
+    <MudMainContent>
+        <MenuSuperior />
+
+        @* <ContenedorCargador>
+            <Contenido>
+                <CascadingValue Value="this">
+                    @Body
+                </CascadingValue>
+            </Contenido>
+        </ContenedorCargador>   *@
+        <CascadingValue Value="this">
+            @Body
+        </CascadingValue>
+    </MudMainContent>
+</MudLayout>
+
+@code {
+    #region ***** DEPENDENCIAS *****
+    #endregion
+
+    #region ***** PROPIEDADES PRIVADAS *****
+    private MudTheme _temaPersonalizado = new MudTheme()
+    {
+        PaletteLight = new PaletteLight()
+        {
+            Primary = "#1E88E5",
+            Secondary = "#9C27B0",
+            Tertiary = "#FFFFFF",
+            Success = "#4CAF50",
+            Info = "#00BCD4",
+            Warning = "#FFC107",
+            Error = "#F44336",
+            Dark = "#424242",           
+        }
+    };
+    #endregion
+
+    #region ***** PROPIEDADES PÚBLICAS *****
+
+    #endregion
+
+    #region ***** MÉTODOS PÚBLICOS *****
+        
+    #endregion
+
+    #region ***** MÉTODOS PRIVADOS *****
+
+    #endregion
+}

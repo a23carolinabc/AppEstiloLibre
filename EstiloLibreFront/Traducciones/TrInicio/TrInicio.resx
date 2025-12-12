@@ -1,0 +1,214 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="btnComenzar" xml:space="preserve">
+    <value>Comenzar Gratis</value>
+  </data>
+  <data name="btnSaberMas" xml:space="preserve">
+    <value>Saber más</value>
+  </data>
+  <data name="EstiloLibre" xml:space="preserve">
+    <value>EstiloLibre</value>
+  </data>
+  <data name="lblGancho1" xml:space="preserve">
+    <value>Organiza tu armario, </value>
+  </data>
+  <data name="lblGancho2" xml:space="preserve">
+    <value>crea tu estilo</value>
+  </data>
+  <data name="lblSeccionFuncionamiento" xml:space="preserve">
+    <value>Cómo Funciona</value>
+  </data>
+  <data name="lblSubTituloGancho" xml:space="preserve">
+    <value>EstiloLibre es tu asistente personal de moda que te ayuda a gestionar tu guardarropa,
+crear conjuntos únicos y descubrir tu estilo personal.</value>
+  </data>
+  <data name="lblTextoCaracteristica1" xml:space="preserve">
+    <value>Digitaliza todas tus prendas de forma sencilla. Clasifícalas por tipo, color,
+temporada y más. Ten tu armario siempre contigo.</value>
+  </data>
+  <data name="lblTextoCaracteristica2" xml:space="preserve">
+    <value>Combina tus prendas para crear looks únicos. Guarda tus conjuntos favoritos
+y tenlos listos para cualquier ocasión.</value>
+  </data>
+  <data name="lblTextoCaracteristica3" xml:space="preserve">
+    <value>Analiza tus preferencias y descubre patrones en tu forma de vestir.
+Optimiza tus compras y aprovecha al máximo tu guardarropa.</value>
+  </data>
+  <data name="lblTituloCaracteristica1" xml:space="preserve">
+    <value>Organiza tu Armario</value>
+  </data>
+  <data name="lblTituloCaracteristica2" xml:space="preserve">
+    <value>Crea Conjuntos</value>
+  </data>
+  <data name="lblTituloCaracteristica3" xml:space="preserve">
+    <value>Descubre tu Estilo</value>
+  </data>
+  <data name="lblSeccionCaracteristicas" xml:space="preserve">
+    <value>Por qué elegir</value>
+  </data>
+  <data name="pageTitle" xml:space="preserve">
+    <value>EstiloLibre</value>
+  </data>
+  <data name="lblPaso1" xml:space="preserve">
+    <value>Paso 1</value>
+  </data>
+  <data name="lblTituloPaso1" xml:space="preserve">
+    <value>Regístrate</value>
+  </data>
+  <data name="lblTextoPaso1" xml:space="preserve">
+    <value>Crea tu cuenta gratuita en menos de un minuto. No necesitas tarjeta de crédito.</value>
+  </data>
+  <data name="lblPaso2" xml:space="preserve">
+    <value>Paso 2</value>
+  </data>
+  <data name="lblTituloPaso2" xml:space="preserve">
+    <value>Sube tus Prendas</value>
+  </data>
+  <data name="lblTextoPaso2" xml:space="preserve">
+    <value>Fotografía tus prendas o sube imágenes existentes. Añade detalles como color,
+tipo y temporada.</value>
+  </data>
+  <data name="lblPaso3" xml:space="preserve">
+    <value>Paso 3</value>
+  </data>
+  <data name="lblTituloPaso3" xml:space="preserve">
+    <value>Crea Conjuntos</value>
+  </data>
+  <data name="lblTextoPaso3" xml:space="preserve">
+    <value>Combina tus prendas para crear looks completos. Guarda tus favoritos y
+compártelos si quieres.</value>
+  </data>
+  <data name="lblPaso4" xml:space="preserve">
+    <value>¡Listo!</value>
+  </data>
+  <data name="lblTituloPaso4" xml:space="preserve">
+    <value>Disfruta de tu Estilo</value>
+  </data>
+  <data name="lblTextoPaso4" xml:space="preserve">
+    <value>Accede a tu armario digital desde cualquier lugar y nunca más te quedes sin
+ideas para vestir.</value>
+  </data>
+  <data name="lblSeccionAccion" xml:space="preserve">
+    <value>¿Listo para transformar tu armario?</value>
+  </data>
+  <data name="lblTextoAccion" xml:space="preserve">
+    <value>Únete a miles de usuarios que ya están organizando su estilo con EstiloLibre</value>
+  </data>
+</root>

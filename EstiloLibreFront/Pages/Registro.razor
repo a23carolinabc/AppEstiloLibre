@@ -1,0 +1,337 @@
+﻿@attribute [AllowAnonymous]
+@page "/registro"
+@layout LayoutPublico
+
+<PageTitle>Registro - EstiloLibre</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.Medium" Class="registro-container">
+    <MudPaper Elevation="4" Class="pa-6">
+        <!-- Encabezado -->
+        <div class="text-center mb-6">
+            <MudIcon Icon="@Icons.Material.Filled.Checkroom" 
+                     Size="Size.Large" 
+                     Color="Color.Primary"
+                     Style="font-size: 64px;" />
+            <MudText Typo="Typo.h4" Class="mt-3">Únete a EstiloLibre</MudText>
+            <MudText Typo="Typo.body1" Color="Color.Dark">
+                Crea tu cuenta en solo 3 pasos
+            </MudText>
+        </div>
+
+        <!-- Stepper -->
+        <MudStepper @ref="@this._stepper" NonLinear="false" @bind-ActiveIndex="@this._pasoActivo">
+            
+            <!-- PASO 1: Información de Cuenta -->
+            <MudStep Title="Información de Cuenta" Skippable=false>
+                <ChildContent>
+                    <EditForm Model="@this._usuario">
+                        <DataAnnotationsValidator />
+                        
+                        <MudText Typo="Typo.h6" Class="mb-4">Crea tu cuenta</MudText>
+
+                        <MudTextField @bind-Value="@this._usuario.Login"
+                                      Label="Nombre de usuario"
+                                      Variant="Variant.Outlined"
+                                      FullWidth="true"
+                                      Margin="Margin.Normal"
+                                      Adornment="Adornment.Start"
+                                      AdornmentIcon="@Icons.Material.Filled.Person"
+                                      Required="true"
+                                      HelperText="Este será tu identificador único en EstiloLibre" />
+
+                        <MudTextField @bind-Value="@this._usuario.CorreoE"
+                                      Label="Correo electrónico"
+                                      Variant="Variant.Outlined"
+                                      InputType="InputType.Email"
+                                      FullWidth="true"
+                                      Margin="Margin.Normal"
+                                      Adornment="Adornment.Start"
+                                      AdornmentIcon="@Icons.Material.Filled.Email"
+                                      Required="true"
+                                      HelperText="Usaremos este correo para comunicaciones importantes" />
+
+                        <MudTextField @bind-Value="@this._usuario.Contraseña"
+                                      Label="Contraseña"
+                                      Variant="Variant.Outlined"
+                                      InputType="InputType.Password"
+                                      FullWidth="true"
+                                      Margin="Margin.Normal"
+                                      Adornment="Adornment.Start"
+                                      AdornmentIcon="@Icons.Material.Filled.Lock"
+                                      Required="true"
+                                      HelperText="Mínimo 8 caracteres" />
+
+                        <MudTextField @bind-Value="@this._contraseñaConfirmacion"
+                                      Label="Confirmar contraseña"
+                                      Variant="Variant.Outlined"
+                                      InputType="InputType.Password"
+                                      FullWidth="true"
+                                      Margin="Margin.Normal"
+                                      Adornment="Adornment.Start"
+                                      AdornmentIcon="@Icons.Material.Filled.Lock"
+                                      Required="true"
+                                      Error="@(!this.ContraseñasCoinciden())"
+                                      ErrorText="Las contraseñas no coinciden" />
+                    </EditForm>
+                </ChildContent>
+            </MudStep>
+
+            <!-- PASO 2: Información Personal -->
+            <MudStep Title="Información Personal" Skippable=false
+                     Icon="@Icons.Material.Filled.PersonalInjury">
+                <ChildContent>
+                    <MudText Typo="Typo.h6" Class="mb-2">Información personal (Opcional)</MudText>
+                    <MudText Typo="Typo.body2" Color="Color.Dark" Class="mb-4">
+                        Esta información nos ayudará a personalizar tu experiencia
+                    </MudText>
+
+                    <MudTextField @bind-Value="@this._usuario.Nombre"
+                                  Label="Nombre"
+                                  Variant="Variant.Outlined"
+                                  FullWidth="true"
+                                  Margin="Margin.Normal" />
+
+                    <MudTextField @bind-Value="@this._usuario.Apellido1"
+                                  Label="Apellido 1"
+                                  Variant="Variant.Outlined"
+                                  FullWidth="true"
+                                  Margin="Margin.Normal" />
+
+                    <MudTextField @bind-Value="@this._usuario.Apellido2"
+                                  Label="Apellido 2"
+                                  Variant="Variant.Outlined"
+                                  FullWidth="true"
+                                  Margin="Margin.Normal" />
+
+                    <MudDatePicker @bind-Date="@this._usuario.FechaNacimiento"
+                                   Label="Fecha de nacimiento"
+                                   Variant="Variant.Outlined"
+                                   Margin="Margin.Normal"
+                                   MaxDate="@DateTime.Today.AddYears(-16)"
+                                   HelperText="Debes tener al menos 16 años para usar EstiloLibre" />
+
+                    <MudSelect @bind-Value="this._usuario.IdiomaId"
+                               Label="Color *"
+                               Variant="Variant.Outlined"
+                               Class="mb-3"
+                               Required="true">
+                        <MudSelectItem Value="0">Seleccione un color</MudSelectItem>
+                        @if (this._usuarioData.Idiomas != null)
+                        {
+                            @foreach (var color in this._usuarioData.Idiomas)
+                            {
+                                <MudSelectItem Value="@color.Id">@color.Nombre</MudSelectItem>
+                            }
+                        }
+                    </MudSelect>
+                </ChildContent>
+            </MudStep>
+
+            <!-- PASO 3: Términos y Condiciones -->
+            <MudStep Title="Términos y Condiciones" 
+                     Icon="@Icons.Material.Filled.Gavel">
+                <ChildContent>
+                    <MudText Typo="Typo.h6" Class="mb-4">Acepta nuestros términos</MudText>
+
+                    <MudPaper Elevation="1" Class="pa-4 mb-4" Style="max-height: 300px; overflow-y: auto;">
+                        <MudText Typo="Typo.body2" Class="mb-2">
+                            <strong>Resumen de términos:</strong>
+                        </MudText>
+                        <MudList Dense="true" T="string">
+                            <MudListItem Icon="@Icons.Material.Filled.Check">
+                                Tus datos serán tratados conforme a nuestra Política de Privacidad
+                            </MudListItem>
+                            <MudListItem Icon="@Icons.Material.Filled.Check">
+                                Eres responsable de mantener la seguridad de tu cuenta
+                            </MudListItem>
+                            <MudListItem Icon="@Icons.Material.Filled.Check">
+                                El contenido que subas debe ser de tu propiedad
+                            </MudListItem>
+                            <MudListItem Icon="@Icons.Material.Filled.Check">
+                                Nos reservamos el derecho de suspender cuentas que incumplan las normas
+                            </MudListItem>
+                            <MudListItem Icon="@Icons.Material.Filled.Check">
+                                Puedes eliminar tu cuenta en cualquier momento
+                            </MudListItem>
+                        </MudList>
+                    </MudPaper>
+
+                    <MudCheckBox @bind-Value="@this._aceptaPrivacidad" 
+                                 Color="Color.Primary"
+                                 Dense="true">
+                        <MudText Typo="Typo.body2">
+                            He leído y acepto la 
+                            <MudLink Href="@URLsPantallas.PoliticaPrivacidad" Target="_blank" Color="Color.Primary">
+                                Política de Privacidad
+                            </MudLink>
+                        </MudText>
+                    </MudCheckBox>
+
+                    <MudCheckBox @bind-Value="@this._aceptaTerminos" 
+                                 Color="Color.Primary"
+                                 Dense="true"
+                                 Class="mt-2">
+                        <MudText Typo="Typo.body2">
+                            Acepto los Términos y Condiciones de uso
+                        </MudText>
+                    </MudCheckBox>
+
+                    <MudCheckBox @bind-Value="@this._aceptaComunicaciones" 
+                                 Color="Color.Primary"
+                                 Dense="true"
+                                 Class="mt-2">
+                        <MudText Typo="Typo.body2">
+                            Deseo recibir novedades y consejos de moda (opcional)
+                        </MudText>
+                    </MudCheckBox>
+
+                    @if (this._errorRegistro != null)
+                    {
+                        <MudAlert Severity="Severity.Error" Class="mt-3">
+                            @this._errorRegistro
+                        </MudAlert>
+                    }
+
+                    <MudStack Row="true" Justify="Justify.SpaceBetween" Class="mt-4">                        
+                        <MudButton Variant="Variant.Filled"
+                                   Color="Color.Success"
+                                   OnClick="@this.CompletarRegistro"
+                                   Disabled="@(!this.Paso3Valido() || this._procesandoRegistro)"
+                                   StartIcon="@Icons.Material.Filled.CheckCircle">
+                            @if (this._procesandoRegistro)
+                            {
+                                <MudProgressCircular Size="Size.Small" Indeterminate="true" Class="mr-2" />
+                                <text>Creando cuenta...</text>
+                            }
+                            else
+                            {
+                                <text>Crear Cuenta</text>
+                            }
+                        </MudButton>
+                    </MudStack>
+                </ChildContent>
+            </MudStep>
+        </MudStepper>
+
+        <!-- Enlaces adicionales -->
+        <MudDivider Class="my-4" />
+        <MudText Align="Align.Center" Typo="Typo.body2">
+            ¿Ya tienes una cuenta?
+            <MudLink Href="@URLsPantallas.Login" Color="Color.Primary" Typo="Typo.body2" Class="font-weight-bold">
+                Inicia sesión aquí
+            </MudLink>
+        </MudText>
+    </MudPaper>
+
+    <!-- Enlace volver a inicio -->
+    <MudText Align="Align.Center" Class="mt-4">
+        <MudLink Href="@URLsPantallas.Inicio" Color="Color.Primary">
+            <MudIcon Icon="@Icons.Material.Filled.ArrowBack" Size="Size.Small" />
+            Volver al inicio
+        </MudLink>
+    </MudText>
+</MudContainer>
+
+@code {
+    #region ***** DEPENDENCIAS *****
+
+    [Inject]
+    public required ISnackbar ServicioNotificacion { get; set; }    
+    [Inject]
+    public required ServicioNavegacion ServicioNavegacion { get; set; }
+    [Inject]
+    public required ServicioUsuarios ServicioUsuarios { get; set; }
+    [Inject]
+    public required IStringLocalizer<TrErrores> TraductorErrores { get; set; }
+
+    #endregion
+
+    #region ***** PROPIEDADES PRIVADAS *****
+
+    private MudStepper? _stepper;
+    private int _pasoActivo = 0;
+    private NuevoUsuarioDTO _usuario = new();
+    private UsuarioData _usuarioData;
+    private string _contraseñaConfirmacion = string.Empty;
+    private bool _aceptaPrivacidad = false;
+    private bool _aceptaTerminos = false;
+    private bool _aceptaComunicaciones = false;
+    private bool _procesandoRegistro = false;
+    private string? _errorRegistro = null;
+
+    #endregion
+
+    #region ***** MÉTODOS PÚBLICOS *****
+    protected async override Task OnInitializedAsync()
+    {
+        try
+        {
+            this._usuarioData = await this.ServicioUsuarios.AddNew()?? new();
+        }
+        catch (Exception ex)
+        {
+            this.ServicioNotificacion.Add(this.TraductorErrores["ERR_CargaDatosIniciales"], Severity.Error);
+        }
+    }
+    #endregion
+
+    #region ***** MÉTODOS PRIVADOS *****
+
+    private bool ContraseñasCoinciden()
+    {
+        bool bCoinciden;
+
+        if (string.IsNullOrWhiteSpace(this._contraseñaConfirmacion))
+        {
+            return true; // No mostrar error hasta que empiece a escribir
+        }
+
+        bCoinciden = this._usuario.Contraseña == this._contraseñaConfirmacion;
+
+        return bCoinciden;
+    }
+
+    private bool Paso3Valido()
+    {
+        bool bAceptacionesValidas;
+
+        bAceptacionesValidas = this._aceptaPrivacidad && this._aceptaTerminos;
+
+        return bAceptacionesValidas;
+    }
+
+    private async Task CompletarRegistro()
+    {
+        this._procesandoRegistro = true;
+        this._errorRegistro = null;
+        StateHasChanged();
+
+        try
+        {
+            await this.ServicioUsuarios.SaveDataNuevoUsuario(this._usuario);
+
+            this.ServicioNotificacion.Add("¡Cuenta creada exitosamente! Redirigiendo al login...", Severity.Success);
+            await Task.Delay(1500);
+            
+            this.ServicioNavegacion.NavegarA(URLsPantallas.Login);
+        }
+        catch (Exception ex)
+        {
+            this._errorRegistro = $"Error al crear la cuenta: {ex.Message}";
+            this.ServicioNotificacion.Add("Error al crear la cuenta. Inténtalo de nuevo.", Severity.Error);
+        }
+        finally
+        {
+            this._procesandoRegistro = false;
+            StateHasChanged();
+        }
+    }
+
+    #endregion
+
+    #region ***** CLASES AUXILIARES *****
+
+    
+
+    #endregion
+}
