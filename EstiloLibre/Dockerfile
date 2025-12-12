@@ -39,6 +39,5 @@ RUN mkdir -p /app/Adjuntos
 
 # Variables de entorno para Railway
 ENV ASPNETCORE_ENVIRONMENT=Docker
-ENV ASPNETCORE_URLS=http://+:80
 
 ENTRYPOINT ["dotnet", "EstiloLibre.dll"]
