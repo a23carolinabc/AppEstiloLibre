@@ -3,10 +3,10 @@
 window.obtenerPosicionCanvas = function (canvasElement) {
     const rect = canvasElement.getBoundingClientRect();
     return {
-        left: rect.left + window.scrollX,
-        top: rect.top + window.scrollY,
-        width: rect.width,
-        height: rect.height
+        Izquierda: rect.left + window.scrollX, 
+        Arriba: rect.top + window.scrollY,      
+        Ancho: rect.width,                       
+        Altura: rect.height                 
     };
 };
 

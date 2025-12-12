@@ -67,18 +67,9 @@
             </HeaderContent>
             <RowTemplate>
                 <MudTd DataLabel="Foto">
-                    @if (!string.IsNullOrEmpty(context.ImagenBase64))
-                    {
-                        <MudAvatar>
-                            <MudImage Src="@($"data:image/jpeg;base64,{context.ImagenBase64}")" />
-                        </MudAvatar>
-                    }
-                    else
-                    {
-                        <MudAvatar Color="Color.Primary">
-                            <MudIcon Icon="@Icons.Material.Filled.Person" />
-                        </MudAvatar>
-                    }
+                    <MudAvatar Color="Color.Primary">
+                        <MudIcon Icon="@Icons.Material.Filled.Person" />
+                    </MudAvatar>
                 </MudTd>
                 <MudTd DataLabel="Login">@context.Login</MudTd>
                 <MudTd DataLabel="Nombre">@context.NombreCompleto</MudTd>

@@ -1,4 +1,4 @@
-﻿/*.prenda-canvas {
+﻿.prenda-canvas {
     border: 2px solid transparent;
     transition: border-color 0.2s;
 }
@@ -16,4 +16,4 @@
     height: 100%;
     object-fit: contain;
     pointer-events: none;
-}*/
+}
