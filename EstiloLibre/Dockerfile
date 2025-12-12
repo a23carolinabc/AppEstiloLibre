@@ -1,7 +1,6 @@
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 WORKDIR /app
 EXPOSE 80
-EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
@@ -18,10 +17,10 @@ COPY ["EstiloLibre.sln", "./"]
 COPY ["EstiloLibre/EstiloLibre.csproj", "EstiloLibre/"]
 COPY ["EstiloLibre_CapaNegocio/EstiloLibre_CapaNegocio.csproj", "EstiloLibre_CapaNegocio/"]
 
-# Restaurar dependencias con la configuración limpia
-RUN dotnet restore "EstiloLibre.sln" --configfile ./nuget.config --disable-parallel
+# Restaurar dependencias
+RUN dotnet restore "EstiloLibre.sln"
 
-# Copiar todo el código fuente (sin bin/obj gracias al .dockerignore)
+# Copiar todo el código fuente
 COPY . .
 
 # Compilar el proyecto principal
@@ -37,5 +36,9 @@ COPY --from=publish /app/publish .
 
 # Crear carpeta para adjuntos
 RUN mkdir -p /app/Adjuntos
+
+# Variables de entorno para Railway
+ENV ASPNETCORE_ENVIRONMENT=Docker
+ENV ASPNETCORE_URLS=http://+:80
 
 ENTRYPOINT ["dotnet", "EstiloLibre.dll"]
