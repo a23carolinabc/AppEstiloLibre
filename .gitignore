@@ -82,9 +82,3 @@ _ReSharper*/
 PublishProfiles/
 *.pubxml
 *.publishproj
-
-# Archivos de configuración local
-appsettings.Development.json
-appsettings.Local.json
-**/appsettings.*.json
-!**/appsettings.json
