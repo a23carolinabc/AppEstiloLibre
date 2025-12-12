@@ -19,19 +19,13 @@ WORKDIR /usr/share/nginx/html
 # Copiar archivos publicados de Blazor
 COPY --from=build /app/publish/wwwroot .
 
-# Copiar y reemplazar appsettings (importante para Railway)
+# Copiar y reemplazar appsettings
 COPY --from=build /app/publish/wwwroot/appsettings.Docker.json ./appsettings.json
 
-# Copiar configuración de Nginx con template
-COPY nginx.conf.template /etc/nginx/templates/default.conf.template
-
-# Copiar script de inicio
+# Copiar scripts
 COPY docker-entrypoint.sh /docker-entrypoint.sh
-RUN chmod +x /docker-entrypoint.sh
-
-# ...
 COPY replace-env.sh /replace-env.sh
-RUN chmod +x /replace-env.sh
+RUN chmod +x /docker-entrypoint.sh /replace-env.sh
 
 # Railway proporciona PORT como variable de entorno
 ENV PORT=80
