@@ -1,0 +1,27 @@
+# Carpetas a ignorar
+ConceptosVisuales/
+**/bin/
+**/obj/
+**/.vs/
+**/.vscode/
+
+# Archivos SQL
+*.sql
+ScriptCreación.sql
+ScriptInsert.sql
+
+# Archivos de cache de NuGet y proyecto
+**/project.lock.json
+**/project.fragment.lock.json
+**/artifacts/
+**/*.csproj.nuget.*
+
+# Otros
+.git/
+.gitignore
+**/.dockerignore
+**/docker-compose*
+**/Dockerfile*
+**/*.md
+LICENSE
+.gitattributes
