@@ -111,7 +111,7 @@
                                         <MudCard>
                                             @if (!string.IsNullOrEmpty(prenda.ImagenBase64))
                                             {
-                                                <MudCardMedia Image="@($"data:image/jpeg;base64,{prenda.ImagenBase64}")" 
+                                                <MudCardMedia Image="@($"{prenda.ImagenBase64}")" 
                                                               Height="200" />
                                             }
                                             else
@@ -180,7 +180,7 @@
                                         <MudCard>
                                             @if (!string.IsNullOrEmpty(conjunto.ImagenBase64))
                                             {
-                                                <MudCardMedia Image="@($"data:image/jpeg;base64,{conjunto.ImagenBase64}")" 
+                                                <MudCardMedia Image="@($"{conjunto.ImagenBase64}")" 
                                                               Height="200" />
                                             }
                                             else
