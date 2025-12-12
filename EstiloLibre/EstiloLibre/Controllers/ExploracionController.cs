@@ -31,9 +31,6 @@ public class ExploracionController : ControladorApiBase
 
     #region ***** MÉTODOS PÚBLICOS *****
 
-    /// <summary>
-    /// Obtiene datos necesarios para filtros de búsqueda
-    /// </summary>
     [Route("datos")]
     [HttpGet]
     [ProducesResponseType(typeof(DatosExploracionDTO), (int)HttpStatusCode.OK)]
@@ -46,9 +43,6 @@ public class ExploracionController : ControladorApiBase
         return Ok(objeto);
     }
 
-    /// <summary>
-    /// Obtiene listado de conjuntos públicos con filtros opcionales
-    /// </summary>
     [Route("conjuntos")]
     [HttpGet]
     [ProducesResponseType(typeof(List<ConjuntoPublicoResumenDTO>), (int)HttpStatusCode.OK)]
@@ -75,9 +69,6 @@ public class ExploracionController : ControladorApiBase
         return Ok(lista);
     }
 
-    /// <summary>
-    /// Obtiene listado de prendas públicas con filtros opcionales
-    /// </summary>
     [Route("prendas")]
     [HttpGet]
     [ProducesResponseType(typeof(List<PrendaPublicaResumenDTO>), (int)HttpStatusCode.OK)]
@@ -104,9 +95,6 @@ public class ExploracionController : ControladorApiBase
         return Ok(lista);
     }
 
-    /// <summary>
-    /// Copia una prenda pública al armario del usuario autenticado
-    /// </summary>
     [Route("copiar/prenda/{id}")]
     [HttpPost]
     [ProducesResponseType(typeof(int), (int)HttpStatusCode.OK)]
@@ -123,9 +111,6 @@ public class ExploracionController : ControladorApiBase
         return Ok(iPrendaIdNueva);
     }
 
-    /// <summary>
-    /// Copia un conjunto público (con todas sus prendas) al armario del usuario autenticado
-    /// </summary>
     [Route("copiar/conjunto/{id}")]
     [HttpPost]
     [ProducesResponseType(typeof(int), (int)HttpStatusCode.OK)]
