@@ -7,10 +7,6 @@
 	<BlazorWebAssemblyLoadAllGlobalizationData>true</BlazorWebAssemblyLoadAllGlobalizationData>
   </PropertyGroup>
 
-	<ItemGroup>
-		<Content Include="wwwroot\css\**\*.css" />
-	</ItemGroup>
-
   <ItemGroup>
 	<BlazorWebAssemblyAdditionalCulture Include="gl-ES" />
   </ItemGroup>
