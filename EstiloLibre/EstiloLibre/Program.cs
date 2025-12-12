@@ -33,32 +33,6 @@ namespace EstiloLibre
             }
         }
 
-        /* public static IHost BuildHostBuilder(string[] args, IConfiguration configuracionGeneral)
-        {
-            return Host.CreateDefaultBuilder(args)
-
-                //Especificar que la configuraci�n de la clase Startup sea la recibida por argumento en lugar
-                //de que .NET la cargue de nuevo por su cuenta. Esto �ltimo no interesa porque no modificar�
-                //ciertos valores de claves de configuraci�n que s� se hace en esta clase Program.cs
-                .ConfigureAppConfiguration(builder =>
-                {
-                    builder.Sources.Clear();
-                    builder.AddConfiguration(configuracionGeneral);
-                })
-
-                //Indicar la clase Startup.
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-                })
-
-                //Borrar todos los registros de los loggers que vienen prerregistrados.
-                .ConfigureLogging(logging =>
-                {
-                    logging.ClearProviders();
-                })
-            .Build();
-        } */
         public static IHost BuildHostBuilder(string[] args, IConfiguration configuracionGeneral)
         {
             string? strPort;
@@ -99,25 +73,6 @@ namespace EstiloLibre
                 })
             .Build();
         }
-
-        /* private static IConfiguration CargarConfiguracionGeneral()
-        {
-            IConfigurationBuilder configBuilder;
-            string strPathBase;
-
-            //En el entorno de PRD la ubicaci�n del fichero de configuraci�n puede estar en una variable 
-            //de entorno (PRD).
-            strPathBase = Environment.GetEnvironmentVariable("apps_config_path") ?? Directory.GetCurrentDirectory();
-
-            //Cargar el fichero appsettings.json.
-            configBuilder = new ConfigurationBuilder()
-                .SetBasePath(strPathBase)
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                .AddEnvironmentVariables();
-
-            //Devolver el objeto de configuraci�n.
-            return configBuilder.Build();
-        } */
 
         private static IConfiguration CargarConfiguracionGeneral()
         {
