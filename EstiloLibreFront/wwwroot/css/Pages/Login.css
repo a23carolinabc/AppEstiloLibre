@@ -1,0 +1,133 @@
+﻿/* ========================================
+   PÁGINA DE LOGIN - ESTILOS
+   ======================================== */
+
+/*.login-container {
+    min-height: calc(100vh - 64px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+    background: linear-gradient(135deg, #F8F8F8 0%, #FFFFFF 50%, #FFE5F2 100%);
+}
+
+.login-paper {
+    border-radius: 24px !important;
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.08) !important;
+    background: #FFFFFF !important;
+    border: 1px solid #E8E8E8;
+    max-width: 480px;
+    width: 100%;
+}
+
+    .login-paper .mud-icon-root {
+        color: #FFB3D9;
+    }
+
+    .login-paper .mud-text-h4 {
+        color: #2A2A2A;
+        font-weight: 300;
+    }
+
+    .login-paper .mud-text-h6 {
+        color: #6B6B6B;
+        font-weight: 400;
+    }*/
+
+    /* Campos de formulario */
+    /*.login-paper .mud-input {
+        border-radius: 12px !important;
+    }
+
+    .login-paper .mud-input-outlined:hover .mud-input-outlined-border {
+        border-color: #FFB3D9 !important;
+    }
+
+    .login-paper .mud-input-outlined.mud-input-adorned-start .mud-input-adornment-start {
+        color: #FFB3D9;
+    }*/
+
+    /* Botón de login */
+    /*.login-paper .mud-button-filled {
+        border-radius: 24px !important;
+        padding: 14px 32px !important;
+        font-weight: 500 !important;
+        text-transform: none !important;
+        letter-spacing: 0.5px !important;
+        box-shadow: 0 4px 12px rgba(255, 179, 217, 0.3) !important;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    }
+
+        .login-paper .mud-button-filled:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(255, 179, 217, 0.4) !important;
+        }
+
+        .login-paper .mud-button-filled:disabled {
+            background-color: #F8F8F8 !important;
+            color: #9B9B9B !important;
+        }*/
+
+    /* Enlaces */
+    /*.login-paper .mud-link {
+        color: #FFB3D9;
+        font-weight: 500;
+        transition: color 0.2s ease;
+    }
+
+        .login-paper .mud-link:hover {
+            color: #FF9FD1;
+            text-decoration: none;
+        }*/
+
+    /* Alertas */
+    /*.login-paper .mud-alert {
+        border-radius: 12px !important;
+    }*/
+
+    /* Divider */
+    /*.login-paper .mud-divider {
+        border-color: #E8E8E8 !important;
+    }*/
+
+/* Responsive */
+/*@media (max-width: 600px) {
+    .login-container {
+        padding: 1rem 0.5rem;
+    }
+
+    .login-paper {
+        padding: 2rem 1.5rem !important;
+    }
+
+        .login-paper .mud-icon-root {
+            font-size: 48px !important;
+        }
+
+        .login-paper .mud-text-h4 {
+            font-size: 1.75rem;
+        }
+}
+
+@media (min-width: 601px) {
+    .login-paper {
+        padding: 3rem 2.5rem !important;
+    }
+}*/
+
+/* Animación de entrada */
+/*@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.login-paper {
+    animation: slideInUp 0.5s ease-out;
+}*/

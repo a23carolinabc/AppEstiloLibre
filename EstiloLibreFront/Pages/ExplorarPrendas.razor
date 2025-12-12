@@ -8,49 +8,6 @@
 <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="mt-4">
     <MudText Typo="Typo.h4" Class="mb-4">Explorar Prendas Públicas</MudText>
 
-    <!-- Barra de búsqueda y filtros -->
-    <MudPaper Class="pa-4 mb-4" Elevation="2">
-        <MudGrid>
-            <MudItem xs="12" sm="4">
-                <MudSelect @bind-Value="this._tipoBusqueda"
-                           Label="Buscar por"
-                           Variant="Variant.Outlined"
-                           Dense="true"
-                           OnValueChanged="@((TipoBusquedaPrenda tipo) => OnTipoBusquedaChanged(tipo))">
-                    <MudSelectItem Value="@TipoBusquedaPrenda.Todos">Todas</MudSelectItem>
-                    <MudSelectItem Value="@TipoBusquedaPrenda.Categoria">Categoría</MudSelectItem>
-                    <MudSelectItem Value="@TipoBusquedaPrenda.Color">Color</MudSelectItem>
-                    <MudSelectItem Value="@TipoBusquedaPrenda.Estacion">Estación</MudSelectItem>
-                    <MudSelectItem Value="@TipoBusquedaPrenda.Marca">Marca</MudSelectItem>
-                </MudSelect>
-            </MudItem>
-            <MudItem xs="12" sm="5">
-                @if (this._tipoBusqueda != TipoBusquedaPrenda.Todos)
-                {
-                    <MudSelect @bind-Value="this._valorBusqueda"
-                               Label="@ObtenerEtiquetaValor()"
-                               Variant="Variant.Outlined"
-                               Dense="true"
-                               T="int?">
-                        @foreach (var item in this.ObtenerOpcionesFiltro())
-                        {
-                            <MudSelectItem Value="@((int?)item.Id)">@item.Nombre</MudSelectItem>
-                        }
-                    </MudSelect>
-                }
-            </MudItem>
-            <MudItem xs="12" sm="3" Class="d-flex align-center">
-                <MudButton Variant="Variant.Filled"
-                           Color="Color.Primary"
-                           StartIcon="@Icons.Material.Filled.Search"
-                           OnClick="BuscarPrendas"
-                           FullWidth="true">
-                    Buscar
-                </MudButton>
-            </MudItem>
-        </MudGrid>
-    </MudPaper>
-
     <!-- Grid de prendas -->
     @if (this._cargando)
     {

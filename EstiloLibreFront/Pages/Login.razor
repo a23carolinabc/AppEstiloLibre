@@ -21,7 +21,7 @@
 
             <!-- Campo Usuario -->
             <MudTextField @bind-Value="@this._usuario.Login"
-                          Label="@Traductor["strUsuario"]"
+                          Label="Usuario"
                           Variant="Variant.Outlined"
                           FullWidth="true"
                           Margin="Margin.Normal"
@@ -32,7 +32,7 @@
 
             <!-- Campo Contraseña -->
             <MudTextField @bind-Value="@this._usuario.Contraseña"
-                          Label="@Traductor["strContraseña"]"
+                          Label="Contraseña"
                           Variant="Variant.Outlined"
                           InputType="InputType.Password"
                           FullWidth="true"
@@ -49,13 +49,6 @@
                     @TraductorErrores["ERR_CrendencialesInvalidas"]
                 </MudAlert>
             }
-
-            <!-- Enlaces -->
-            <MudStack Class="my-3">
-                <MudLink Href="#" Color="Color.Primary" Typo="Typo.body2">
-                    ¿Olvidaste tu contraseña?
-                </MudLink>
-            </MudStack>
 
             <!-- Botón Iniciar Sesión -->
             <MudButton ButtonType="ButtonType.Submit"
@@ -89,14 +82,6 @@
             </MudText>
         </EditForm>
     </MudPaper>
-
-    <!-- Enlace volver a inicio -->
-    <MudText Align="Align.Center" Class="mt-4">
-        <MudLink Href="@URLsPantallas.Inicio" Color="Color.Primary">
-            <MudIcon Icon="@Icons.Material.Filled.ArrowBack" Size="Size.Small" />
-            Volver al inicio
-        </MudLink>
-    </MudText>
 </MudContainer>
 
 @code {

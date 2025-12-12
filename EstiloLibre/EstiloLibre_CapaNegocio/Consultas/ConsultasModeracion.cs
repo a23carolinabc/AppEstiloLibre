@@ -92,15 +92,6 @@ namespace EstiloLibre_CapaNegocio.Consultas
             objeto.Usuario = new UsuarioNormalDTO(cd.Usuario);
             objeto.Idiomas = this._servicioCombos.GetListaElementosCombo(cd.Idiomas, true, o => o.Id, o => o.Nombre);
 
-            // Cargar imagen del usuario
-            if (objeto.Usuario.Id > 0)
-            {
-                adjuntos = this._con.CargarAdjuntos(Codigos.ClasesObjetos.Usuario, objeto.Usuario.Id);
-                if (adjuntos != null && adjuntos.Any())
-                {
-                    objeto.Usuario.ImagenBase64 = await this._servicioAlmacenamiento.ObtenerImagenBase64(adjuntos.First());
-                }
-            }
 
             // Procesar prendas
             prendasDTO = new List<PrendaAdminDTO>();

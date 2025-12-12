@@ -5,14 +5,14 @@
 <PageTitle>Mis prendas</PageTitle>
 
 <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="mt-4">
-    <MudText Typo="Typo.h4" Class="mb-4">Mis Conjuntos</MudText>
+    <MudText Typo="Typo.h4" Class="mb-4">Mis Prendas</MudText>
 
     <MudButton Variant="Variant.Filled"
                Color="Color.Primary"
                StartIcon="@Icons.Material.Filled.Add"
-               OnClick="@IrACrearConjunto"
+               OnClick="@IrACrearPrenda"
                Class="mb-4">
-        Crear Nuevo Conjunto
+        Crear Nueva Prenda
     </MudButton>
 
     @if (this._cargando)
@@ -22,7 +22,7 @@
     else if (this._prendas == null || !this._prendas.Any())
     {
         <MudAlert Severity="Severity.Info">
-            No tienes conjuntos creados. ¡Crea tu primer conjunto!
+            No tiene prendas creados. ¡Crea tu primer prenda!
         </MudAlert>
     }
     else
@@ -39,6 +39,7 @@
                             <MudIconButton Icon="@Icons.Material.Filled.Edit"
                                            Color="Color.Primary"
                                            OnClick="@(() => IrAEditarConjunto(conjunto.Id))" />
+                                           <MudSpacer></MudSpacer>
                             <MudIconButton Icon="@Icons.Material.Filled.Delete"
                                            Color="Color.Error"
                                            OnClick="@(() => EliminarConjunto(conjunto.Id))" />
@@ -93,9 +94,9 @@
         }
     }
 
-    private void IrACrearConjunto()
+    private void IrACrearPrenda()
     {
-        this.ServicioNavegacion.NavegarA($"{URLsPantallas.Conjuntos}");
+        this.ServicioNavegacion.NavegarA($"{URLsPantallas.Prendas}");
     }
 
     private void IrAEditarConjunto(int iConjuntoId)

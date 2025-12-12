@@ -1,0 +1,197 @@
+﻿/* ========================================
+   PÁGINA DE REGISTRO - ESTILOS
+   ======================================== */
+
+/*.registro-container {
+    min-height: calc(100vh - 64px);
+    padding: 3rem 1rem;
+    background: linear-gradient(135deg, #FFFFFF 0%, #F8F8F8 50%, #FFE5F2 100%);
+}
+
+    .registro-container .mud-paper {
+        border-radius: 24px !important;
+        box-shadow: 0 16px 48px rgba(0, 0, 0, 0.08) !important;
+        background: #FFFFFF !important;
+        border: 1px solid #E8E8E8;
+    }*/
+
+    /* Icono y encabezado */
+    /*.registro-container .mud-icon-root {
+        color: #FFB3D9;
+    }
+
+    .registro-container .mud-text-h4 {
+        color: #2A2A2A;
+        font-weight: 300;
+    }
+
+    .registro-container .mud-text-body1 {
+        color: #6B6B6B;
+    }*/
+
+    /* Stepper personalizado */
+    /*.registro-container .mud-stepper {
+        background: transparent;
+    }
+
+        .registro-container .mud-stepper .mud-step-label-active {
+            color: #FFB3D9 !important;
+        }
+
+        .registro-container .mud-stepper .mud-step-icon-active {
+            background-color: #FFB3D9 !important;
+        }
+
+        .registro-container .mud-stepper .mud-step-connector-line {
+            border-color: #E8E8E8;
+        }*/
+
+/* Formularios en dos columnas */
+/*.registro-formulario {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+}
+
+@media (min-width: 768px) {
+    .registro-formulario {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .registro-campo-completo {
+        grid-column: 1 / -1;
+    }
+}*/
+
+/* Campos de formulario */
+/*.registro-container .mud-input {
+    border-radius: 12px !important;
+}
+
+.registro-container .mud-input-outlined:hover .mud-input-outlined-border {
+    border-color: #FFB3D9 !important;
+}
+
+.registro-container .mud-input-outlined.mud-input-adorned-start .mud-input-adornment-start {
+    color: #FFB3D9;
+}
+
+.registro-container .mud-select {
+    border-radius: 12px !important;
+}*/
+
+/* Botones del stepper */
+/*.registro-container .mud-button-filled {
+    border-radius: 24px !important;
+    padding: 12px 32px !important;
+    font-weight: 500 !important;
+    text-transform: none !important;
+    letter-spacing: 0.5px !important;
+    box-shadow: 0 4px 12px rgba(255, 179, 217, 0.3) !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+    .registro-container .mud-button-filled:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(255, 179, 217, 0.4) !important;
+    }
+
+.registro-container .mud-button-outlined {
+    border-radius: 24px !important;
+    padding: 12px 32px !important;
+    font-weight: 500 !important;
+    text-transform: none !important;
+    letter-spacing: 0.5px !important;
+    border-width: 2px !important;
+    transition: all 0.3s ease !important;
+}
+
+    .registro-container .mud-button-outlined:hover {
+        background-color: rgba(255, 179, 217, 0.08) !important;
+        transform: translateY(-2px);
+    }*/
+
+/* Checkboxes y switches */
+/*.registro-container .mud-checkbox-root.Mud-checked .mud-checkbox-checkmark {
+    color: #FFB3D9 !important;
+}
+
+.registro-container .mud-switch-checked .mud-switch-thumb {
+    background-color: #FFB3D9 !important;
+}
+
+.registro-container .mud-switch-checked .mud-switch-track {
+    background-color: rgba(255, 179, 217, 0.5) !important;
+}*/
+
+/* Alertas y mensajes de ayuda */
+/*.registro-container .mud-alert {
+    border-radius: 12px !important;
+}
+
+.registro-container .mud-input-helper-text {
+    color: #9B9B9B;
+    font-size: 0.75rem;
+}*/
+
+/* Divider */
+/*.registro-container .mud-divider {
+    border-color: #E8E8E8 !important;
+}*/
+
+/* Progress indicator */
+/*.registro-container .mud-progress-circular {
+    color: #FFB3D9 !important;
+}*/
+
+/* Responsive */
+/*@media (max-width: 600px) {
+    .registro-container {
+        padding: 2rem 0.5rem;
+    }
+
+        .registro-container .mud-paper {
+            padding: 2rem 1rem !important;
+        }
+
+        .registro-container .mud-icon-root[style*="font-size: 64px"] {
+            font-size: 48px !important;
+        }
+
+        .registro-container .mud-text-h4 {
+            font-size: 1.75rem;
+        }
+}
+
+@media (min-width: 601px) and (max-width: 959px) {
+    .registro-container {
+        padding: 2.5rem 1rem;
+    }
+
+        .registro-container .mud-paper {
+            padding: 2.5rem 2rem !important;
+        }
+}
+
+@media (min-width: 960px) {
+    .registro-container .mud-paper {
+        padding: 3rem 2.5rem !important;
+    }
+}*/
+
+/* Animación de entrada */
+/*@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.registro-container .mud-paper {
+    animation: fadeInScale 0.4s ease-out;
+}*/

@@ -8,48 +8,6 @@
 <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="mt-4">
     <MudText Typo="Typo.h4" Class="mb-4">Explorar Conjuntos Públicos</MudText>
 
-    <!-- Barra de búsqueda y filtros -->
-    <MudPaper Class="pa-4 mb-4" Elevation="2">
-        <MudGrid>
-            <MudItem xs="12" sm="4">
-                <MudSelect @bind-Value="this._tipoBusqueda"
-                           Label="Buscar por"
-                           Variant="Variant.Outlined"
-                           Dense="true"
-                           OnValueChanged="@((TipoBusquedaConjunto tipo) => OnTipoBusquedaChanged(tipo))">
-                    <MudSelectItem Value="@TipoBusquedaConjunto.Todos">Todos</MudSelectItem>
-                    <MudSelectItem Value="@TipoBusquedaConjunto.Estilo">Estilo</MudSelectItem>
-                    <MudSelectItem Value="@TipoBusquedaConjunto.Estacion">Estación</MudSelectItem>
-                    <MudSelectItem Value="@TipoBusquedaConjunto.Color">Color</MudSelectItem>
-                </MudSelect>
-            </MudItem>
-            <MudItem xs="12" sm="5">
-                @if (this._tipoBusqueda != TipoBusquedaConjunto.Todos)
-                {
-                    <MudSelect @bind-Value="this._valorBusqueda"
-                               Label="@ObtenerEtiquetaValor()"
-                               Variant="Variant.Outlined"
-                               Dense="true"
-                               T="int?">
-                        @foreach (var item in this.ObtenerOpcionesFiltro())
-                        {
-                            <MudSelectItem Value="@((int?)item.Id)">@item.Nombre</MudSelectItem>
-                        }
-                    </MudSelect>
-                }
-            </MudItem>
-            <MudItem xs="12" sm="3" Class="d-flex align-center">
-                <MudButton Variant="Variant.Filled"
-                           Color="Color.Primary"
-                           StartIcon="@Icons.Material.Filled.Search"
-                           OnClick="BuscarConjuntos"
-                           FullWidth="true">
-                    Buscar
-                </MudButton>
-            </MudItem>
-        </MudGrid>
-    </MudPaper>
-
     <!-- Grid de conjuntos -->
     @if (this._cargando)
     {

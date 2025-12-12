@@ -1,27 +1,31 @@
 ﻿@using Microsoft.AspNetCore.Components.Authorization
 
-<MudDrawer Open="true" Elevation="0" Variant="@DrawerVariant.Persistent"
+<MudDrawer @bind-Open="@this._drawerAbierto"
+           Elevation="0"
+           Variant="@DrawerVariant.Responsive"
+           Breakpoint="Breakpoint.Md"
            ClipMode="DrawerClipMode.Never">
     <MudPaper Width="100%" Height="100%" Class="d-inline-flex py-3" Elevation="0" Outlined=true>
-        <MudNavMenu Class="mud-width-full">
-            <MudText Typo="Typo.h6" Class="px-4">@Traductor["lblEstiloLibre"]</MudText>
-            <MudText Typo="Typo.body2" Class="px-4 mud-text-secondary">@Traductor["lblAdministracion"]</MudText>
-            <MudDivider Class="my-2" />
+        <MudNavMenu Class="mud-width-full" Color="Color.Primary">
+            <!-- Encabezado con botón cerrar en móvil -->
+            <div class="d-flex align-center justify-space-between px-4 mb-2">
+                <div>
+                    <MudText Typo="Typo.h6">@Traductor["EstiloLibre"]</MudText>
+                    <MudText Typo="Typo.body2" Class="mud-text-secondary">@Traductor["lblAdministracion"]</MudText>
+                </div>
+            </div>
 
-            <!-- Menú Principal -->
-            <MudNavLink Href=@(URLsPantallas.AdminMenu)
-                        Icon="@Icons.Material.Filled.Dashboard">
-                @Traductor["nvlkPanelAdmin"]
-            </MudNavLink>
+            <MudDivider Class="my-2" />
 
             <AuthorizeView Policy="@CodigosPermisos.MODERADOR">
                 <Authorized>
-                    <!-- Gestión de Usuarios Normales (ADMIN) -->
+                    <!-- Gestión de Usuarios Normales (MODERADOR) -->
                     <MudNavGroup Title="@Traductor["lblUsuariosNormales"]"
                                  Icon="@Icons.Material.Filled.People"
                                  Expanded="false">
                         <MudNavLink Href=@(URLsPantallas.AdminUsuariosNormalesListado)
-                                    Icon="@Icons.Material.Filled.List">
+                                    Icon="@Icons.Material.Filled.List"
+                                    OnClick="@this.CerrarDrawer">
                             @Traductor["nvlkListadoUsuarios"]
                         </MudNavLink>
                     </MudNavGroup>
@@ -30,16 +34,18 @@
 
             <AuthorizeView Policy="@CodigosPermisos.ADMIN">
                 <Authorized>
-                    <!-- Gestión de Usuarios Admin (PLUS) -->
+                    <!-- Gestión de Usuarios Admin (ADMIN) -->
                     <MudNavGroup Title="@Traductor["lblAdministradores"]"
                                  Icon="@Icons.Material.Filled.AdminPanelSettings"
                                  Expanded="false">
                         <MudNavLink Href=@(URLsPantallas.AdminUsuariosListado)
-                                    Icon="@Icons.Material.Filled.List">
+                                    Icon="@Icons.Material.Filled.List"
+                                    OnClick="@this.CerrarDrawer">
                             @Traductor["nvlkListadoAdmins"]
                         </MudNavLink>
                         <MudNavLink Href=@(URLsPantallas.AdminUsuarios)
-                                    Icon="@Icons.Material.Filled.PersonAdd">
+                                    Icon="@Icons.Material.Filled.PersonAdd"
+                                    OnClick="@this.CerrarDrawer">
                             @Traductor["nvlkCrearAdmin"]
                         </MudNavLink>
                     </MudNavGroup>
@@ -53,17 +59,32 @@
     #region ***** DEPENDENCIAS *****
     [Inject]
     public required IStringLocalizer<TrShared> Traductor { get; set; }
+
+    
+    [CascadingParameter]
+    public required LayoutAdministracion LayoutAdministracion { get; set; }
     #endregion
 
     #region ***** PARÁMETROS *****
     #endregion
 
     #region ***** PROPIEDADES PRIVADAS *****
+    private bool _drawerAbierto = true;
     #endregion
 
     #region ***** MÉTODOS PÚBLICOS *****
+    public void AlternarDrawer()
+    {
+        this._drawerAbierto = !this._drawerAbierto;
+        this.StateHasChanged();
+    }
     #endregion
 
     #region ***** MÉTODOS PRIVADOS *****
+    private void CerrarDrawer()
+    {
+        this._drawerAbierto = false;
+        this.StateHasChanged(); 
+    }
     #endregion
 }

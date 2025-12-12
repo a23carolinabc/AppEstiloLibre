@@ -1,19 +1,17 @@
-﻿@layout MainLayout
-@page "/prendas/"
+﻿@page "/prendas/"
 @page "/prendas/{Id:int}"
+@layout MainLayout
 
-<PageTitle>@Traductor["PageTitle"]</PageTitle>
+<PageTitle>@(this.Id > 0 ? "Editar prenda" : "Crear prenda")</PageTitle>
 
-<MudContainer MaxWidth="MaxWidth.Large" Class="mt-6">
-    <MudText Typo="Typo.h4" Class="mb-3">
-        <MudIcon Icon="@Icons.Material.Filled.AddCircle" Class="mr-2" />
-        @Traductor["lblCrearNuevaPrenda"]
+<MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="mt-4">
+    <MudText Typo="Typo.h4" Class="mb-4">
+        @(this.Id > 0 ? "Editar prenda" : "Crear prenda")
     </MudText>
 
     @if (this._prendaData == null)
     {
-        <!-- ERROR AL CARGAR DATOS -->
-        <MudAlert Severity="Severity.Error">@TraductorErrores["ERR_CargaDatosIniciales"]</MudAlert>
+        <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
     }
     else
     {
@@ -26,222 +24,230 @@
                     <CardHeaderContent>
                         <MudText Typo="Typo.h6">
                             <MudIcon Icon="@Icons.Material.Filled.Image" Class="mr-2" />
-                            @Traductor["lblFotoPrenda"]
+                            Foto de la prenda
                         </MudText>
                     </CardHeaderContent>
                 </MudCardHeader>
                 <MudCardContent>
+                    <MudGrid>
+                        <MudItem xs="12" sm="6" Class="d-flex flex-column align-center">
+                            @if (string.IsNullOrEmpty(this._strImagenPreview))
+                            {
+                                <MudPaper Elevation="0" Class="pa-8 text-center" Style="border: 2px dashed #e0e0e0; width: 100%; min-height: 150px;">
+                                    <MudIcon Icon="@Icons.Material.Filled.AddPhotoAlternate" Size="Size.Large" Color="Color.Default" Style="font-size: 80px;" />
+                                    <MudText Typo="Typo.h6" Class="mt-4">
+                                        Sin imagen
+                                    </MudText>
+                                </MudPaper>
+                            }
+                            else
+                            {
+                                <MudImage Src="@($"{this._strImagenPreview}")"
+                                          Alt="@Traductor["lblPreviewImagen"]"
+                                          Elevation="3"
+                                          Class="rounded"
+                                          Style="max-width: 100%; max-height: 200px; object-fit: contain;" />
+                            }
+                        </MudItem>
+                    </MudGrid>
+                    <MudGrid>
+                        <MudItem xs="12" sm="6" Class="d-flex flex-column justify-center">
+                            <InputFile id="fileInput"
+                                       OnChange="this.CargarImagen"
+                                       hidden
+                                       accept=".jpg,.jpeg,.png" />
 
-                    <InputFile id="fileInput"
-                               OnChange="this.CargarImagen"
-                               accept="image/*"
-                               class="d-none" />
+                            <MudButton HtmlTag="label"
+                                       Variant="Variant.Filled"
+                                       Color="Color.Secondary"
+                                       StartIcon="@Icons.Material.Filled.CloudUpload"
+                                       FullWidth="true"
+                                       for="fileInput"
+                                       Disabled="@this._bProcesandoImagen"
+                                       Class="mb-3">
+                                Seleccione una imagen
+                            </MudButton>
 
-                    @if (this._bProcesandoImagen)
-                    {
-                        <!-- CÍRCULO DE CARGAR MIENTRAS SE PROCESA LA IMAGEN -->
-                        <div class="text-center pa-4">
-                            <MudProgressCircular Indeterminate="true" Size="Size.Large" Color="Color.Primary" />
-                            <MudText Typo="Typo.body1" Class="mt-2">
-                                @Traductor["lblEsperaEliminacionFondo"]
-                            </MudText>
-                            <MudText Typo="Typo.body2" Color="Color.Secondary">
-                                @Traductor["lblAvisoEspera"]
-                            </MudText>
-                        </div>
-                    }
-                    else
-                    {
-                        <!-- BOTÓN SELECCIÓN DE IMAGEN -->
-                        <MudButton HtmlTag="label"
-                                   Variant="Variant.Filled"
-                                   Color="Color.Primary"
-                                   StartIcon="@Icons.Material.Filled.CloudUpload"
-                                   for="fileInput"
-                                   FullWidth="true">
-                            @(string.IsNullOrEmpty(this._strImagenPreview) 
-                                                    ? Traductor["btnSeleccionarImagen"] 
-                                                    : Traductor["btnCambiarImagen"])
-                        </MudButton>
-
-                        <!-- Preview de la imagen -->
-                        @if (!string.IsNullOrEmpty(this._strImagenPreview))
-                        {
-                            <MudPaper Class="mt-4 pa-2 text-center" Style="background-color: #f5f5f5;">
-                                <MudImage Src="@this._strImagenPreview"
-                                          Alt="Vista previa"
-                                          Style="max-width: 100%; max-height: 400px; border: 2px solid #ddd; border-radius: 8px;" />
-                                <MudText Typo="Typo.caption" Class="mt-2" Color="Color.Success">
-                                    ✓ Fondo eliminado correctamente
+                            @if (this._bProcesandoImagen)
+                            {
+                                <MudProgressLinear Color="Color.Secondary" Indeterminate="true" Class="mb-3" />
+                                <MudText Typo="Typo.body2" Align="Align.Center" Color="Color.Default">
+                                    Procesando...
                                 </MudText>
-                            </MudPaper>
-                        }
-                        else
-                        {
-                            <MudAlert Severity="Severity.Info" Class="mt-2">
-                                Selecciona una imagen de tu prenda. El fondo se eliminará automáticamente.
-                            </MudAlert>
-                        }
-                    }
-
+                            }
+                        </MudItem>
+                    </MudGrid>
                 </MudCardContent>
             </MudCard>
 
-            <!-- INFORMACIÓN BÁSICA -->
+            <!-- INFORMACIÓN BÁSICA EN 2 COLUMNAS -->
             <MudCard Class="mb-4">
                 <MudCardHeader>
                     <CardHeaderContent>
                         <MudText Typo="Typo.h6">
                             <MudIcon Icon="@Icons.Material.Filled.Info" Class="mr-2" />
-                            Información Básica
+                            Información esencial
                         </MudText>
                     </CardHeaderContent>
                 </MudCardHeader>
                 <MudCardContent>
+                    <MudGrid>
+                        <!-- Color -->
+                        <MudItem xs="12" sm="6">
+                            <MudSelect @bind-Value="this._prenda.ColorId"
+                                       Label="Color"
+                                       Variant="Variant.Outlined"
+                                       Required="true">
+                                <MudSelectItem Value="0">Seleccione un color</MudSelectItem>
+                                @if (this._prendaData.Colores != null)
+                                {
+                                    @foreach (var color in this._prendaData.Colores)
+                                    {
+                                        <MudSelectItem Value="@color.Id">@color.Nombre</MudSelectItem>
+                                    }
+                                }
+                            </MudSelect>
+                        </MudItem>
 
-                    <!-- Color -->
-                    <MudSelect @bind-Value="this._prenda.ColorId"
-                               Label="Color *"
-                               Variant="Variant.Outlined"
-                               Class="mb-3"
-                               Required="true">
-                        <MudSelectItem Value="0">Seleccione un color</MudSelectItem>
-                        @if (this._prendaData.Colores != null)
-                        {
-                            @foreach (var color in this._prendaData.Colores)
-                            {
-                                <MudSelectItem Value="@color.Id">@color.Nombre</MudSelectItem>
-                            }
-                        }
-                    </MudSelect>
+                        <!-- Material -->
+                        <MudItem xs="12" sm="6">
+                            <MudSelect @bind-Value="this._prenda.MaterialId"
+                                       Label="Material"
+                                       Variant="Variant.Outlined"
+                                       Required="true">
+                                <MudSelectItem Value="0">Seleccione un material</MudSelectItem>
+                                @if (this._prendaData.Materiales != null)
+                                {
+                                    @foreach (var material in this._prendaData.Materiales)
+                                    {
+                                        <MudSelectItem Value="@material.Id">@material.Nombre</MudSelectItem>
+                                    }
+                                }
+                            </MudSelect>
+                        </MudItem>
 
-                    <!-- Categoría -->
-                    <MudSelect @bind-Value="this._prenda.CategoriaId"
-                               Label="Categoría *"
-                               Variant="Variant.Outlined"
-                               Class="mb-3"
-                               Required="true">
-                        <MudSelectItem Value="0">Seleccione una categoría</MudSelectItem>
-                        @if (this._prendaData.Categorias != null)
-                        {
-                            @foreach (var categoria in this._prendaData.Categorias)
-                            {
-                                <MudSelectItem Value="@categoria.Id">@categoria.Nombre</MudSelectItem>
-                            }
-                        }
-                    </MudSelect>
+                        <!-- Categoría -->
+                        <MudItem xs="12" sm="6">
+                            <MudSelect @bind-Value="this._prenda.CategoriaId"
+                                       Label="Categoría"
+                                       Variant="Variant.Outlined"
+                                       Required="true">
+                                <MudSelectItem Value="0">Seleccione una categoría</MudSelectItem>
+                                @if (this._prendaData.Categorias != null)
+                                {
+                                    @foreach (var categoria in this._prendaData.Categorias)
+                                    {
+                                        <MudSelectItem Value="@categoria.Id">@categoria.Nombre</MudSelectItem>
+                                    }
+                                }
+                            </MudSelect>
+                        </MudItem>
 
-                    <!-- Talla -->
-                    <MudSelect @bind-Value="this._prenda.TallaId"
-                               Label="Talla *"
-                               Variant="Variant.Outlined"
-                               Class="mb-3"
-                               Required="true">
-                        <MudSelectItem Value="0">Seleccione una talla</MudSelectItem>
-                        @if (this._prendaData.Tallas != null)
-                        {
-                            @foreach (var talla in this._prendaData.Tallas)
-                            {
-                                <MudSelectItem Value="@talla.Id">@talla.Nombre</MudSelectItem>
-                            }
-                        }
-                    </MudSelect>
+                        <!-- Talla -->
+                        <MudItem xs="12" sm="6">
+                            <MudSelect @bind-Value="this._prenda.TallaId"
+                                       Label="Talla"
+                                       Variant="Variant.Outlined"
+                                       Required="true">
+                                <MudSelectItem Value="0">Seleccione una talla</MudSelectItem>
+                                @if (this._prendaData.Tallas != null)
+                                {
+                                    @foreach (var talla in this._prendaData.Tallas)
+                                    {
+                                        <MudSelectItem Value="@talla.Id">@talla.Nombre</MudSelectItem>
+                                    }
+                                }
+                            </MudSelect>
+                        </MudItem>
 
-                    <!-- Estado -->
-                    <MudSelect @bind-Value="this._prenda.EstadoId"
-                               Label="Estado *"
-                               Variant="Variant.Outlined"
-                               Class="mb-3"
-                               Required="true">
-                        <MudSelectItem Value="0">Seleccione un estado</MudSelectItem>
-                        @if (this._prendaData.Estados != null)
-                        {
-                            @foreach (var estado in this._prendaData.Estados)
-                            {
-                                <MudSelectItem Value="@estado.Id">@estado.Nombre</MudSelectItem>
-                            }
-                        }
-                    </MudSelect>
+                        <!-- Estado -->
+                        <MudItem xs="12" sm="6">
+                            <MudSelect @bind-Value="this._prenda.EstadoId"
+                                       Label="Estado"
+                                       Variant="Variant.Outlined"
+                                       Required="true">
+                                <MudSelectItem Value="0">Seleccione un estado</MudSelectItem>
+                                @if (this._prendaData.Estados != null)
+                                {
+                                    @foreach (var estado in this._prendaData.Estados)
+                                    {
+                                        <MudSelectItem Value="@estado.Id">@estado.Nombre</MudSelectItem>
+                                    }
+                                }
+                            </MudSelect>
+                        </MudItem>
 
-                    <!-- Material -->
-                    <MudSelect @bind-Value="this._prenda.MaterialId"
-                               Label="Material *"
-                               Variant="Variant.Outlined"
-                               Class="mb-3"
-                               Required="true">
-                        <MudSelectItem Value="0">Seleccione un material</MudSelectItem>
-                        @if (this._prendaData.Materiales != null)
-                        {
-                            @foreach (var material in this._prendaData.Materiales)
-                            {
-                                <MudSelectItem Value="@material.Id">@material.Nombre</MudSelectItem>
-                            }
-                        }
-                    </MudSelect>
-
+                        <!-- Marca -->
+                        <MudItem xs="12" sm="6">
+                            <MudSelect T="int?" @bind-Value="this._prenda.MarcaId"
+                                       Label="Marca"
+                                       Variant="Variant.Outlined">
+                                <MudSelectItem T="int?" Value="null">Seleccione una marca</MudSelectItem>
+                                @if (this._prendaData.Marcas != null)
+                                {
+                                    @foreach (var marca in this._prendaData.Marcas)
+                                    {
+                                        <MudSelectItem T="int?" Value="@marca.Id">@marca.Nombre</MudSelectItem>
+                                    }
+                                }
+                            </MudSelect>
+                        </MudItem>
+                    </MudGrid>
                 </MudCardContent>
             </MudCard>
 
-            <!-- INFORMACIÓN ADICIONAL (OPCIONAL) -->
+            <!-- INFORMACIÓN ADICIONAL EN 2 COLUMNAS -->
             <MudCard Class="mb-4">
                 <MudCardHeader>
                     <CardHeaderContent>
                         <MudText Typo="Typo.h6">
                             <MudIcon Icon="@Icons.Material.Filled.MoreHoriz" Class="mr-2" />
-                            Información Adicional (Opcional)
+                            Información adicional
                         </MudText>
                     </CardHeaderContent>
                 </MudCardHeader>
                 <MudCardContent>
+                    <MudGrid>
+                        <!-- Estación -->
+                        <MudItem xs="12" sm="6">
+                            <MudSelect T="int?" @bind-Value="this._prenda.EstacionId"
+                                       Label="Estación"
+                                       Variant="Variant.Outlined">
+                                <MudSelectItem T="int?" Value="null">Seleccione una estación</MudSelectItem>
+                                @if (this._prendaData.Estaciones != null)
+                                {
+                                    @foreach (var estacion in this._prendaData.Estaciones)
+                                    {
+                                        <MudSelectItem T="int?" Value="@estacion.Id">@estacion.Nombre</MudSelectItem>
+                                    }
+                                }
+                            </MudSelect>
+                        </MudItem>
 
-                    <!-- Marca -->
-                    <MudSelect T="int?" @bind-Value="this._prenda.MarcaId"
-                               Label="Marca (Opcional)"
-                               Variant="Variant.Outlined"
-                               Class="mb-3">
-                        <MudSelectItem T="int?" Value="null">Sin marca</MudSelectItem>
-                        @if (this._prendaData.Marcas != null)
-                        {
-                            @foreach (var marca in this._prendaData.Marcas)
-                            {
-                                <MudSelectItem T="int?" Value="@marca.Id">@marca.Nombre</MudSelectItem>
-                            }
-                        }
-                    </MudSelect>
+                        <!-- Precio -->
+                        <MudItem xs="12" sm="6">
+                            <MudNumericField @bind-Value="this._prenda.Precio"
+                                             Label="Precio"
+                                             Variant="Variant.Outlined"
+                                             Min="0"
+                                             Adornment="Adornment.Start"
+                                             AdornmentText="€" />
+                        </MudItem>
 
-                    <!-- Estación -->
-                    <MudSelect T="int?" @bind-Value="this._prenda.EstacionId"
-                               Label="Estación (Opcional)"
-                               Variant="Variant.Outlined"
-                               Class="mb-3">
-                        <MudSelectItem T="int?" Value="null">Sin estacion</MudSelectItem>
-                        @if (this._prendaData.Estaciones != null)
-                        {
-                            @foreach (var estacion in this._prendaData.Estaciones)
-                            {
-                                <MudSelectItem T="int?" Value="@estacion.Id">@estacion.Nombre</MudSelectItem>
-                            }
-                        }
-                    </MudSelect>
+                        <!-- Enlace de Compra -->
+                        <MudItem xs="12" sm="6">
+                            <MudTextField @bind-Value="this._prenda.EnlaceCompra"
+                                          Label="Enlace de compra"
+                                          Variant="Variant.Outlined" />
+                        </MudItem>
 
-                    <!-- Precio -->
-                    <MudNumericField @bind-Value="this._prenda.Precio"
-                                     Label="Precio (€)"
-                                     Variant="Variant.Outlined"
-                                     Min="0"
-                                     Class="mb-3" />
-
-                    <!-- Enlace de Compra -->
-                    <MudTextField @bind-Value="this._prenda.EnlaceCompra"
-                                  Label="Enlace de Compra (URL)"
-                                  Variant="Variant.Outlined"
-                                  Class="mb-3" />
-
-                    <!-- Fecha de Compra -->
-                    <MudDatePicker @bind-Date="this._prenda.FechaCompra"
-                                   Label="Fecha de Compra"
-                                   Variant="Variant.Outlined" />
-
+                        <!-- Fecha de Compra -->
+                        <MudItem xs="12" sm="6">
+                            <MudDatePicker @bind-Date="this._prenda.FechaCompra"
+                                           Label="Fecha de compra"
+                                           Variant="Variant.Outlined" />
+                        </MudItem>
+                    </MudGrid>
                 </MudCardContent>
             </MudCard>
 
@@ -250,7 +256,7 @@
                 <MudButton Variant="Variant.Outlined"
                            Color="Color.Default"
                            StartIcon="@Icons.Material.Filled.ArrowBack"
-                           OnClick="@(() => this.ServicioNavegacion.NavegarA("/"))">
+                           OnClick="@(() => this.ServicioNavegacion.NavegarA(URLsPantallas.ListadoPrendas))">
                     Cancelar
                 </MudButton>
 
@@ -259,7 +265,7 @@
                            Color="Color.Primary"
                            StartIcon="@Icons.Material.Filled.Save"
                            Disabled="@(this._bGuardando || string.IsNullOrEmpty(this._strImagenPreview))">
-                    @(this._bGuardando ? "Guardando..." : "Guardar Prenda")
+                    @(this._bGuardando ? "Guardando..." : "Guardar prenda")
                 </MudButton>
             </MudStack>
 
@@ -309,10 +315,8 @@
 
     protected override async Task OnInitializedAsync()
     {
-        // this.ServicioCargador.Abrir();
         try
         {
-            // Cargar datos necesarios para el formulario.
             if(this.Id > 0)
             {
                 this._prendaData = await this.ServicioPrendas.ShowData(this.Id);
@@ -321,7 +325,6 @@
                 this._prendaData = await this.ServicioPrendas.AddNew();
             }
 
-            //Iniciamos objeto prenda.
             if (this._prendaData == null)
             {
                 this.ServicioNotificacion.Add(this.TraductorErrores["ERR_CargaDatosIniciales"], Severity.Error);
@@ -338,10 +341,6 @@
         catch (Exception ex)
         {
             this.ServicioNotificacion.Add(this.TraductorErrores["ERR_CargaDatosIniciales"], Severity.Error);
-        }
-        finally
-        {
-            // this.ServicioCargador.Cerrar();
         }
     }
 
@@ -361,22 +360,19 @@
         {
             archivo = e.File;
 
-            //Indicar espera al usuario.
             this._bProcesandoImagen = true;
             StateHasChanged();
                       
-            // Validar tamaño (máximo 10MB).
             if (archivo.Size > 10 * 1024 * 1024)
             {
-                this.ServicioNotificacion.Add(this.TraductorErrores["ERR_ImagenDemasiadoGrande"], Severity.Warning);
+                this.ServicioNotificacion.Add("Imagen demasiado grande", Severity.Warning);
                 this._bProcesandoImagen = false;
                 StateHasChanged();
                 return;
             }
 
-            this.ServicioNotificacion.Add(this.Traductor["NTF_ProcesandoImagen"], Severity.Info);
+            this.ServicioNotificacion.Add("Procesando imagen...", Severity.Info);
 
-            // Leer imagen y pasar a bytes[].           
             using (var stream = archivo.OpenReadStream(maxAllowedSize: 10 * 1024 * 1024))
             using (var ms = new MemoryStream())
             {
@@ -384,42 +380,31 @@
                 imagenBytes = ms.ToArray();
             }
 
-            // Convertir a base64.
             imagenBase64 = $"data:{archivo.ContentType};base64,{Convert.ToBase64String(imagenBytes)}";
 
-            // Definir tiempo máximo de procesamiento.
-            tokenTiempoCancelacionMetodo = new CancellationTokenSource(TimeSpan.FromSeconds(300)); // 60 segundos timeout
+            tokenTiempoCancelacionMetodo = new CancellationTokenSource(TimeSpan.FromSeconds(300));
 
-            // Usar función js para eliminar el fondo.
             imagenFinalBase64 = await this.ServicioJS.InvokeAsync<string>(
                     "eliminarFondo",
                     tokenTiempoCancelacionMetodo.Token,
                     imagenBase64
                 );
 
-            // Guardar resultado,
             if (!string.IsNullOrEmpty(imagenFinalBase64))
             {
-                // Para preview.
                 this._strImagenPreview = imagenFinalBase64;
-
-                // Para enviar al servidor.
                 this._prenda.ImagenBase64 = imagenFinalBase64.Contains(",") ? imagenFinalBase64.Split(',')[1] : imagenFinalBase64;
-
-                //Notificar al usuario.
-                this.ServicioNotificacion.Add(this.Traductor["NTF_FondoEliminadoCorrectamente"], Severity.Success);
+                this.ServicioNotificacion.Add("Fondo eliminado correctamente", Severity.Success);
             }
             else
             {
-                this.ServicioNotificacion.Add(this.TraductorErrores["ERR_FondoNoEliminado"], Severity.Error);
+                this.ServicioNotificacion.Add("Fallo en la eliminación del fondo", Severity.Error);
                 throw new Exception();
             }
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Error detallado: {ex}");
-
-            // Limpiar preview.
             this._strImagenPreview = string.Empty;
             this._prenda.ImagenBase64 = string.Empty;
         }
@@ -437,23 +422,19 @@
 
         try
         {
-            //Validar formulario.
             bFormValido = this.Validar();
             if (!bFormValido) return;
 
-            //Notificar al usuario.
             this._bGuardando = true;
-            this.ServicioNotificacion.Add(this.TraductorGeneral["NTF_Guardando"], Severity.Info);
+            this.ServicioNotificacion.Add("Guardando...", Severity.Info);
 
-            // Enviar al servidor
             iPrendaId = await this.ServicioPrendas.SaveData(this._prenda);
 
-            //Notificar al usuario el guardado.
-            this.ServicioNotificacion.Add(this.TraductorGeneral["NTF_Guardado"], Severity.Success);
+            this.ServicioNotificacion.Add("Guardado!", Severity.Success);
         }
         catch (Exception ex)
         {
-            this.ServicioNotificacion.Add(this.TraductorErrores["ERR_Guardado"], Severity.Error);
+            this.ServicioNotificacion.Add("Error en el guardado", Severity.Error);
             Console.WriteLine($"Error detallado: {ex}");
         }
         finally
@@ -466,7 +447,7 @@
     {
         if (string.IsNullOrEmpty(this._prenda.ImagenBase64))
         {
-            this.ServicioNotificacion.Add(this.TraductorErrores["ERR_AvisoSubirImagen"], Severity.Warning);
+            this.ServicioNotificacion.Add("Suba una imagen", Severity.Warning);
             return false;
         }
         if (this._prenda.ColorId <= 0 ||

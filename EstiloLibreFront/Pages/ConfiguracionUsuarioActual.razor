@@ -13,18 +13,6 @@
         <EditForm Model="@this._usuario" OnValidSubmit="this.Guardar">
             <DataAnnotationsValidator />
 
-            <!-- SELECCIÓN DE LA IMAGEN -->
-            <MudCard Class="mb-4">
-                <MudCardHeader>
-                    <CardHeaderContent>
-                        <MudText Typo="Typo.h6">
-                            <MudIcon Icon="@Icons.Material.Filled.Image" Class="mr-2" />
-                            @Traductor["lblFotoPrenda"]
-                        </MudText>
-                    </CardHeaderContent>
-                </MudCardHeader>
-            </MudCard>
-
             <!-- INFORMACIÓN BÁSICA -->
             <MudCard Class="mb-4">
                 <MudCardHeader>
@@ -230,7 +218,7 @@
             iPrendaId = await this.ServicioUsuarios.SaveData(this._usuario);
 
             //Notificar al usuario el guardado.
-            this.ServicioNotificacion.Add(this.Traductor["NTF_Guardado"], Severity.Success);
+            this.ServicioNotificacion.Add("Guardado", Severity.Success);
         }
         catch (Exception ex)
         {

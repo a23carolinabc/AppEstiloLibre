@@ -1,4 +1,4 @@
-﻿.conjunto-card {
+﻿/*.conjunto-card {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     cursor: pointer;
     height: 100%;
@@ -37,3 +37,4 @@
     .conjunto-card .mud-chip {
         margin-right: 4px;
     }
+*/

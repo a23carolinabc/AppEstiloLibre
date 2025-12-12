@@ -72,19 +72,10 @@ namespace EstiloLibre_CapaNegocio.Consultas
         private async Task<UsuarioShowDataDTO> GetDatosParaShowData(CDUsuariosShowData cd)
         {
             UsuarioShowDataDTO objeto;
-            Adjuntos adjuntos;
 
             objeto = new();
             objeto.Usuario = new(cd.Usuario);
             objeto.Idiomas = this._servicioCombos.GetListaElementosCombo(cd.Idiomas, true, o => o.Id, o => o.Nombre);
-            if (objeto.Usuario.Id > 0)
-            {
-                adjuntos = this._con.CargarAdjuntos(Codigos.ClasesObjetos.Usuario, objeto.Usuario.Id);
-                if (adjuntos != null && adjuntos.Any())
-                {
-                    objeto.Usuario.ImagenBase64 = await this._servicioAlmacenamiento.ObtenerImagenBase64(adjuntos.First());
-                }
-            }
             return objeto;
         }
 

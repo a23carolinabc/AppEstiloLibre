@@ -124,39 +124,6 @@ namespace EstiloLibre_CapaNegocio.Comandos
                 //Guardar todos los cambios recibidos.
                 usuario.Guardar();
 
-                if (!string.IsNullOrEmpty(comando.Usuario.ImagenBase64))
-                {
-                    if (bEsActualizacion)
-                    {
-                        Adjuntos adjuntosAntiguos = con.CargarAdjuntos(Codigos.ClasesObjetos.Usuario, usuario.Id);
-
-                        foreach (Adjunto adjuntoAntiguo in adjuntosAntiguos)
-                        {
-                            // Eliminar archivo físico
-                            this._servicioAlmacenamiento.EliminarArchivo(adjuntoAntiguo);
-
-                            // Eliminar registro de BD
-                            adjuntoAntiguo.Eliminar();
-                        }
-                    }
-
-                    // Procesar imagen (redimensionar, convertir a WebP)
-                    byImagen = await this._servicioAlmacenamiento.ProcesarImagen(comando.Usuario.ImagenBase64);
-
-                    // Crear nuevo adjunto en BD
-                    adjunto = con.CrearAdjunto();
-                    adjunto.ClaseObjetoId = Codigos.ClasesObjetos.Prenda;
-                    adjunto.ObjetoId = usuario.Id;
-                    adjunto.TipoAdjuntoId = Codigos.TiposAdjuntos.Imagen;
-                    adjunto.Guid = UtilsVarios.GenerarGuid();
-
-                    // Guardar adjunto.
-                    adjunto.Guardar();
-
-                    // Guardar archivo físico comprimido
-                    await this._servicioAlmacenamiento.GuardarArchivo(adjunto, byImagen);
-                }
-
                 //Confirmar transacción.
                 con.CommitTrans();
 

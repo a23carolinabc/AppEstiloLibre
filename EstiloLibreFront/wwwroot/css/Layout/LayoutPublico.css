@@ -1,5 +1,19 @@
 ﻿.contenido-publico {
-    margin-top:3rem;
+    margin-top: 3rem;
     min-height: calc(100vh - 64px - 200px);
     padding-top: 64px;
+}
+
+@media (max-width: 960px) {
+    .contenido-publico {
+        padding-top: 56px;
+        margin-top: 2rem;
+    }
+}
+
+@media (max-width: 600px) {
+    .contenido-publico {
+        padding-top: 48px;
+        margin-top: 1rem;
+    }
 }

@@ -28,24 +28,9 @@
             <MudText Typo="Typo.h6" Class="mb-3">Información del Usuario</MudText>
             
             <MudGrid>
-                <!-- Foto -->
-                <MudItem xs="12" sm="3" Class="d-flex justify-center align-center">
-                    @if (!string.IsNullOrEmpty(this._datosUsuario.Usuario.ImagenBase64))
-                    {
-                        <MudAvatar Size="Size.Large" Style="width: 120px; height: 120px;">
-                            <MudImage Src="@($"data:image/jpeg;base64,{this._datosUsuario.Usuario.ImagenBase64}")" />
-                        </MudAvatar>
-                    }
-                    else
-                    {
-                        <MudAvatar Color="Color.Primary" Size="Size.Large" Style="width: 120px; height: 120px;">
-                            <MudIcon Icon="@Icons.Material.Filled.Person" Size="Size.Large" />
-                        </MudAvatar>
-                    }
-                </MudItem>
 
                 <!-- Información básica -->
-                <MudItem xs="12" sm="9">
+                <MudItem xs="12" sm="12">
                     <MudGrid>
                         <MudItem xs="12" sm="6">
                             <MudTextField Label="Login" 

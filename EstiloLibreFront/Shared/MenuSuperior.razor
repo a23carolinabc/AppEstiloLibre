@@ -1,15 +1,21 @@
 ﻿<link href="css/Shared/MenuSuperior.css" rel="stylesheet" />
 
-<MudAppBar Elevation="0" Dense="false" Color="Color.Tertiary" Class="appbar-principal">
-    <MudTextField @bind-Value="this._strBusqueda"
-                  Placeholder=@Traductor["phBuscar"]
-                  Adornment="Adornment.Start"
-                  AdornmentIcon="@Icons.Material.Filled.Search"
-                  Variant="Variant.Outlined"
-                  Margin="Margin.Dense"
-                  Class="mx-4 search-field"
-                  AdornmentColor="Color.Primary"
-                  FullWidth="false" />
+<MudAppBar Elevation="0" Dense="false" Color="Color.Primary" Class="appbar-principal">
+    <MudIconButton Icon="@Icons.Material.Filled.Menu"
+                   Color="Color.Tertiary"
+                   Edge="Edge.Start"
+                   OnClick="@this.AlternarDrawer"
+                   Class="d-flex d-md-none" />
+    
+    <!-- Información del usuario admin -->
+    <MudChip T="string"
+             Icon="@Icons.Material.Filled.AdminPanelSettings"
+             Color="Color.Tertiary"
+             Size="Size.Medium"
+             Variant="Variant.Outlined"
+             Class="mr-2">
+        @this.ServicioDatosContexto.GetLoginUsuario()
+    </MudChip>
     <MudSpacer />
 
     <!-- DISPOSITIVOS PEQUEÑOS -->
@@ -17,7 +23,7 @@
         <MudMenu Dense
                  Variant="Variant.Text"
                  Size="Size.Medium"
-                 Color="Color.Dark"
+                 Color="Color.Tertiary"
                  Icon="@Icons.Material.Filled.MoreVert">
 
             <MudMenuItem Href="@(URLsPantallas.Configuracion)"
@@ -40,21 +46,9 @@
         <MudMenu Dense
                  Variant="Variant.Text"
                  Size="Size.Medium"
-                 Color="Color.Dark"
-                 Icon="@Icons.Material.TwoTone.SupervisedUserCircle">
+                 Color="Color.Tertiary"
+                 Icon="@Icons.Material.TwoTone.MoreVert">
 
-            @* <MudMenu StartIcon="@Icons.Material.TwoTone.Settings"
-                     IconColor="Color.Primary"
-                     Label="Settings">
-                <MudMenuItem Icon="@Icons.Material.TwoTone.DarkMode"
-                             IconColor="Color.Secondary"
-                             Label="Dark Theme" />
-
-                <MudMenuItem Href="@(URLsPantallas.Configuracion)"
-                             Icon="@Icons.Material.TwoTone.SettingsApplications"
-                             IconColor="Color.Primary"
-                             Label="Perfil"/>
-            </MudMenu> *@
             <MudMenuItem Href="@(URLsPantallas.Configuracion)"
                          Icon="@Icons.Material.TwoTone.SettingsApplications"
                          IconColor="Color.Primary"
@@ -77,9 +71,13 @@
     public ServicioLogIn ServicioLogIn { get; set; }
     [Inject]
     public required IStringLocalizer<TrShared> Traductor { get; set; }
+    [Inject]
+    public required ServicioDatosContexto ServicioDatosContexto { get; set; }
     #endregion
 
     #region ***** PARÁMETROS *****
+    [CascadingParameter]
+    public LayoutAdministracion? Layout { get; set; }
     #endregion
 
     #region ***** PROPIEDADES PRIVADAS *****
@@ -94,6 +92,11 @@
     private void LogOut()
     {
         this.ServicioLogIn.LogOut();
+    }
+
+    private void AlternarDrawer()
+    {
+        this.Layout?.MenuLateral?.AlternarDrawer();
     }
     #endregion
 }

@@ -7,16 +7,16 @@
 <link href="css/Layout/LayoutAdministracion.css" rel="stylesheet" />
 
 <MudLayout>
-    <MenuLateralAdmin />
+    <MenuLateralAdmin @ref="this.MenuLateral" />
     
     <MudMainContent>
-        <MenuSuperiorAdmin />
+        <CascadingValue Value="this">
+            <MenuSuperiorAdmin/>
 
-        <div class="contenido-admin pa-4">
-            <CascadingValue Value="this">
-                @Body
-            </CascadingValue>
-        </div>
+            <div class="contenido-admin pa-4">
+                    @Body            
+            </div>
+        </CascadingValue>
     </MudMainContent>
 </MudLayout>
 
@@ -30,20 +30,16 @@
     {
         PaletteLight = new PaletteLight()
         {
-            Primary = "#424242", // CasiNegro
-            Secondary = "#DE869E", // Rosa claro
-            Tertiary = "#FFFFFF", // Blanco
-            Success = "#4CAF50",
-            Info = "#00BCD4",
-            Warning = "#FFC107",
-            Error = "#F44336",
-            Dark = "#21211F",//Casi Negro
-        }
+            Primary = "#5C6BC0",
+            Secondary = "#777777",
+            Tertiary = "#FFFFFF",
+        }        
     };
     
     #endregion
 
     #region ***** PROPIEDADES PÚBLICAS *****
+    public MenuLateralAdmin? MenuLateral { get; set; }
     #endregion
 
     #region ***** MÉTODOS PÚBLICOS *****

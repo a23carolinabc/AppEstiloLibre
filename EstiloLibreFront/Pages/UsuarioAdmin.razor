@@ -21,35 +21,7 @@
         <MudPaper Class="pa-4" Elevation="2">
             <MudForm @ref="this._form" @bind-IsValid="@this._formValido">
                 <MudGrid>
-                    <!-- Foto de perfil -->
-                    <MudItem xs="12" Class="d-flex justify-center mb-4">
-                        <MudStack AlignItems="AlignItems.Center" Spacing="2">
-                            @if (!string.IsNullOrEmpty(this._fotoPreview))
-                            {
-                                <MudAvatar Size="Size.Large" Style="width: 120px; height: 120px;">
-                                    <MudImage Src="@this._fotoPreview" />
-                                </MudAvatar>
-                            }
-                            else
-                            {
-                                <MudAvatar Color="Color.Primary" Size="Size.Large" Style="width: 120px; height: 120px;">
-                                    <MudIcon Icon="@Icons.Material.Filled.Person" Size="Size.Large" />
-                                </MudAvatar>
-                            }
-                            <InputFile id="fileInput"
-                                       OnChange="OnImagenSeleccionada"
-                                       accept="image/*"
-                                       hidden />
-                            <MudButton HtmlTag="label"
-                                       Variant="Variant.Filled"
-                                       Color="Color.Primary"
-                                       StartIcon="@Icons.Material.Filled.CloudUpload"
-                                       for="fileInput">
-                                Subir Foto
-                            </MudButton>
-                        </MudStack>
-                    </MudItem>
-
+                    
                     <!-- Login -->
                     <MudItem xs="12" sm="6">
                         <MudTextField @bind-Value="this._usuario.Login"
@@ -146,14 +118,14 @@
                             @foreach (var permiso in this._datosUsuario.PermisosDisponibles)
                             {
                                 <MudCheckBox @bind-Value="permiso.Asignado"
-                                             Label="@($"{permiso.Codigo} - {permiso.Nombre}")"
+                                             Label="@($"{permiso.Codigo}")"
                                              Color="@ObtenerColorPermiso(permiso.Codigo)" />
                             }
                         </MudPaper>
                         @if (!this._datosUsuario.PermisosDisponibles.Any(p => p.Asignado))
                         {
                             <MudText Color="Color.Error" Typo="Typo.caption" Class="mt-1">
-                                Debe asignar al menos el permiso ADMIN
+                                Debe asignar al menos el permiso MODERADOR
                             </MudText>
                         }
                     </MudItem>
@@ -357,7 +329,7 @@
     {
         return codigo switch
         {
-            "PLUS" => Color.Success,
+            "MODERADOR" => Color.Success,
             "ADMIN" => Color.Primary,
             _ => Color.Default
         };

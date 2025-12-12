@@ -1,4 +1,4 @@
-﻿.prenda-card {
+﻿/*.prenda-card {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     cursor: pointer;
     height: 100%;
@@ -31,3 +31,4 @@
     .prenda-card .mud-card-actions.pa-2 {
         padding: 8px;
     }
+*/

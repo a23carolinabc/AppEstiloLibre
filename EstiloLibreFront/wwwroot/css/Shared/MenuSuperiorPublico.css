@@ -4,17 +4,5 @@
     left: 0;
     right: 0;
     z-index: 1200;
-    border-bottom: 1px solid #e0e0e0;
+    border-bottom: none;
 }
-.appbar-logo {
-    color: #DE869E;
-}
-
-.nav-link-publico {
-    font-weight: 500;
-    transition: color 0.3s ease;
-}
-
-    .nav-link-publico:hover {
-        color: #DE869E !important;
-    }

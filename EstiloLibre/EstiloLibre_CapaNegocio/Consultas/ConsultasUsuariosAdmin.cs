@@ -94,14 +94,7 @@ namespace EstiloLibre_CapaNegocio.Consultas
 
                 // Cargar permisos del usuario
                 permisosUsuario = this._con.CargarPermisosUsuario(usuario.Id);
-                dto.PermisosAsignados = permisosUsuario.Select(p => p.Codigo).ToList();
-
-                // Cargar imagen del usuario
-                adjuntos = this._con.CargarAdjuntos(Codigos.ClasesObjetos.Usuario, usuario.Id);
-                if (adjuntos != null && adjuntos.Any())
-                {
-                    dto.ImagenBase64 = await this._servicioAlmacenamiento.ObtenerImagenBase64(adjuntos.First());
-                }
+                dto.PermisosAsignados = permisosUsuario.Select(p => p.Codigo).ToList();                
 
                 lista.Add(dto);
             }
@@ -157,16 +150,6 @@ namespace EstiloLibre_CapaNegocio.Consultas
                 permisosDTO.Add(new PermisoDTO(permiso, bEstaAsignado));
             }
             objeto.PermisosDisponibles = permisosDTO;
-
-            // Cargar imagen del usuario
-            if (objeto.Usuario.Id > 0)
-            {
-                adjuntos = this._con.CargarAdjuntos(Codigos.ClasesObjetos.Usuario, objeto.Usuario.Id);
-                if (adjuntos != null && adjuntos.Any())
-                {
-                    objeto.Usuario.ImagenBase64 = await this._servicioAlmacenamiento.ObtenerImagenBase64(adjuntos.First());
-                }
-            }
 
             return objeto;
         }

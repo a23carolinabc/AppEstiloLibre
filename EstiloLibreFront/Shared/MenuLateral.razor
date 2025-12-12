@@ -1,22 +1,26 @@
-﻿<MudDrawer Open="true" Elevation="0" Variant="@DrawerVariant.Persistent"
-           ClipMode="DrawerClipMode.Never">
+﻿<MudDrawer @bind-Open="@this._drawerAbierto"
+               Elevation="0"
+               Variant="@DrawerVariant.Responsive"
+               Breakpoint="Breakpoint.Md"
+               ClipMode="DrawerClipMode.Never">
     <MudPaper Width="100%" Height="100%" Class="d-inline-flex py-3" Elevation="0" Outlined=true >
-        <MudNavMenu Class="mud-width-full">
+        <MudNavMenu Class="mud-width-full" Color="Color.Primary">
             <MudText Typo="Typo.h6" Class="px-4">@Traductor["EstiloLibre"]</MudText>
             <MudText Typo="Typo.body2" Class="px-4 mud-text-secondary">@Traductor["lblMenu"]</MudText>
             <MudDivider Class="my-2" />
             <MudNavLink Href=@(URLsPantallas.ListadoPrendas)
-                        Icon="@Icons.Material.Filled.DashboardCustomize">@Traductor["nvlkListaPrendas"]</MudNavLink>
-            <MudNavLink Href=@(URLsPantallas.Prendas) 
-                        Icon="@Icons.Material.Filled.DashboardCustomize">@Traductor["nvlkCrearPrenda"]</MudNavLink>
-            <MudNavLink Href=@(URLsPantallas.ListadoConjuntos)
-                        Icon="@Icons.Material.Filled.DashboardCustomize">@Traductor["nvlkListaConjuntos"]</MudNavLink>
-            <MudNavLink Href=@(URLsPantallas.Conjuntos)
-                        Icon="@Icons.Material.Filled.DashboardCustomize">@Traductor["nvlkCrearConjunto"]</MudNavLink>
-            <MudNavLink Href=@(URLsPantallas.ExplorarConjuntos)
-                        Icon="@Icons.Material.Filled.DashboardCustomize">@Traductor["nvlkExplorarConjuntos"]</MudNavLink>
+                        Icon="@Icons.Material.Filled.List" OnClick="@this.CerrarDrawer">@Traductor["nvlkListaPrendas"]</MudNavLink>
+            <MudNavLink Href=@(URLsPantallas.Prendas)
+                        Icon="@Icons.Material.Filled.Create" OnClick="@this.CerrarDrawer">@Traductor["nvlkCrearPrenda"]</MudNavLink>
             <MudNavLink Href=@(URLsPantallas.ExplorarPrendas)
-                        Icon="@Icons.Material.Filled.DashboardCustomize">@Traductor["nvlkExplorarPrendas"]</MudNavLink>
+                        Icon="@Icons.Material.Filled.ListAlt" OnClick="@this.CerrarDrawer">Explorar prendas</MudNavLink>
+            <MudDivider Class="my-1" />
+            <MudNavLink Href=@(URLsPantallas.ListadoConjuntos)
+                        Icon="@Icons.Material.Filled.List" OnClick="@this.CerrarDrawer">@Traductor["nvlkListaConjuntos"]</MudNavLink>
+            <MudNavLink Href=@(URLsPantallas.Conjuntos)
+                        Icon="@Icons.Material.Filled.Create" OnClick="@this.CerrarDrawer">@Traductor["nvlkCrearConjunto"]</MudNavLink>
+            <MudNavLink Href=@(URLsPantallas.ExplorarConjuntos)
+                        Icon="@Icons.Material.Filled.ListAlt" OnClick="@this.CerrarDrawer">Explorar conjuntos</MudNavLink>
         </MudNavMenu>
     </MudPaper>
 </MudDrawer>
@@ -29,19 +33,23 @@
 
     #endregion
 
-    #region ***** PARÁMETROS *****
-    #endregion
-
     #region ***** PROPIEDADES PRIVADAS *****
-
+    private bool _drawerAbierto = true;
     #endregion
 
     #region ***** MÉTODOS PÚBLICOS *****
-
-
+    public void AlternarDrawer()
+    {
+        this._drawerAbierto = !this._drawerAbierto;
+        this.StateHasChanged();
+    }
     #endregion
 
     #region ***** MÉTODOS PRIVADOS *****
-
+    private void CerrarDrawer()
+    {
+        this._drawerAbierto = false;
+        this.StateHasChanged();
+    }
     #endregion
 }

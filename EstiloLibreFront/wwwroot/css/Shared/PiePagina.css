@@ -1,10 +1,5 @@
 ﻿.pie-pagina {
-    background-color: lightgray;
-    border-top: 1px solid #e0e0e0;
+    background-color: #EEEEEE;
+    border-top: 1px solid #EEEEEE;
     margin-top: 2rem;
-}
-
-
-.text-muted {
-    color: #757575;
 }

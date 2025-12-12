@@ -19,7 +19,7 @@
         </div>
 
         <!-- Stepper -->
-        <MudStepper @ref="@this._stepper" NonLinear="false" @bind-ActiveIndex="@this._pasoActivo">
+        <MudStepper @ref="@this._stepper" NonLinear="false" OnPreviewInteraction="EnCambioDePaso">
             
             <!-- PASO 1: Información de Cuenta -->
             <MudStep Title="Información de Cuenta" Skippable=false>
@@ -89,19 +89,28 @@
                                   Label="Nombre"
                                   Variant="Variant.Outlined"
                                   FullWidth="true"
-                                  Margin="Margin.Normal" />
+                                  Margin="Margin.Normal"
+                                  Adornment="Adornment.Start"
+                                  AdornmentIcon="@Icons.Material.Filled.Person"
+                                  Required="true"/>
 
                     <MudTextField @bind-Value="@this._usuario.Apellido1"
                                   Label="Apellido 1"
                                   Variant="Variant.Outlined"
                                   FullWidth="true"
-                                  Margin="Margin.Normal" />
+                                  Margin="Margin.Normal"
+                                  Adornment="Adornment.Start"
+                                  AdornmentIcon="@Icons.Material.Filled.Person"
+                                  Required="true" />
 
                     <MudTextField @bind-Value="@this._usuario.Apellido2"
                                   Label="Apellido 2"
                                   Variant="Variant.Outlined"
                                   FullWidth="true"
-                                  Margin="Margin.Normal" />
+                                  Margin="Margin.Normal"
+                                  Adornment="Adornment.Start"
+                                  AdornmentIcon="@Icons.Material.Filled.Person"/>
+                    
 
                     <MudDatePicker @bind-Date="@this._usuario.FechaNacimiento"
                                    Label="Fecha de nacimiento"
@@ -111,11 +120,14 @@
                                    HelperText="Debes tener al menos 16 años para usar EstiloLibre" />
 
                     <MudSelect @bind-Value="this._usuario.IdiomaId"
-                               Label="Color *"
+                               Label="Idioma"
                                Variant="Variant.Outlined"
                                Class="mb-3"
+                               Margin="Margin.Normal"
+                               Adornment="Adornment.Start"
+                               AdornmentIcon="@Icons.Material.Filled.Message"
                                Required="true">
-                        <MudSelectItem Value="0">Seleccione un color</MudSelectItem>
+                        <MudSelectItem Value="0">Seleccione un idioma</MudSelectItem>
                         @if (this._usuarioData.Idiomas != null)
                         {
                             @foreach (var color in this._usuarioData.Idiomas)
@@ -176,15 +188,6 @@
                         </MudText>
                     </MudCheckBox>
 
-                    <MudCheckBox @bind-Value="@this._aceptaComunicaciones" 
-                                 Color="Color.Primary"
-                                 Dense="true"
-                                 Class="mt-2">
-                        <MudText Typo="Typo.body2">
-                            Deseo recibir novedades y consejos de moda (opcional)
-                        </MudText>
-                    </MudCheckBox>
-
                     @if (this._errorRegistro != null)
                     {
                         <MudAlert Severity="Severity.Error" Class="mt-3">
@@ -222,14 +225,6 @@
             </MudLink>
         </MudText>
     </MudPaper>
-
-    <!-- Enlace volver a inicio -->
-    <MudText Align="Align.Center" Class="mt-4">
-        <MudLink Href="@URLsPantallas.Inicio" Color="Color.Primary">
-            <MudIcon Icon="@Icons.Material.Filled.ArrowBack" Size="Size.Small" />
-            Volver al inicio
-        </MudLink>
-    </MudText>
 </MudContainer>
 
 @code {
@@ -249,13 +244,13 @@
     #region ***** PROPIEDADES PRIVADAS *****
 
     private MudStepper? _stepper;
-    private int _pasoActivo = 0;
+    private bool _bPaso1 = false;
+    private bool _bPaso2 = false;
     private NuevoUsuarioDTO _usuario = new();
     private UsuarioData _usuarioData;
     private string _contraseñaConfirmacion = string.Empty;
     private bool _aceptaPrivacidad = false;
     private bool _aceptaTerminos = false;
-    private bool _aceptaComunicaciones = false;
     private bool _procesandoRegistro = false;
     private string? _errorRegistro = null;
 
@@ -273,31 +268,45 @@
             this.ServicioNotificacion.Add(this.TraductorErrores["ERR_CargaDatosIniciales"], Severity.Error);
         }
     }
+    private async Task EnCambioDePaso(StepperInteractionEventArgs arg)
+    {
+        if (arg.Action == StepAction.Complete)
+        {
+            // occurrs when clicking next
+            await ControlPaso(arg);
+        }
+    }
+    private async Task ControlPaso(StepperInteractionEventArgs arg)
+    {
+        switch (arg.StepIndex)
+        {
+            case 0:
+                if (!Paso1Valido())
+                {
+                    this.ServicioNotificacion.Add(this.TraductorErrores["ERR_RellenarCamposObligatorios"], Severity.Error);
+                    arg.Cancel = true;
+                }
+                break;
+            case 1:
+                if (!Paso2Valido())
+                {
+                    this.ServicioNotificacion.Add(this.TraductorErrores["ERR_RellenarCamposObligatorios"], Severity.Error);
+                    arg.Cancel = true;
+                }
+                break;
+        }
+    }
     #endregion
 
     #region ***** MÉTODOS PRIVADOS *****
 
     private bool ContraseñasCoinciden()
     {
-        bool bCoinciden;
-
-        if (string.IsNullOrWhiteSpace(this._contraseñaConfirmacion))
+        if (!string.IsNullOrWhiteSpace(this._contraseñaConfirmacion) && string.IsNullOrWhiteSpace(this._contraseñaConfirmacion))
         {
-            return true; // No mostrar error hasta que empiece a escribir
+            return false;
         }
-
-        bCoinciden = this._usuario.Contraseña == this._contraseñaConfirmacion;
-
-        return bCoinciden;
-    }
-
-    private bool Paso3Valido()
-    {
-        bool bAceptacionesValidas;
-
-        bAceptacionesValidas = this._aceptaPrivacidad && this._aceptaTerminos;
-
-        return bAceptacionesValidas;
+        return this._contraseñaConfirmacion.Equals(this._usuario.Contraseña, StringComparison.CurrentCulture);
     }
 
     private async Task CompletarRegistro()
@@ -312,7 +321,7 @@
 
             this.ServicioNotificacion.Add("¡Cuenta creada exitosamente! Redirigiendo al login...", Severity.Success);
             await Task.Delay(1500);
-            
+
             this.ServicioNavegacion.NavegarA(URLsPantallas.Login);
         }
         catch (Exception ex)
@@ -327,6 +336,38 @@
         }
     }
 
+    private bool Paso1Valido()
+    {
+        if(string.IsNullOrEmpty(this._usuario.Login)||
+        string.IsNullOrEmpty(this._usuario.Contraseña) ||
+        string.IsNullOrEmpty(this._usuario.CorreoE) ||
+        !this.ContraseñasCoinciden())
+        {
+            return false;
+        }
+        return true;
+    }
+
+    private bool Paso2Valido()
+    {
+        if (string.IsNullOrEmpty(this._usuario.Nombre) ||
+        string.IsNullOrEmpty(this._usuario.Apellido1) ||
+        this._usuario.FechaNacimiento == null ||
+        this._usuario.IdiomaId <= 0)
+        {
+            return false;
+        }
+        return true;
+    }
+
+    private bool Paso3Valido()
+    {
+        bool bAceptacionesValidas;
+
+        bAceptacionesValidas = this._aceptaPrivacidad && this._aceptaTerminos;
+
+        return bAceptacionesValidas;
+    }
     #endregion
 
     #region ***** CLASES AUXILIARES *****

@@ -59,17 +59,6 @@ namespace EstiloLibre_CapaNegocio.Comandos
                     throw new ReglaNegocioParaUsuarioException("ERR_ObjetoNoEncontrado");
                 }
 
-                // Eliminar adjuntos físicos del usuario
-                adjuntos = this.con.CargarAdjuntos(Codigos.ClasesObjetos.Usuario, usuario.Id);
-                foreach (Adjunto adjunto in adjuntos)
-                {
-                    // Eliminar archivo físico
-                    this._servicioAlmacenamiento.EliminarArchivo(adjunto);
-
-                    // Eliminar registro de BD
-                    adjunto.Eliminar();
-                }
-
                 // Eliminar permisos del usuario
                 this.con.EliminarPermisosDeUsuario(usuario.Id);
 
