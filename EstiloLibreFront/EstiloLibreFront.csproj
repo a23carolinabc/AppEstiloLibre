@@ -7,16 +7,9 @@
 	<BlazorWebAssemblyLoadAllGlobalizationData>true</BlazorWebAssemblyLoadAllGlobalizationData>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Content Remove="wwwroot\css\Layout\LayoutAdministracion.css" />
-    <Content Remove="wwwroot\css\Pages\Conocenos.css" />
-    <Content Remove="wwwroot\css\Pages\ExploracionConjuntos.css" />
-    <Content Remove="wwwroot\css\Pages\ExploracionPrendas.css" />
-    <Content Remove="wwwroot\css\Pages\Inicio.css" />
-    <Content Remove="wwwroot\css\Shared\MenuSuperior.css" />
-    <Content Remove="wwwroot\css\Shared\MenuSuperiorAdmin.css" />
-    <Content Remove="wwwroot\css\Shared\MenuSuperiorPublico.css" />
-  </ItemGroup>
+	<ItemGroup>
+		<Content Include="wwwroot\css\**\*.css" />
+	</ItemGroup>
 
   <ItemGroup>
 	<BlazorWebAssemblyAdditionalCulture Include="gl-ES" />
