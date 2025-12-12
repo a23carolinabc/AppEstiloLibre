@@ -12,7 +12,7 @@ namespace EstiloLibre
             IConfiguration configuracionGeneral;
             IHost host;
 
-            //Cargar la configuración general de la aplicación (appsettings.json).
+            //Cargar la configuraciï¿½n general de la aplicaciï¿½n (appsettings.json).
             configuracionGeneral = CargarConfiguracionGeneral();
 
             try
@@ -20,7 +20,7 @@ namespace EstiloLibre
                 //Crear el host.
                 host = BuildHostBuilder(args, configuracionGeneral);
 
-                //Arrancar la aplicación.
+                //Arrancar la aplicaciï¿½n.
                 host.Run();                
 
                 //Salir sin indicar error al sistema operativo.
@@ -33,13 +33,13 @@ namespace EstiloLibre
             }
         }
 
-        public static IHost BuildHostBuilder(string[] args, IConfiguration configuracionGeneral)
+        /* public static IHost BuildHostBuilder(string[] args, IConfiguration configuracionGeneral)
         {
             return Host.CreateDefaultBuilder(args)
 
-                //Especificar que la configuración de la clase Startup sea la recibida por argumento en lugar
-                //de que .NET la cargue de nuevo por su cuenta. Esto último no interesa porque no modificará
-                //ciertos valores de claves de configuración que sí se hace en esta clase Program.cs
+                //Especificar que la configuraciï¿½n de la clase Startup sea la recibida por argumento en lugar
+                //de que .NET la cargue de nuevo por su cuenta. Esto ï¿½ltimo no interesa porque no modificarï¿½
+                //ciertos valores de claves de configuraciï¿½n que sï¿½ se hace en esta clase Program.cs
                 .ConfigureAppConfiguration(builder =>
                 {
                     builder.Sources.Clear();
@@ -58,14 +58,54 @@ namespace EstiloLibre
                     logging.ClearProviders();
                 })
             .Build();
+        } */
+        public static IHost BuildHostBuilder(string[] args, IConfiguration configuracionGeneral)
+        {
+            string? strPort;
+            string strUrls;
+            
+            // CRÃTICO PARA RAILWAY: Leer el puerto de la variable de entorno
+            strPort = Environment.GetEnvironmentVariable("PORT");
+            
+            if (!string.IsNullOrEmpty(strPort))
+            {
+                strUrls = $"http://0.0.0.0:{strPort}";
+            }
+            else
+            {
+                strUrls = "http://0.0.0.0:80";
+            }
+            
+            return Host.CreateDefaultBuilder(args)
+                //Especificar que la configuraciÃ³n de la clase Startup sea la recibida por argumento en lugar
+                //de que .NET la cargue de nuevo por su cuenta.
+                .ConfigureAppConfiguration(builder =>
+                {
+                    builder.Sources.Clear();
+                    builder.AddConfiguration(configuracionGeneral);
+                })
+                //Indicar la clase Startup.
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder.UseStartup<Startup>();
+                    
+                    // CRÃTICO: Configurar el puerto dinÃ¡mico de Railway
+                    webBuilder.UseUrls(strUrls);
+                })
+                //Borrar todos los registros de los loggers que vienen prerregistrados.
+                .ConfigureLogging(logging =>
+                {
+                    logging.ClearProviders();
+                })
+            .Build();
         }
 
-        private static IConfiguration CargarConfiguracionGeneral()
+        /* private static IConfiguration CargarConfiguracionGeneral()
         {
             IConfigurationBuilder configBuilder;
             string strPathBase;
 
-            //En el entorno de PRD la ubicación del fichero de configuración puede estar en una variable 
+            //En el entorno de PRD la ubicaciï¿½n del fichero de configuraciï¿½n puede estar en una variable 
             //de entorno (PRD).
             strPathBase = Environment.GetEnvironmentVariable("apps_config_path") ?? Directory.GetCurrentDirectory();
 
@@ -75,7 +115,31 @@ namespace EstiloLibre
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                 .AddEnvironmentVariables();
 
-            //Devolver el objeto de configuración.
+            //Devolver el objeto de configuraciï¿½n.
+            return configBuilder.Build();
+        } */
+
+        private static IConfiguration CargarConfiguracionGeneral()
+        {
+            IConfigurationBuilder configBuilder;
+            string strPathBase;
+            string? strEntorno;
+            
+            // Obtener entorno
+            strEntorno = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production";
+            
+            //En el entorno de PRD la ubicaciÃ³n del fichero de configuraciÃ³n puede estar en una variable 
+            //de entorno (PRD).
+            strPathBase = Environment.GetEnvironmentVariable("apps_config_path") ?? Directory.GetCurrentDirectory();
+            
+            //Cargar el fichero appsettings.json.
+            configBuilder = new ConfigurationBuilder()
+                .SetBasePath(strPathBase)
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .AddJsonFile($"appsettings.{strEntorno}.json", optional: true, reloadOnChange: true)
+                .AddEnvironmentVariables();
+            
+            //Devolver el objeto de configuraciÃ³n.
             return configBuilder.Build();
         }
     }
